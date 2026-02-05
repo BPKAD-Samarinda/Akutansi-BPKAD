@@ -1,179 +1,163 @@
 import { useState } from "react";
-import Sidebar from "../components/layout/Sidebar";
-import Header from "../components/layout/Header";
-import FilterBar from "../components/document/FilterBar";
-import DocumentTable from "../components/document/DocumentTable";
-import { Document } from "../types";
+import { useNavigate } from "react-router-dom";
+import buildingImage from "../assets/images/logo-bpkad.png";
+import logoBpkad from "../assets/images/bpkad-building.png";
+import userIcon from "../assets/icons/profile.svg";
+import lockIcon from "../assets/icons/kunci.svg";
 
-// Sample data - seharusnya dari API
-const initialDocuments: Document[] = [
-  {
-    id: 1,
-    name: "Lampiran 26 Maret 2024",
-    format: "PDF",
-    size: "4.687 KB",
-    date: "19 Maret 2024",
-  },
-  {
-    id: 2,
-    name: "Laporan Bulanan Februari",
-    format: "XLSX",
-    size: "8.123 KB",
-    date: "18 Maret 2024",
-  },
-  {
-    id: 3,
-    name: "Presentasi Rapat Koordinasi",
-    format: "PPTX",
-    size: "12.456 KB",
-    date: "15 Maret 2024",
-  },
-  {
-    id: 4,
-    name: "Dokumen Kontrak Vendor",
-    format: "DOCX",
-    size: "2.345 KB",
-    date: "12 Maret 2024",
-  },
-  {
-    id: 5,
-    name: "Anggaran Q1 2024",
-    format: "PDF",
-    size: "5.234 KB",
-    date: "10 Maret 2024",
-  },
-  {
-    id: 6,
-    name: "Data Transaksi Januari",
-    format: "XLSX",
-    size: "15.678 KB",
-    date: "08 Maret 2024",
-  },
-  {
-    id: 7,
-    name: "Surat Keputusan Direksi",
-    format: "PDF",
-    size: "3.456 KB",
-    date: "05 Maret 2024",
-  },
-  {
-    id: 8,
-    name: "Rencana Kerja Tahunan",
-    format: "DOCX",
-    size: "6.789 KB",
-    date: "03 Maret 2024",
-  },
-];
+export default function Login() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
-export default function Dashboard() {
-  const [documents, setDocuments] = useState<Document[]>(initialDocuments);
-  const [filteredDocuments, setFilteredDocuments] =
-    useState<Document[]>(initialDocuments);
-
-  // Filter handlers
-  const handleSearch = (query: string) => {
-    if (!query) {
-      setFilteredDocuments(documents);
-      return;
-    }
-
-    const filtered = documents.filter((doc) =>
-      doc.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredDocuments(filtered);
-  };
-
-  const handleDateFilter = (date: string) => {
-    if (!date) {
-      setFilteredDocuments(documents);
-      return;
-    }
-
-    const filtered = documents.filter((doc) => {
-      // Convert date format for comparison
-      const docDate = new Date(doc.date.split(" ").reverse().join("-"));
-      const filterDate = new Date(date);
-      return docDate.toDateString() === filterDate.toDateString();
-    });
-    setFilteredDocuments(filtered);
-  };
-
-  const handleCategoryFilter = (category: string) => {
-    if (!category) {
-      setFilteredDocuments(documents);
-      return;
-    }
-
-    const filtered = documents.filter(
-      (doc) => doc.format.toLowerCase() === category.toLowerCase()
-    );
-    setFilteredDocuments(filtered);
-  };
-
-  const handleRefresh = () => {
-    setFilteredDocuments(documents);
-    // Bisa ditambahkan logic untuk fetch data dari API
-    console.log("Refreshing data...");
-  };
-
-  // Document action handlers
-  const handleView = (id: number | string) => {
-    console.log("View document:", id);
-    // Implementasi view document
-    alert(`Melihat dokumen ID: ${id}`);
-  };
-
-  const handleEdit = (id: number | string) => {
-    console.log("Edit document:", id);
-    // Implementasi edit document
-    alert(`Edit dokumen ID: ${id}`);
-  };
-
-  const handleDelete = (id: number | string) => {
-    const confirmDelete = window.confirm(
-      "Apakah Anda yakin ingin menghapus dokumen ini?"
-    );
-
-    if (confirmDelete) {
-      const updatedDocuments = documents.filter((doc) => doc.id !== id);
-      setDocuments(updatedDocuments);
-      setFilteredDocuments(updatedDocuments);
-      console.log("Deleted document:", id);
-    }
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulasi login - redirect ke dashboard
+    navigate("/dashboarddokumen");
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Poppins']">
-      <Sidebar />
-
-      <div className="flex-1 flex flex-col">
-        <Header title="Dashboard" />
-
-        <main className="flex-1 p-4 lg:p-8">
-          {/* Page Title - Hidden on mobile, shown on desktop */}
-          <h1 className="hidden lg:block text-3xl xl:text-4xl font-bold text-gray-800 mb-6 lg:mb-8">
-            Dashboard Dokumen
-          </h1>
-
-          {/* Filter Section */}
-          <div className="mb-6 lg:mb-8">
-            <FilterBar
-              onSearch={handleSearch}
-              onDateChange={handleDateFilter}
-              onCategoryChange={handleCategoryFilter}
-              onRefresh={handleRefresh}
-            />
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#F6F6F6] font-['Poppins']">
+      {/* LEFT SECTION - LOGIN FORM */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-2 lg:order-1">
+        <div className="w-full max-w-[440px] bg-white rounded-3xl shadow-lg px-6 sm:px-10 py-8 sm:py-12">
+          {/* LOGO BPKAD WITH BADGE AND TEXT */}
+          <div className="flex flex-col items-center mb-8 sm:mb-10">
+            <div className="flex items-center gap-3 mb-2">
+              <img
+                src={logoBpkad}
+                alt="BPKAD Logo"
+                className="h-16 sm:h-20 object-contain"
+              />
+            </div>
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                BPKAD
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">
+                Kota Samarinda
+              </p>
+            </div>
           </div>
 
-          {/* Document Table */}
-          <DocumentTable
-            documents={filteredDocuments}
-            totalDocuments={documents.length}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        </main>
+          <form onSubmit={handleLogin}>
+            {/* NAMA PENGGUNA INPUT */}
+            <div className="mb-5">
+              <label className="block text-xs font-bold text-gray-700 mb-2 tracking-wide">
+                NAMA PENGGUNA
+              </label>
+              <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus-within:border-orange-400 transition">
+                <img
+                  src={userIcon}
+                  className="w-5 h-5 mr-3 opacity-40"
+                  alt="User"
+                />
+                <input
+                  type="text"
+                  placeholder="NIP atau Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                />
+              </div>
+            </div>
+
+            {/* KATA SANDI INPUT */}
+            <div className="mb-5">
+              <label className="block text-xs font-bold text-gray-700 mb-2 tracking-wide">
+                KATA SANDI
+              </label>
+              <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus-within:border-orange-400 transition">
+                <img
+                  src={lockIcon}
+                  className="w-5 h-5 mr-3 opacity-40"
+                  alt="Lock"
+                />
+                <input
+                  type="password"
+                  placeholder="Masukkan kata sandi"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                />
+              </div>
+            </div>
+
+            {/* CHECKBOX - REMEMBER ME */}
+            <div className="flex items-center mb-7">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400 cursor-pointer"
+              />
+              <label
+                htmlFor="remember"
+                className="ml-2 text-sm text-gray-600 select-none cursor-pointer"
+              >
+                Ingat Saya Di Perangkat Ini
+              </label>
+            </div>
+
+            {/* LOGIN BUTTON */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-sm tracking-wider py-3.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              MASUK
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* RIGHT SECTION - HERO IMAGE & INFO */}
+      <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-screen order-1 lg:order-2">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-no-repeat"
+          style={{
+            backgroundImage: `url(${buildingImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "scroll",
+          }}
+        />
+
+        {/* Overlay dengan transparansi */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/30 via-orange-600/40 to-orange-700/50" />
+
+        {/* Dekorasi geometris - Responsif */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[600px] lg:h-[600px] border-[40px] sm:border-[60px] lg:border-[80px] border-white/10 rotate-45 rounded-3xl" />
+        </div>
+
+        {/* Info Card - Responsif */}
+        <div className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-4 right-4 sm:left-8 sm:right-8 lg:left-16 lg:right-16 max-w-xl mx-auto lg:mx-0">
+          <div className="bg-black/50 backdrop-blur-md rounded-2xl p-6 sm:p-8 text-white shadow-2xl">
+            {/* Badge */}
+            <div className="flex items-center text-xs font-semibold mb-3 sm:mb-4 tracking-wider">
+              <span className="w-2.5 h-2.5 bg-orange-500 rounded-full mr-2.5 animate-pulse" />
+              LAYANAN AKUNTANSI DIGITAL
+            </div>
+
+            {/* Heading - Responsif */}
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight mb-3 sm:mb-4">
+              Efisiensi Manajemen
+              <br />
+              Dokumen Keuangan
+              <br />
+              Terintegrasi.
+            </h1>
+
+            {/* Description */}
+            <p className="text-xs sm:text-sm text-gray-200 leading-relaxed">
+              Sistem terpadu untuk koordinasi penggunaan data akuntansi yang
+              aman dan transparan di seluruh departemen perusahaan.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
