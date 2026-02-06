@@ -3,9 +3,11 @@ import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import FilterBar from "../components/document/FilterBar";
 import DocumentTable from "../components/document/DocumentTable";
+import Toast from "../components/ui/Toast";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
 import { Document } from "../types";
 
-// Sample data - seharusnya dari API
+// Sample data
 const initialDocuments: Document[] = [
   {
     id: 1,
@@ -63,12 +65,70 @@ const initialDocuments: Document[] = [
     size: "6.789 KB",
     date: "03 Maret 2024",
   },
+  {
+    id: 8,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+  {
+    id: 9,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+  {
+    id: 10,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+  {
+    id: 11,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+  {
+    id: 12,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+  {
+    id: 13,
+    name: "Rencana Kerja Tahunan",
+    format: "DOCX",
+    size: "6.789 KB",
+    date: "03 Maret 2024",
+  },
+
 ];
+
+interface ToastState {
+  show: boolean;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
+}
 
 export default function Dashboard() {
   const [documents, setDocuments] = useState<Document[]>(initialDocuments);
-  const [filteredDocuments, setFilteredDocuments] =
-    useState<Document[]>(initialDocuments);
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>(initialDocuments);
+  const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    documentId: null as number | string | null,
+    documentName: "",
+  });
+
+  const showToast = (message: string, type: ToastState["type"]) => {
+    setToast({ show: true, message, type });
+  };
 
   // Filter handlers
   const handleSearch = (query: string) => {
@@ -81,6 +141,10 @@ export default function Dashboard() {
       doc.name.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredDocuments(filtered);
+
+    if (filtered.length === 0) {
+      showToast("Tidak ada dokumen yang cocok dengan pencarian", "info");
+    }
   };
 
   const handleDateFilter = (date: string) => {
@@ -90,12 +154,15 @@ export default function Dashboard() {
     }
 
     const filtered = documents.filter((doc) => {
-      // Convert date format for comparison
       const docDate = new Date(doc.date.split(" ").reverse().join("-"));
       const filterDate = new Date(date);
       return docDate.toDateString() === filterDate.toDateString();
     });
     setFilteredDocuments(filtered);
+
+    if (filtered.length === 0) {
+      showToast("Tidak ada dokumen pada tanggal ini", "info");
+    }
   };
 
   const handleCategoryFilter = (category: string) => {
@@ -108,58 +175,76 @@ export default function Dashboard() {
       (doc) => doc.format.toLowerCase() === category.toLowerCase()
     );
     setFilteredDocuments(filtered);
+
+    if (filtered.length === 0) {
+      showToast(`Tidak ada dokumen ${category.toUpperCase()}`, "info");
+    }
   };
 
   const handleRefresh = () => {
     setFilteredDocuments(documents);
-    // Bisa ditambahkan logic untuk fetch data dari API
-    console.log("Refreshing data...");
+    showToast("Filter telah direset", "info");
   };
 
   // Document action handlers
   const handleView = (id: number | string) => {
+    const doc = documents.find((d) => d.id === id);
+    showToast(`Membuka ${doc?.name || "dokumen"}...`, "info");
     console.log("View document:", id);
-    // Implementasi view document
-    alert(`Melihat dokumen ID: ${id}`);
   };
 
   const handleEdit = (id: number | string) => {
+    const doc = documents.find((d) => d.id === id);
+    showToast(`Membuka editor untuk ${doc?.name || "dokumen"}...`, "info");
     console.log("Edit document:", id);
-    // Implementasi edit document
-    alert(`Edit dokumen ID: ${id}`);
   };
 
   const handleDelete = (id: number | string) => {
-    const confirmDelete = window.confirm(
-      "Apakah Anda yakin ingin menghapus dokumen ini?"
-    );
+    const doc = documents.find((d) => d.id === id);
+    setConfirmDialog({
+      isOpen: true,
+      documentId: id,
+      documentName: doc?.name || "dokumen ini",
+    });
+  };
 
-    if (confirmDelete) {
-      const updatedDocuments = documents.filter((doc) => doc.id !== id);
+  const confirmDelete = () => {
+    if (confirmDialog.documentId) {
+      const updatedDocuments = documents.filter((doc) => doc.id !== confirmDialog.documentId);
       setDocuments(updatedDocuments);
       setFilteredDocuments(updatedDocuments);
-      
-      // Show success message
-      alert("Dokumen berhasil dihapus!");
-      console.log("Deleted document:", id);
+
+      showToast("Dokumen berhasil dihapus!", "success");
+      console.log("Deleted document:", confirmDialog.documentId);
     }
+
+    setConfirmDialog({ isOpen: false, documentId: null, documentName: "" });
+  };
+
+  const cancelDelete = () => {
+    setConfirmDialog({ isOpen: false, documentId: null, documentName: "" });
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Poppins']">
+   <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Dashboard" />
 
         <main className="flex-1 p-4 lg:p-8">
-          {/* Page Title - Hidden on mobile, shown on desktop */}
-          <h1 className="hidden lg:block text-3xl xl:text-4xl font-bold text-gray-800 mb-6 lg:mb-8">
-            Dashboard Dokumen
-          </h1>
+          {/* Page Title */}
+          <div className="mb-6 lg:mb-8 animate-[slideDown_0.6s_ease-out]">
+            <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
+              Dashboard Dokumen
+            </h1>
+            <p className="hidden lg:block text-gray-600 mt-2 font-medium">
+              Kelola dan organisir dokumen keuangan Anda
+            </p>
+          </div>
 
           {/* Filter Section */}
-          <div className="mb-6 lg:mb-8">
+          <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <FilterBar
               onSearch={handleSearch}
               onDateChange={handleDateFilter}
@@ -169,15 +254,67 @@ export default function Dashboard() {
           </div>
 
           {/* Document Table */}
-          <DocumentTable
-            documents={filteredDocuments}
-            totalDocuments={documents.length}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <div className="animate-[slideUp_0.6s_ease-out_0.2s_both]">
+            <DocumentTable
+              documents={filteredDocuments}
+              totalDocuments={documents.length}
+              onView={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
         </main>
       </div>
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title="Hapus Dokumen?"
+        message={`Apakah Anda yakin ingin menghapus "${confirmDialog.documentName}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        type="danger"
+      />
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

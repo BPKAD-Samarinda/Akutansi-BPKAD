@@ -10,19 +10,20 @@ export default function Sidebar() {
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
-    // Implementasi logout
     navigate("/login");
   };
 
   return (
-    <aside className="w-20 lg:w-[88px] bg-gradient-to-b from-orange-500 to-orange-600 flex flex-col items-center py-6 shadow-xl">
-      {/* LOGO / FOLDER ICON */}
-      <div className="mb-10 text-white text-3xl">
+    <aside className="fixed top-0 left-0 w-20 lg:w-[88px] h-screen 
+      bg-gradient-to-b from-orange-500 to-orange-600 
+      flex flex-col items-center py-6 shadow-xl z-50">
+      
+      {/* LOGO */}
+      <div className="mb-8 text-white text-3xl">
         <svg
           className="w-10 h-10"
           viewBox="0 0 24 24"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M3 8C3 6.89543 3.89543 6 5 6H9.58579C9.851 6 10.1054 6.10536 10.2929 6.29289L12.7071 8.70711C12.8946 8.89464 13.149 9 13.4142 9H19C20.1046 9 21 9.89543 21 11V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V8Z"
@@ -35,40 +36,31 @@ export default function Sidebar() {
       <nav className="flex flex-col gap-4 flex-1">
         <button
           onClick={() => navigate("/dashboarddokumen")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
-            isActive("/dashboarddokumen")
+          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${isActive("/dashboarddokumen")
               ? "bg-white/30 shadow-lg scale-105"
-              : "hover:bg-white/20"
-          }`}
-          title="Dashboard"
+              : "hover:bg-white/20"}`}
         >
-          <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
+          <img src={homeIcon} className="w-6 h-6" />
         </button>
 
         <button
           onClick={() => navigate("/upload")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${
-            isActive("/upload")
+          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${isActive("/upload")
               ? "bg-white/30 shadow-lg scale-105"
-              : "hover:bg-white/20"
-          }`}
-          title="Unggah Dokumen"
+              : "hover:bg-white/20"}`}
         >
-          <img src={documentIcon} className="w-6 h-6" alt="Upload" />
+          <img src={documentIcon} className="w-6 h-6" />
         </button>
       </nav>
 
       {/* LOGOUT */}
       <button
         onClick={handleLogout}
-        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center transition-all duration-200 group"
-        title="Logout"
+        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center"
       >
-        <img
-          src={logoutIcon}
-          className="w-6 h-6 group-hover:scale-110 transition-transform"
-          alt="Logout"
-        />
+        <img src={logoutIcon} className="w-6 h-6" />
       </button>
     </aside>
   );

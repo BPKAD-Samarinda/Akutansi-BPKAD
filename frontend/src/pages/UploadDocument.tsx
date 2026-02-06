@@ -2,7 +2,14 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
+import Toast from "../components/ui/Toast";
 import uploadIcon from "../assets/icons/upload.svg";
+
+interface ToastState {
+  show: boolean;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
+}
 
 export default function UploadDocument() {
   const navigate = useNavigate();
@@ -15,6 +22,12 @@ export default function UploadDocument() {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
+
+  const showToast = (message: string, type: ToastState["type"]) => {
+    setToast({ show: true, message, type });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,7 +38,6 @@ export default function UploadDocument() {
   };
 
   const handleFileSelect = (file: File) => {
-    // Validasi tipe file
     const allowedTypes = [
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -34,18 +46,18 @@ export default function UploadDocument() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      alert("Tipe file tidak didukung. Hanya PDF, DOCX, XLSX, dan PPTX yang diperbolehkan.");
+      showToast("Tipe file tidak didukung. Hanya PDF, DOCX, XLSX, dan PPTX yang diperbolehkan.", "error");
       return;
     }
 
-    // Validasi ukuran file (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      alert("Ukuran file terlalu besar. Maksimal 10MB.");
+      showToast("Ukuran file terlalu besar. Maksimal ukuran file adalah 10MB.", "error");
       return;
     }
 
     setSelectedFile(file);
+    showToast("File berhasil dipilih!", "success");
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,29 +91,37 @@ export default function UploadDocument() {
     fileInputRef.current?.click();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.date || !selectedFile) {
-      alert("Mohon lengkapi semua field!");
+      showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
       return;
     }
 
+    setIsUploading(true);
+
     // Simulasi upload
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     console.log("Form Data:", formData);
     console.log("Selected File:", selectedFile);
 
-    alert("Dokumen berhasil disimpan!");
+    setIsUploading(false);
+    showToast("Dokumen berhasil diunggah!", "success");
 
-    // Reset form
-    setFormData({ name: "", date: "" });
-    setSelectedFile(null);
-
-    // Navigate back to dashboard
-    navigate("/dashboarddokumen");
+    // Wait for toast to show then navigate
+    setTimeout(() => {
+      setFormData({ name: "", date: "" });
+      setSelectedFile(null);
+      navigate("/dashboarddokumen");
+    }, 1500);
   };
 
   const handleCancel = () => {
+    if (formData.name || formData.date || selectedFile) {
+      showToast("Pengunggahan dibatalkan", "info");
+    }
     navigate("/dashboarddokumen");
   };
 
@@ -110,33 +130,39 @@ export default function UploadDocument() {
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Poppins']">
+    <div className="min-h-screen flex bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Unggah Dokumen" />
 
         <main className="flex-1 p-4 lg:p-8">
           {/* Page Title */}
-          <h1 className="hidden lg:block text-3xl xl:text-4xl font-bold text-gray-800 mb-6 lg:mb-8">
-            Unggah Dokumen
-          </h1>
+          <div className="mb-6 lg:mb-8 animate-[slideDown_0.6s_ease-out]">
+            <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
+              Unggah Dokumen Baru
+            </h1>
+            <p className="hidden lg:block text-gray-600 mt-2 font-medium">
+              Tambahkan dokumen baru ke catatan keuangan Anda
+            </p>
+          </div>
 
           {/* Upload Form */}
-          <form onSubmit={handleSubmit}>
-            <div className="bg-white rounded-2xl shadow-sm p-6 lg:p-10">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
-                {/* LEFT SECTION - Informasi Dokumen */}
-                <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
+            <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                
+                {/* LEFT SECTION - Document Information */}
+                <div className="space-y-6 animate-[slideInLeft_0.6s_ease-out_0.2s_both]">
                   {/* Section Header */}
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-[bounce_0.6s_ease-in-out_0.3s_both]">
                       <svg
-                        className="w-6 h-6 text-orange-500"
+                        className="w-7 h-7 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -149,58 +175,64 @@ export default function UploadDocument() {
                         />
                       </svg>
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-700">
+                    <h2 className="text-xl font-bold text-gray-800">
                       Informasi Dokumen
                     </h2>
                   </div>
 
-                  {/* Nama Dokumen */}
-                  <div>
+                  {/* Document Name */}
+                  <div className="group">
                     <label
                       htmlFor="name"
-                      className="block text-sm font-semibold text-gray-700 mb-2"
+                      className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
                     >
                       Nama Dokumen
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Contoh: Dokumen Lampiran Tahun 2024"
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none transition"
-                      required
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Contoh: Laporan Keuangan Q1 2024"
+                        className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white"
+                        required
+                      />
+                    </div>
                   </div>
 
-                  {/* Tanggal */}
-                  <div>
+                  {/* Date */}
+                  <div className="group">
                     <label
                       htmlFor="date"
-                      className="block text-sm font-semibold text-gray-700 mb-2"
+                      className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
                     >
                       Tanggal
                     </label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none transition"
-                      required
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
+                      <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleInputChange}
+                        className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* RIGHT SECTION - Berkas Dokumen */}
-                <div className="space-y-6">
+                {/* RIGHT SECTION - File Upload */}
+                <div className="space-y-6 animate-[slideInRight_0.6s_ease-out_0.2s_both]">
                   {/* Section Header */}
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-[bounce_0.6s_ease-in-out_0.4s_both]">
                       <svg
-                        className="w-6 h-6 text-orange-500"
+                        className="w-7 h-7 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -213,7 +245,7 @@ export default function UploadDocument() {
                         />
                       </svg>
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-700">
+                    <h2 className="text-xl font-bold text-gray-800">
                       Berkas
                     </h2>
                   </div>
@@ -225,15 +257,17 @@ export default function UploadDocument() {
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     className={`
-                      border-2 border-dashed rounded-xl 
-                      min-h-[250px] lg:min-h-[300px]
+                      border-3 border-dashed rounded-2xl 
+                      min-h-[280px] lg:min-h-[320px]
                       flex flex-col items-center justify-center
-                      cursor-pointer transition-all
+                      cursor-pointer transition-all duration-500
+                      relative overflow-hidden
                       ${
                         isDragging
-                          ? "border-orange-400 bg-orange-50"
-                          : "border-gray-300 hover:border-orange-400 hover:bg-gray-50"
+                          ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                          : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
                       }
+                      ${selectedFile ? "border-green-400 bg-gradient-to-br from-green-50 to-transparent" : ""}
                     `}
                   >
                     <input
@@ -245,10 +279,10 @@ export default function UploadDocument() {
                     />
 
                     {selectedFile ? (
-                      <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="text-center p-8 animate-[scaleIn_0.4s_ease-out]">
+                        <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-green-500/30 animate-[bounce_0.6s_ease-in-out]">
                           <svg
-                            className="w-8 h-8 text-green-500"
+                            className="w-10 h-10 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -256,15 +290,15 @@ export default function UploadDocument() {
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
-                              strokeWidth={2}
+                              strokeWidth={2.5}
                               d="M5 13l4 4L19 7"
                             />
                           </svg>
                         </div>
-                        <p className="text-sm font-semibold text-gray-700 mb-1">
+                        <p className="text-base font-bold text-gray-800 mb-2">
                           {selectedFile.name}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm text-gray-600 mb-5">
                           {formatFileSize(selectedFile.size)}
                         </p>
                         <button
@@ -272,53 +306,182 @@ export default function UploadDocument() {
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedFile(null);
+                            showToast("File dihapus", "info");
                           }}
-                          className="mt-4 text-xs text-red-500 hover:text-red-700 underline"
+                          className="text-sm text-red-600 hover:text-red-700 font-semibold underline transition-colors"
                         >
-                          Hapus file
+                          Hapus File
                         </button>
                       </div>
                     ) : (
-                      <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="text-center p-8">
+                        <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform duration-300">
                           <img
                             src={uploadIcon}
-                            className="w-8 h-8"
+                            className="w-10 h-10 brightness-0 invert"
                             alt="Upload"
                           />
                         </div>
-                        <p className="text-sm font-semibold text-gray-700 mb-2">
-                          Klik untuk mengunggah atau drag & drop
+                        <p className="text-base font-bold text-gray-800 mb-2">
+                          Klik untuk mengunggah atau seret & lepas
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm text-gray-600">
                           PDF, DOCX, XLSX, atau PPTX (Maks. 10MB)
                         </p>
                       </div>
                     )}
+
+                    {/* Animated Background Elements */}
+                    <div className="absolute inset-0 pointer-events-none opacity-20">
+                      <div className="absolute top-0 left-0 w-32 h-32 bg-orange-400 rounded-full filter blur-3xl animate-pulse"></div>
+                      <div className="absolute bottom-0 right-0 w-32 h-32 bg-orange-600 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-end mt-8 lg:mt-10">
+              <div className="flex flex-col sm:flex-row gap-4 justify-end mt-10 lg:mt-12 animate-[slideUp_0.6s_ease-out_0.3s_both]">
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-all order-2 sm:order-1"
+                  disabled={isUploading}
+                  className="px-8 py-3.5 border-2 border-gray-300 rounded-xl text-gray-700 font-bold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
                 >
-                  Batalkan
+                  Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium transition-all shadow-md hover:shadow-lg active:scale-95 order-1 sm:order-2"
+                  disabled={isUploading}
+                  className="relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group"
                 >
-                  Simpan Dokumen
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="relative flex items-center justify-center gap-2">
+                    {isUploading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        <span>Mengunggah...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Simpan Dokumen</span>
+                        <svg
+                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </>
+                    )}
+                  </span>
                 </button>
               </div>
             </div>
           </form>
         </main>
       </div>
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes bounce {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
