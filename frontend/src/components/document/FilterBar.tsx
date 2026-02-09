@@ -4,19 +4,20 @@ import refreshIcon from "../../assets/icons/refresh.svg";
 
 interface FilterBarProps {
   onSearch?: (query: string) => void;
-  onDateChange?: (date: string) => void;
+  onDateRangeChange?: (startDate: string, endDate: string) => void;
   onCategoryChange?: (category: string) => void;
   onRefresh?: () => void;
 }
 
 export default function FilterBar({
   onSearch,
-  onDateChange,
+  onDateRangeChange,
   onCategoryChange,
   onRefresh,
 }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [date, setDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [category, setCategory] = useState("");
 
   const handleSearchChange = (value: string) => {
@@ -24,9 +25,14 @@ export default function FilterBar({
     onSearch?.(value);
   };
 
-  const handleDateChange = (value: string) => {
-    setDate(value);
-    onDateChange?.(value);
+  const handleStartDateChange = (value: string) => {
+    setStartDate(value);
+    onDateRangeChange?.(value, endDate);
+  };
+
+  const handleEndDateChange = (value: string) => {
+    setEndDate(value);
+    onDateRangeChange?.(startDate, value);
   };
 
   const handleCategoryChange = (value: string) => {
@@ -36,16 +42,17 @@ export default function FilterBar({
 
   const handleRefresh = () => {
     setSearchQuery("");
-    setDate("");
+    setStartDate("");
+    setEndDate("");
     setCategory("");
     onRefresh?.();
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-        {/* PENCARIAN – DIPANJANGKAN */}
-        <div className="sm:col-span-2 lg:col-span-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        {/* PENCARIAN */}
+        <div>
           <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
             Pencarian
           </label>
@@ -65,20 +72,33 @@ export default function FilterBar({
           </div>
         </div>
 
-        {/* TANGGAL */}
+        {/* DARI TANGGAL */}
         <div>
           <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
-            Tanggal
+            Dari Tanggal
           </label>
           <input
             type="date"
-            value={date}
-            onChange={(e) => handleDateChange(e.target.value)}
+            value={startDate}
+            onChange={(e) => handleStartDateChange(e.target.value)}
             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition"
           />
         </div>
 
-        {/* KATEGORI */}
+        {/* SAMPAI TANGGAL */}
+        <div>
+          <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
+            Sampai Tanggal
+          </label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => handleEndDateChange(e.target.value)}
+            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition"
+          />
+        </div>
+
+        {/* KATEGORI - UPDATED: Lampiran & Keuangan */}
         <div>
           <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
             Kategori
@@ -90,10 +110,8 @@ export default function FilterBar({
               className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 focus:border-orange-400 focus:outline-none transition appearance-none cursor-pointer"
             >
               <option value="">Semua Kategori</option>
-              <option value="pdf">PDF</option>
-              <option value="xlsx">XLSX</option>
-              <option value="docx">DOCX</option>
-              <option value="pptx">PPTX</option>
+              <option value="Lampiran">Lampiran</option>
+              <option value="Keuangan">Keuangan</option>
             </select>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg
@@ -128,6 +146,16 @@ export default function FilterBar({
           </button>
         </div>
       </div>
+
+      {/* Active Filter Indicator */}
+      {(searchQuery || startDate || endDate || category) && (
+        <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-lg border border-orange-200 text-xs lg:text-sm">
+          <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+          </svg>
+          <span className="font-semibold">Filter Aktif</span>
+        </div>
+      )}
     </div>
   );
 }

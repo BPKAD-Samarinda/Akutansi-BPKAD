@@ -18,6 +18,7 @@ export default function UploadDocument() {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
+    category: "" as "Lampiran" | "Keuangan" | "",
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -29,7 +30,7 @@ export default function UploadDocument() {
     setToast({ show: true, message, type });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -57,6 +58,14 @@ export default function UploadDocument() {
     }
 
     setSelectedFile(file);
+    
+    // AUTO-FILL: Set nama dokumen dari nama file (tanpa ekstensi)
+    const fileName = file.name.replace(/\.[^/.]+$/, "");
+    setFormData((prev) => ({
+      ...prev,
+      name: fileName,
+    }));
+    
     showToast("File berhasil dipilih!", "success");
   };
 
@@ -94,7 +103,7 @@ export default function UploadDocument() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.date || !selectedFile) {
+    if (!formData.name || !formData.date || !formData.category || !selectedFile) {
       showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
       return;
     }
@@ -112,14 +121,14 @@ export default function UploadDocument() {
 
     // Wait for toast to show then navigate
     setTimeout(() => {
-      setFormData({ name: "", date: "" });
+      setFormData({ name: "", date: "", category: "" });
       setSelectedFile(null);
       navigate("/dashboarddokumen");
     }, 1500);
   };
 
   const handleCancel = () => {
-    if (formData.name || formData.date || selectedFile) {
+    if (formData.name || formData.date || formData.category || selectedFile) {
       showToast("Pengunggahan dibatalkan", "info");
     }
     navigate("/dashboarddokumen");
@@ -181,47 +190,80 @@ export default function UploadDocument() {
                   </div>
 
                   {/* Document Name */}
-                  <div className="group">
+                  <div>
                     <label
                       htmlFor="name"
                       className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
                     >
                       Nama Dokumen
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Contoh: Laporan Keuangan Q1 2024"
-                        className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white"
-                        required
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Nama akan otomatis terisi dari file..."
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+                      required
+                    />
                   </div>
 
                   {/* Date */}
-                  <div className="group">
+                  <div>
                     <label
                       htmlFor="date"
                       className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
                     >
                       Tanggal
                     </label>
+                    <input
+                      type="date"
+                      id="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+                      required
+                    />
+                  </div>
+
+                  {/* Category - DROPDOWN */}
+                  <div>
+                    <label
+                      htmlFor="category"
+                      className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide"
+                    >
+                      Kategori
+                    </label>
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-                      <input
-                        type="date"
-                        id="date"
-                        name="date"
-                        value={formData.date}
+                      <select
+                        id="category"
+                        name="category"
+                        value={formData.category}
                         onChange={handleInputChange}
-                        className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white appearance-none cursor-pointer"
                         required
-                      />
+                      >
+                        <option value="">Pilih Kategori</option>
+                        <option value="Lampiran">Lampiran</option>
+                        <option value="Keuangan">Keuangan</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -306,6 +348,7 @@ export default function UploadDocument() {
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedFile(null);
+                            setFormData((prev) => ({ ...prev, name: "" }));
                             showToast("File dihapus", "info");
                           }}
                           className="text-sm text-red-600 hover:text-red-700 font-semibold underline transition-colors"

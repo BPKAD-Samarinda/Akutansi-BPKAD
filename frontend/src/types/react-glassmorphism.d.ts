@@ -1,7 +1,7 @@
 declare module "react-glassmorphism" {
-  import { ReactNode } from "react";
+  import { ReactNode, FC } from "react";
 
-  const Glassmorphism: React.FC<{
+  const Glassmorphism: FC<{
     blur?: number;
     transparency?: number;
     color?: string;

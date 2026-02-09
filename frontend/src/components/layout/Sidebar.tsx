@@ -32,7 +32,10 @@ export default function Sidebar() {
         </svg>
       </div>
 
-      {/* MENU */}
+      {/* SEPARATOR LINE */}
+      <div className="w-12 h-px bg-white/30 mb-6"></div>
+
+      {/* MENU NAVIGATION */}
       <nav className="flex flex-col gap-4 flex-1">
         <button
           onClick={() => navigate("/dashboarddokumen")}
@@ -40,8 +43,9 @@ export default function Sidebar() {
             ${isActive("/dashboarddokumen")
               ? "bg-white/30 shadow-lg scale-105"
               : "hover:bg-white/20"}`}
+          title="Dashboard"
         >
-          <img src={homeIcon} className="w-6 h-6" />
+          <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
         </button>
 
         <button
@@ -50,17 +54,22 @@ export default function Sidebar() {
             ${isActive("/upload")
               ? "bg-white/30 shadow-lg scale-105"
               : "hover:bg-white/20"}`}
+          title="Upload Dokumen"
         >
-          <img src={documentIcon} className="w-6 h-6" />
+          <img src={documentIcon} className="w-6 h-6" alt="Upload" />
         </button>
       </nav>
 
-      {/* LOGOUT */}
+      {/* SEPARATOR LINE BEFORE LOGOUT */}
+      <div className="w-12 h-px bg-white/30 mb-6"></div>
+
+      {/* LOGOUT - SEPARATED */}
       <button
         onClick={handleLogout}
-        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center"
+        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center transition-all group"
+        title="Keluar"
       >
-        <img src={logoutIcon} className="w-6 h-6" />
+        <img src={logoutIcon} className="w-6 h-6 group-hover:scale-110 transition-transform" alt="Logout" />
       </button>
     </aside>
   );

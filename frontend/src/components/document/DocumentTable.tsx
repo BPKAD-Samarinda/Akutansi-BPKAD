@@ -7,34 +7,57 @@ import uploadIcon from "../../assets/icons/upload.svg";
 interface DocumentTableProps {
   documents: Document[];
   totalDocuments: number;
+  selectedDocuments: Set<number | string>;
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
+  onSelectDocument: (id: number | string) => void;
+  onSelectAll: (checked: boolean) => void;
 }
 
-type SortOrder = "newest" | "oldest";
+type SortOrder = "newest" | "oldest" | null;
 
 export default function DocumentTable({
   documents,
   totalDocuments,
+  selectedDocuments,
   onView,
   onEdit,
   onDelete,
+  onSelectDocument,
+  onSelectAll,
 }: DocumentTableProps) {
   const navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Sorting logic
+  // Parse tanggal Indonesia
+  const parseIndonesianDate = (dateStr: string): Date => {
+    const months: { [key: string]: number } = {
+      Januari: 0, Februari: 1, Maret: 2, April: 3, Mei: 4, Juni: 5,
+      Juli: 6, Agustus: 7, September: 8, Oktober: 9, November: 10, Desember: 11
+    };
+    
+    const parts = dateStr.split(" ");
+    const day = parseInt(parts[0]);
+    const month = months[parts[1]];
+    const year = parseInt(parts[2]);
+    
+    return new Date(year, month, day);
+  };
+
+  // Sorting logic - FIXED
   const sortedDocuments = [...documents].sort((a, b) => {
-    const dateA = new Date(a.date.split(" ").reverse().join("-"));
-    const dateB = new Date(b.date.split(" ").reverse().join("-"));
+    if (!sortOrder) return 0;
+    
+    const dateA = parseIndonesianDate(a.date);
+    const dateB = parseIndonesianDate(b.date);
 
     if (sortOrder === "newest") {
-      return dateB.getTime() - dateA.getTime();
+      return dateB.getTime() - dateA.getTime(); // Terbaru di atas
     } else {
-      return dateA.getTime() - dateB.getTime();
+      return dateA.getTime() - dateB.getTime(); // Terlama di atas
     }
   });
 
@@ -54,13 +77,21 @@ export default function DocumentTable({
     navigate("/upload");
   };
 
+  const handleSortClick = (order: "newest" | "oldest") => {
+    setSortOrder(order);
+  };
+
+  // Check if all current page documents are selected
+  const allSelected = currentDocuments.length > 0 && currentDocuments.every(doc => selectedDocuments.has(doc.id));
+  const someSelected = currentDocuments.some(doc => selectedDocuments.has(doc.id)) && !allSelected;
+
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
       {/* Header table */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div className="flex gap-2">
           <button
-            onClick={() => setSortOrder("newest")}
+            onClick={() => handleSortClick("newest")}
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "newest"
                 ? "bg-orange-100 text-orange-600 shadow-sm"
@@ -70,7 +101,7 @@ export default function DocumentTable({
             TERBARU
           </button>
           <button
-            onClick={() => setSortOrder("oldest")}
+            onClick={() => handleSortClick("oldest")}
             className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
               sortOrder === "oldest"
                 ? "bg-orange-100 text-orange-600 shadow-sm"
@@ -95,10 +126,24 @@ export default function DocumentTable({
         <table className="w-full text-sm">
           <thead className="text-gray-500 border-b border-gray-200">
             <tr>
+              <th className="text-center py-4 px-2 font-semibold w-12">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={input => {
+                    if (input) {
+                      input.indeterminate = someSelected;
+                    }
+                  }}
+                  onChange={(e) => onSelectAll(e.target.checked)}
+                  className="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer"
+                />
+              </th>
               <th className="text-left py-4 px-2 font-semibold">Nama</th>
               <th className="text-center py-4 px-2 font-semibold">Format</th>
               <th className="text-center py-4 px-2 font-semibold">Size</th>
               <th className="text-center py-4 px-2 font-semibold">Tanggal</th>
+              <th className="text-center py-4 px-2 font-semibold">Kategori</th>
               <th className="text-center py-4 px-2 font-semibold">Aksi</th>
             </tr>
           </thead>
@@ -109,6 +154,8 @@ export default function DocumentTable({
                 <DocumentRow
                   key={doc.id}
                   doc={doc}
+                  isSelected={selectedDocuments.has(doc.id)}
+                  onSelect={onSelectDocument}
                   onView={onView}
                   onEdit={onEdit}
                   onDelete={onDelete}
@@ -116,7 +163,7 @@ export default function DocumentTable({
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-gray-400">
+                <td colSpan={7} className="py-12 text-center text-gray-400">
                   Tidak ada dokumen ditemukan
                 </td>
               </tr>
@@ -131,25 +178,48 @@ export default function DocumentTable({
           currentDocuments.map((doc) => (
             <div
               key={doc.id}
-              className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100"
+              className={`bg-gray-50 rounded-xl p-4 space-y-3 border ${
+                selectedDocuments.has(doc.id) ? "border-orange-300 bg-orange-50" : "border-gray-100"
+              }`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800 text-sm mb-2">
-                    {doc.name}
-                  </h3>
-                  <div className="flex items-center gap-3 text-xs text-gray-600">
-                    <span
-                      className={`px-2 py-1 ${
-                        doc.format.toLowerCase() === "pdf"
-                          ? "bg-red-100 text-red-600"
-                          : "bg-gray-200 text-gray-600"
-                      } rounded-full font-semibold`}
-                    >
-                      {doc.format}
-                    </span>
-                    <span>{doc.size}</span>
-                    <span>{doc.date}</span>
+                <div className="flex items-start gap-3 flex-1">
+                  <input
+                    type="checkbox"
+                    checked={selectedDocuments.has(doc.id)}
+                    onChange={() => onSelectDocument(doc.id)}
+                    className="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 cursor-pointer mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-800 text-sm mb-2">
+                      {doc.name}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs text-gray-600 flex-wrap">
+                      <span
+                        className={`px-2 py-1 ${
+                          doc.format.toLowerCase() === "pdf"
+                            ? "bg-red-100 text-red-600"
+                            : doc.format.toLowerCase() === "xlsx"
+                            ? "bg-green-100 text-green-600"
+                            : doc.format.toLowerCase() === "docx"
+                            ? "bg-blue-100 text-blue-600"
+                            : "bg-orange-100 text-orange-600"
+                        } rounded-full font-semibold`}
+                      >
+                        {doc.format}
+                      </span>
+                      <span>{doc.size}</span>
+                      <span>{doc.date}</span>
+                      {doc.category && (
+                        <span className={`px-2 py-1 rounded-full font-semibold ${
+                          doc.category === "Keuangan"
+                            ? "bg-purple-100 text-purple-600"
+                            : "bg-amber-100 text-amber-600"
+                        }`}>
+                          {doc.category}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

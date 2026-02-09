@@ -4,4 +4,6 @@ export interface Document {
   format: string;
   size: string;
   date: string;
+  file?: File | null;
+  category?: "Lampiran" | "Keuangan";
 }
