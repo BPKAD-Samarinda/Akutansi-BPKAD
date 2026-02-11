@@ -1,157 +1,47 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import Toast from "../components/ui/Toast";
 import uploadIcon from "../assets/icons/upload.svg";
-
-interface ToastState {
-  show: boolean;
-  message: string;
-  type: "success" | "error" | "info" | "warning";
-}
+import { ToastState } from "../types";
+import { useFileUpload } from "../hooks/useFileUpload";
+import { formatFileSize } from "../utils/fileUtils";
 
 export default function UploadDocument() {
-  const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    date: "",
-    category: "" as "Lampiran" | "Keuangan" | "",
-  });
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
 
   const showToast = (message: string, type: ToastState["type"]) => {
     setToast({ show: true, message, type });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleFileSelect = (file: File) => {
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-      showToast("Tipe file tidak didukung. Hanya PDF, DOCX, XLSX, dan PPTX yang diperbolehkan.", "error");
-      return;
-    }
-
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      showToast("Ukuran file terlalu besar. Maksimal ukuran file adalah 10MB.", "error");
-      return;
-    }
-
-    setSelectedFile(file);
-    
-    // AUTO-FILL: Set nama dokumen dari nama file (tanpa ekstensi)
-    const fileName = file.name.replace(/\.[^/.]+$/, "");
-    setFormData((prev) => ({
-      ...prev,
-      name: fileName,
-    }));
-    
-    showToast("File berhasil dipilih!", "success");
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-  };
-
-  const handleClickUploadArea = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.name || !formData.date || !formData.category || !selectedFile) {
-      showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
-      return;
-    }
-
-    setIsUploading(true);
-
-    // Simulasi upload
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    console.log("Form Data:", formData);
-    console.log("Selected File:", selectedFile);
-
-    setIsUploading(false);
-    showToast("Dokumen berhasil diunggah!", "success");
-
-    // Wait for toast to show then navigate
-    setTimeout(() => {
-      setFormData({ name: "", date: "", category: "" });
-      setSelectedFile(null);
-      navigate("/dashboarddokumen");
-    }, 1500);
-  };
-
-  const handleCancel = () => {
-    if (formData.name || formData.date || formData.category || selectedFile) {
-      showToast("Pengunggahan dibatalkan", "info");
-    }
-    navigate("/dashboarddokumen");
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-  };
+  const {
+    fileInputRef,
+    formData,
+    setFormData,
+    selectedFile,
+    setSelectedFile,
+    isDragging,
+    isUploading,
+    handleInputChange,
+    handleFileInputChange,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleSubmit,
+    handleCancel,
+    handleClickUploadArea
+  } = useFileUpload(showToast);
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-fadeIn">
         <Header title="Unggah Dokumen" />
 
         <main className="flex-1 p-4 lg:p-8">
           {/* Page Title */}
-          <div className="mb-6 lg:mb-8 animate-[slideDown_0.6s_ease-out]">
+          <div className="mb-6 lg:mb-8 animate-slideDown">
             <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
               Unggah Dokumen Baru
             </h1>
@@ -161,15 +51,15 @@ export default function UploadDocument() {
           </div>
 
           {/* Upload Form */}
-          <form onSubmit={handleSubmit} className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
+          <form onSubmit={handleSubmit} className="animate-slideUp animate-delay-100">
             <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                
+
                 {/* LEFT SECTION - Document Information */}
-                <div className="space-y-6 animate-[slideInLeft_0.6s_ease-out_0.2s_both]">
+                <div className="space-y-6 animate-slideInLeft animate-delay-200">
                   {/* Section Header */}
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-[bounce_0.6s_ease-in-out_0.3s_both]">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-300">
                       <svg
                         className="w-7 h-7 text-white"
                         fill="none"
@@ -269,10 +159,10 @@ export default function UploadDocument() {
                 </div>
 
                 {/* RIGHT SECTION - File Upload */}
-                <div className="space-y-6 animate-[slideInRight_0.6s_ease-out_0.2s_both]">
+                <div className="space-y-6 animate-slideInRight animate-delay-200">
                   {/* Section Header */}
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-[bounce_0.6s_ease-in-out_0.4s_both]">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-400">
                       <svg
                         className="w-7 h-7 text-white"
                         fill="none"
@@ -304,10 +194,9 @@ export default function UploadDocument() {
                       flex flex-col items-center justify-center
                       cursor-pointer transition-all duration-500
                       relative overflow-hidden
-                      ${
-                        isDragging
-                          ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
-                          : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
+                      ${isDragging
+                        ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                        : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
                       }
                       ${selectedFile ? "border-green-400 bg-gradient-to-br from-green-50 to-transparent" : ""}
                     `}
@@ -321,8 +210,8 @@ export default function UploadDocument() {
                     />
 
                     {selectedFile ? (
-                      <div className="text-center p-8 animate-[scaleIn_0.4s_ease-out]">
-                        <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-green-500/30 animate-[bounce_0.6s_ease-in-out]">
+                      <div className="text-center p-8 animate-scaleIn">
+                        <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-green-500/30 animate-bounce">
                           <svg
                             className="w-10 h-10 text-white"
                             fill="none"
@@ -384,7 +273,7 @@ export default function UploadDocument() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-end mt-10 lg:mt-12 animate-[slideUp_0.6s_ease-out_0.3s_both]">
+              <div className="flex flex-col sm:flex-row gap-4 justify-end mt-10 lg:mt-12 animate-slideUp animate-delay-300">
                 <button
                   type="button"
                   onClick={handleCancel}
@@ -454,77 +343,6 @@ export default function UploadDocument() {
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes bounce {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-        }
-      `}</style>
     </div>
   );
 }

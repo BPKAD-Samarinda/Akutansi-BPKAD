@@ -7,3 +7,9 @@ export interface Document {
   file?: File | null;
   category?: "Lampiran" | "Keuangan";
 }
+
+export interface ToastState {
+  show: boolean;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
+}
