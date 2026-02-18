@@ -1,0 +1,49 @@
+.auth-hero-ring-primary {
+  animation: spin 30s linear infinite;
+}
+
+.auth-hero-ring-secondary {
+  animation: spin 25s linear infinite reverse;
+}
+
+.auth-hero-particle-1 {
+  left: 12%;
+  top: 78%;
+  animation-delay: 0s;
+  animation-duration: 3.6s;
+}
+
+.auth-hero-particle-2 {
+  left: 26%;
+  top: 62%;
+  animation-delay: 0.5s;
+  animation-duration: 4.2s;
+}
+
+.auth-hero-particle-3 {
+  left: 43%;
+  top: 84%;
+  animation-delay: 1s;
+  animation-duration: 3.8s;
+}
+
+.auth-hero-particle-4 {
+  left: 58%;
+  top: 68%;
+  animation-delay: 1.5s;
+  animation-duration: 4.5s;
+}
+
+.auth-hero-particle-5 {
+  left: 74%;
+  top: 80%;
+  animation-delay: 2s;
+  animation-duration: 3.9s;
+}
+
+.auth-hero-particle-6 {
+  left: 88%;
+  top: 64%;
+  animation-delay: 2.5s;
+  animation-duration: 4.4s;
+}

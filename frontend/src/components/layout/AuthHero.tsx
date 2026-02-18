@@ -1,16 +1,13 @@
 import buildingImage from "../../assets/images/logo-bpkad.png";
+import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
     <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-screen order-1 lg:order-2 overflow-hidden">
-      <div
-        className="absolute inset-0 bg-no-repeat animate-zoomIn"
-        style={{
-          backgroundImage: `url(${buildingImage})`,
-          backgroundSize: "100% auto",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "100% 90%",
-        }}
+      <img
+        src={buildingImage}
+        alt="Gedung BPKAD"
+        className="absolute inset-0 w-full h-full object-contain object-[100%_90%] animate-zoomIn"
       />
 
       {/* Gradient Overlay with Animation */}
@@ -25,14 +22,8 @@ export default function AuthHero() {
       />
       {/* Animated Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[650px] lg:h-[650px] border-[3px] border-white/20 rotate-45 rounded-[60px] animate-spin"
-          style={{ animationDuration: "30s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] lg:w-[550px] lg:h-[550px] border-[2px] border-white/10 rotate-45 rounded-[50px] animate-spin"
-          style={{ animationDuration: "25s", animationDirection: "reverse" }}
-        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[650px] lg:h-[650px] border-[3px] border-white/20 rotate-45 rounded-[60px] auth-hero-ring-primary" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] lg:w-[550px] lg:h-[550px] border-[2px] border-white/10 rotate-45 rounded-[50px] auth-hero-ring-secondary" />
       </div>
 
       {/* Info Card */}
@@ -73,18 +64,12 @@ export default function AuthHero() {
 
       {/* Floating Particles Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/30 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          />
-        ))}
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-1" />
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-2" />
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-3" />
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-4" />
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-5" />
+        <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-6" />
       </div>
     </div>
   );

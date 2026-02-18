@@ -212,6 +212,7 @@ export default function UploadDocument() {
                       onChange={handleFileInputChange}
                       className="hidden"
                       accept=".pdf,.docx,.xlsx,.pptx"
+                      title="File Input"
                     />
 
                     {selectedFile ? (
