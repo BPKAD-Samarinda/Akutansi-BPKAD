@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Document } from "../../types";
 
 interface EditModalProps {
@@ -8,6 +8,29 @@ interface EditModalProps {
   onSave: (id: number | string, updatedData: Partial<Document>) => void;
 }
 
+const convertToISODate = (dateStr: string): string => {
+  const months: { [key: string]: string } = {
+    Januari: "01",
+    Februari: "02",
+    Maret: "03",
+    April: "04",
+    Mei: "05",
+    Juni: "06",
+    Juli: "07",
+    Agustus: "08",
+    September: "09",
+    Oktober: "10",
+    November: "11",
+    Desember: "12",
+  };
+
+  const parts = dateStr.split(" ");
+  const day = parts[0].padStart(2, "0");
+  const month = months[parts[1]];
+  const year = parts[2];
+  return `${year}-${month}-${day}`;
+};
+
 export default function EditModal({
   isOpen,
   document,
@@ -15,43 +38,10 @@ export default function EditModal({
   onSave,
 }: EditModalProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    date: "",
-    category: "" as "Lampiran" | "Keuangan" | "",
+    name: document?.name || "",
+    date: document ? convertToISODate(document.date) : "",
+    category: (document?.category || "") as "Lampiran" | "Keuangan" | "",
   });
-
-  useEffect(() => {
-    if (document) {
-      // Convert date from "DD Bulan YYYY" to "YYYY-MM-DD"
-      const dateStr = document.date;
-      const months: { [key: string]: string } = {
-        Januari: "01",
-        Februari: "02",
-        Maret: "03",
-        April: "04",
-        Mei: "05",
-        Juni: "06",
-        Juli: "07",
-        Agustus: "08",
-        September: "09",
-        Oktober: "10",
-        November: "11",
-        Desember: "12",
-      };
-
-      const parts = dateStr.split(" ");
-      const day = parts[0].padStart(2, "0");
-      const month = months[parts[1]];
-      const year = parts[2];
-      const formattedDate = `${year}-${month}-${day}`;
-
-      setFormData({
-        name: document.name,
-        date: formattedDate,
-        category: document.category || "",
-      });
-    }
-  }, [document]);
 
   if (!isOpen || !document) return null;
 
