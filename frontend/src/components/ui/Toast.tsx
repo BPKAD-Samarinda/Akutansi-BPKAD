@@ -92,13 +92,11 @@ export default function Toast({
   };
 
   return (
-    <div className="fixed top-6 right-6 z-[9999] animate-[slideInRight_0.4s_ease-out]">
+    <div className="fixed top-6 right-6 z-[9999] animate-slideInRightFast">
       <div
         className={`${styles[type]} rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 min-w-[320px] max-w-md backdrop-blur-sm border border-white/20 hover:scale-105 transition-transform duration-300`}
       >
-        <div className="flex-shrink-0 animate-[bounce_0.6s_ease-in-out]">
-          {icons[type]}
-        </div>
+        <div className="flex-shrink-0 animate-bounceOnce">{icons[type]}</div>
         <p className="flex-1 font-semibold text-sm leading-relaxed">
           {message}
         </p>
@@ -123,42 +121,8 @@ export default function Toast({
         </button>
 
         {/* Progress Bar */}
-        <div
-          className="absolute bottom-0 left-0 h-1 bg-white/30 rounded-b-2xl animate-[shrink_3s_linear]"
-          style={{ width: "100%" }}
-        ></div>
+        <div className="absolute bottom-0 left-0 h-1 w-full bg-white/30 rounded-b-2xl animate-shrink"></div>
       </div>
-
-      <style>{`
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(100px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes shrink {
-          from {
-            width: 100%;
-          }
-          to {
-            width: 0%;
-          }
-        }
-
-        @keyframes bounce {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.2);
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function ConfirmDialog({
   const theme = colors[type];
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease-out]">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fadeInFast">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -53,10 +53,10 @@ export default function ConfirmDialog({
       ></div>
 
       {/* Dialog */}
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-[scaleIn_0.3s_ease-out]">
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scaleInFast">
         {/* Icon */}
         <div
-          className={`w-16 h-16 ${theme.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6 animate-[bounce_0.6s_ease-in-out]`}
+          className={`w-16 h-16 ${theme.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6 animate-bounceOnce`}
         >
           <svg
             className={`w-8 h-8 ${theme.icon}`}
@@ -117,37 +117,6 @@ export default function ConfirmDialog({
           </button>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes bounce {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -68,6 +68,26 @@ body,
   .animate-gradient {
     animation: gradient 3s ease infinite;
   }
+
+  .animate-fadeInFast {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .animate-scaleInFast {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+
+  .animate-slideInRightFast {
+    animation: slideInRightFast 0.4s ease-out forwards;
+  }
+
+  .animate-bounceOnce {
+    animation: bounce 0.6s ease-in-out;
+  }
+
+  .animate-shrink {
+    animation: shrink 3s linear;
+  }
 }
 
 @keyframes fadeIn {
@@ -120,6 +140,18 @@ body,
   from {
     opacity: 0;
     transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRightFast {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
   }
 
   to {
@@ -196,5 +228,15 @@ body,
 
   to {
     transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
   }
 }
