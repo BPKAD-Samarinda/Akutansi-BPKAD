@@ -25,17 +25,20 @@ export default function ConfirmDialog({
     danger: {
       icon: "text-red-600",
       iconBg: "bg-red-100",
-      button: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+      button:
+        "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
     },
     warning: {
       icon: "text-yellow-600",
       iconBg: "bg-yellow-100",
-      button: "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700",
+      button:
+        "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700",
     },
     info: {
       icon: "text-blue-600",
       iconBg: "bg-blue-100",
-      button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
+      button:
+        "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
     },
   };
 
@@ -52,7 +55,9 @@ export default function ConfirmDialog({
       {/* Dialog */}
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-[scaleIn_0.3s_ease-out]">
         {/* Icon */}
-        <div className={`w-16 h-16 ${theme.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6 animate-[bounce_0.6s_ease-in-out]`}>
+        <div
+          className={`w-16 h-16 ${theme.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6 animate-[bounce_0.6s_ease-in-out]`}
+        >
           <svg
             className={`w-8 h-8 ${theme.icon}`}
             fill="none"

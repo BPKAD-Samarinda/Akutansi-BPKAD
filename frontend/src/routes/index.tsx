@@ -8,12 +8,7 @@ export default function AppRoutes() {
   const location = useLocation();
 
   // Debug logging
-  useEffect(() => {
-    console.log("=== ROUTING DEBUG ===");
-    console.log("Current pathname:", location.pathname);
-    console.log("Full URL:", window.location.href);
-    console.log("====================");
-  }, [location]);
+  useEffect(() => {}, [location]);
 
   return (
     <Routes>

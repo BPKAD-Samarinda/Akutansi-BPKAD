@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { parseIndonesianDate } from "../utils/dateUtils";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import FilterBar from "../components/document/FilterBar";
@@ -6,10 +7,7 @@ import DocumentTable from "../components/document/DocumentTable";
 import EditModal from "../components/document/EditModal";
 import Toast from "../components/ui/Toast";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
-<<<<<<< HEAD
 import { getDocuments, Document } from "../services/api"; // <-- DIUBAH
-
-// Sample data DIHAPUS
 
 interface ToastState {
   show: boolean;
@@ -21,16 +19,15 @@ export default function Dashboard() {
   const [documents, setDocuments] = useState<Document[]>([]); // <-- DIUBAH: Mulai dengan array kosong
   const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]); // <-- DIUBAH: Mulai dengan array kosong
   const [loading, setLoading] = useState<boolean>(true); // <-- BARU: State untuk loading
-  
-=======
-import { Document, ToastState } from "../types";
-import { initialDocuments } from "../data/mockDocuments";
-import { useDocumentFilters } from "../hooks/useDocumentFilters";
 
-export default function Dashboard() {
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
-  const [selectedDocuments, setSelectedDocuments] = useState<Set<number | string>>(new Set());
-  const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
+  const [selectedDocuments, setSelectedDocuments] = useState<
+    Set<number | string>
+  >(new Set());
+  const [toast, setToast] = useState<ToastState>({
+    show: false,
+    message: "",
+    type: "info",
+  });
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
@@ -56,12 +53,21 @@ export default function Dashboard() {
     setToast({ show: true, message, type });
   };
 
-<<<<<<< HEAD
   // Fungsi parseIndonesianDate dan applyFilters tidak diubah, tetap di sini
   const parseIndonesianDate = (dateStr: string): Date => {
     const months: { [key: string]: number } = {
-      Januari: 0, Februari: 1, Maret: 2, April: 3, Mei: 4, Juni: 5,
-      Juli: 6, Agustus: 7, September: 8, Oktober: 9, November: 10, Desember: 11
+      Januari: 0,
+      Februari: 1,
+      Maret: 2,
+      April: 3,
+      Mei: 4,
+      Juni: 5,
+      Juli: 6,
+      Agustus: 7,
+      September: 8,
+      Oktober: 9,
+      November: 10,
+      Desember: 11,
     };
     const parts = dateStr.split(" ");
     if (parts.length < 3) return new Date(); // Handle invalid date format
@@ -76,12 +82,12 @@ export default function Dashboard() {
     searchQuery?: string,
     startDate?: string,
     endDate?: string,
-    category?: string
+    category?: string,
   ) => {
     let result = [...docs];
     if (searchQuery) {
       result = result.filter((doc) =>
-        doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+        doc.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
     if (startDate || endDate) {
@@ -102,14 +108,12 @@ export default function Dashboard() {
         return true;
       });
     }
-    if (category && 'category' in result[0]) { // Check if category exists
-      result = result.filter(
-        (doc) => (doc as any).category === category
-      );
+    if (category && "category" in result[0]) {
+      // Check if category exists
+      result = result.filter((doc) => (doc as any).category === category);
     }
     return result;
   };
-
 
   // Semua fungsi handler (handleSearch, handleDelete, dll) tidak perlu diubah
   // karena mereka sudah bekerja dengan state `documents` dan `filteredDocuments`.
@@ -132,7 +136,13 @@ export default function Dashboard() {
   };
 
   const handleCategoryFilter = (category: string) => {
-    const filtered = applyFilters(documents, undefined, undefined, undefined, category);
+    const filtered = applyFilters(
+      documents,
+      undefined,
+      undefined,
+      undefined,
+      category,
+    );
     setFilteredDocuments(filtered);
     if (category && filtered.length === 0) {
       showToast(`Tidak ada dokumen kategori ${category}`, "info");
@@ -144,18 +154,6 @@ export default function Dashboard() {
     setSelectedDocuments(new Set());
     showToast("Filter telah direset", "info");
   };
-=======
-  const {
-    documents,
-    setDocuments,
-    filteredDocuments,
-    setFilteredDocuments,
-    handleSearch,
-    handleDateRangeFilter,
-    handleCategoryFilter,
-    handleRefresh
-  } = useDocumentFilters(initialDocuments, showToast);
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
 
   const handleSelectDocument = (id: number | string) => {
     const newSelected = new Set(selectedDocuments);
@@ -176,20 +174,12 @@ export default function Dashboard() {
     }
   };
 
-    const handleView = (id: number | string) => {
+  const handleView = (id: number | string) => {
     const doc = documents.find((d) => d.id === id);
-<<<<<<< HEAD
-    showToast(`Melihat ${doc?.name || "dokumen"}... (fungsi preview belum diimplementasikan)`, "info");
-=======
-
-    if (doc?.file) {
-      const url = URL.createObjectURL(doc.file);
-      window.open(url, '_blank');
-      showToast(`Membuka ${doc.name}...`, "info");
-    } else {
-      showToast(`Preview tidak tersedia untuk ${doc?.name || "dokumen"}`, "warning");
-    }
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
+    showToast(
+      `Melihat ${doc?.name || "dokumen"}... (fungsi preview belum diimplementasikan)`,
+      "info",
+    );
   };
 
   const handleEdit = (id: number | string) => {
@@ -199,16 +189,15 @@ export default function Dashboard() {
     }
   };
 
-  const handleSaveEdit = (id: number | string, updatedData: Partial<Document>) => {
+  const handleSaveEdit = (
+    id: number | string,
+    updatedData: Partial<Document>,
+  ) => {
     // NOTE: This now only updates the local state.
     // A full implementation would require a PUT request to the backend.
     const updatedDocuments = documents.map((doc) =>
-      doc.id === id ? { ...doc, ...updatedData } : doc
+      doc.id === id ? { ...doc, ...updatedData } : doc,
     );
-<<<<<<< HEAD
-=======
-
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
     setDocuments(updatedDocuments);
     setFilteredDocuments(applyFilters(updatedDocuments)); // Re-apply filters
     showToast("Dokumen berhasil diperbarui (secara lokal)!", "success");
@@ -238,91 +227,60 @@ export default function Dashboard() {
   };
 
   const handleDownloadSelected = () => {
-<<<<<<< HEAD
-    showToast(`Mengunduh ${selectedDocuments.size} dokumen... (fungsi download belum diimplementasikan)`, "info");
-=======
-    if (selectedDocuments.size === 0) {
-      showToast("Tidak ada dokumen yang dipilih", "warning");
-      return;
-    }
-
-    const selectedDocs = documents.filter((doc) => selectedDocuments.has(doc.id));
-
-    selectedDocs.forEach((doc, index) => {
-      setTimeout(() => {
-        if (doc.file) {
-          // Download file asli jika ada
-          const url = URL.createObjectURL(doc.file);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${doc.name}.${doc.format.toLowerCase()}`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        } else {
-          // Buat file dummy untuk demo
-          const dummyContent = `Dokumen: ${doc.name}\nFormat: ${doc.format}\nTanggal: ${doc.date}\nKategori: ${doc.category}`;
-          const blob = new Blob([dummyContent], { type: "text/plain" });
-          const url = URL.createObjectURL(blob);
-
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${doc.name}.txt`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }
-      }, index * 500); // Delay 500ms antar download
-    });
-
-    showToast(`Mengunduh ${selectedDocuments.size} dokumen...`, "success");
-    setSelectedDocuments(new Set()); // Clear selection after download
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
+    showToast(
+      `Mengunduh ${selectedDocuments.size} dokumen... (fungsi download belum diimplementasikan)`,
+      "info",
+    );
   };
 
   const confirmDelete = () => {
     // NOTE: This now only updates the local state.
     // A full implementation would require a DELETE request to the backend.
     if (confirmDialog.isMultiple) {
-      const updatedDocuments = documents.filter((doc) => !selectedDocuments.has(doc.id));
+      const updatedDocuments = documents.filter(
+        (doc) => !selectedDocuments.has(doc.id),
+      );
       setDocuments(updatedDocuments);
       setFilteredDocuments(updatedDocuments);
       setSelectedDocuments(new Set());
-      showToast(`${selectedDocuments.size} dokumen berhasil dihapus (secara lokal)!`, "success");
+      showToast(
+        `${selectedDocuments.size} dokumen berhasil dihapus (secara lokal)!`,
+        "success",
+      );
     } else if (confirmDialog.documentId) {
-      const updatedDocuments = documents.filter((doc) => doc.id !== confirmDialog.documentId);
+      const updatedDocuments = documents.filter(
+        (doc) => doc.id !== confirmDialog.documentId,
+      );
       setDocuments(updatedDocuments);
       setFilteredDocuments(updatedDocuments);
       selectedDocuments.delete(confirmDialog.documentId);
       setSelectedDocuments(new Set(selectedDocuments));
       showToast("Dokumen berhasil dihapus (secara lokal)!", "success");
     }
-    setConfirmDialog({ isOpen: false, documentId: null, documentName: "", isMultiple: false });
+    setConfirmDialog({
+      isOpen: false,
+      documentId: null,
+      documentName: "",
+      isMultiple: false,
+    });
   };
 
   const cancelDelete = () => {
-    setConfirmDialog({ isOpen: false, documentId: null, documentName: "", isMultiple: false });
+    setConfirmDialog({
+      isOpen: false,
+      documentId: null,
+      documentName: "",
+      isMultiple: false,
+    });
   };
 
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
-<<<<<<< HEAD
       <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-=======
-
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-fadeIn">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
         <Header title="Dashboard" />
         <main className="flex-1 p-4 lg:p-8">
-<<<<<<< HEAD
           <div className="mb-6 lg:mb-8 animate-[slideDown_0.6s_ease-out]">
-=======
-          {/* Page Title */}
-          <div className="mb-6 lg:mb-8 animate-slideDown">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
             <h1 className="hidden lg:block text-4xl xl:text-5xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
               Dashboard Dokumen
             </h1>
@@ -333,11 +291,7 @@ export default function Dashboard() {
 
           {/* Action Bar for Selected Documents */}
           {selectedDocuments.size > 0 && (
-<<<<<<< HEAD
-             <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl flex justify-between items-center animate-[slideDown_0.3s_ease-out]">
-=======
-            <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl flex justify-between items-center animate-slideDown">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
+            <div className="mb-4 p-4 bg-orange-50 border border-orange-200 rounded-xl flex justify-between items-center animate-[slideDown_0.3s_ease-out]">
               <span className="text-orange-700 font-semibold text-sm lg:text-base">
                 {selectedDocuments.size} dokumen dipilih
               </span>
@@ -346,8 +300,18 @@ export default function Dashboard() {
                   onClick={handleDownloadSelected}
                   className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 text-sm shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
                   </svg>
                   Unduh Terpilih
                 </button>
@@ -355,22 +319,26 @@ export default function Dashboard() {
                   onClick={handleDeleteSelected}
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center gap-2 text-sm"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                   Hapus Terpilih
                 </button>
               </div>
             </div>
           )}
-<<<<<<< HEAD
-          
-          <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
-=======
 
-          {/* Filter Section */}
-          <div className="mb-6 lg:mb-8 animate-slideUp animate-delay-100">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
+          <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <FilterBar
               onSearch={handleSearch}
               onDateRangeChange={handleDateRangeFilter}
@@ -379,7 +347,6 @@ export default function Dashboard() {
             />
           </div>
 
-<<<<<<< HEAD
           <div className="animate-[slideUp_0.6s_ease-out_0.2s_both]">
             {/* --- BARU: Tampilkan loading indicator --- */}
             {loading ? (
@@ -398,20 +365,6 @@ export default function Dashboard() {
                 onSelectAll={handleSelectAll}
               />
             )}
-=======
-          {/* Document Table */}
-          <div className="animate-slideUp animate-delay-200">
-            <DocumentTable
-              documents={filteredDocuments}
-              totalDocuments={documents.length}
-              selectedDocuments={selectedDocuments}
-              onView={handleView}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onSelectDocument={handleSelectDocument}
-              onSelectAll={handleSelectAll}
-            />
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
           </div>
         </main>
       </div>
@@ -441,15 +394,12 @@ export default function Dashboard() {
         onCancel={cancelDelete}
         type="danger"
       />
-<<<<<<< HEAD
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
-=======
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
     </div>
   );
 }

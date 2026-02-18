@@ -4,6 +4,8 @@ import DocumentRow from "./DocumentRow";
 import { Document } from "../../types";
 import uploadIcon from "../../assets/icons/upload.svg";
 
+import { parseIndonesianDate } from "../../utils/dateUtils";
+
 interface DocumentTableProps {
   documents: Document[];
   totalDocuments: number;
@@ -32,25 +34,10 @@ export default function DocumentTable({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Parse tanggal Indonesia
-  const parseIndonesianDate = (dateStr: string): Date => {
-    const months: { [key: string]: number } = {
-      Januari: 0, Februari: 1, Maret: 2, April: 3, Mei: 4, Juni: 5,
-      Juli: 6, Agustus: 7, September: 8, Oktober: 9, November: 10, Desember: 11
-    };
-    
-    const parts = dateStr.split(" ");
-    const day = parseInt(parts[0]);
-    const month = months[parts[1]];
-    const year = parseInt(parts[2]);
-    
-    return new Date(year, month, day);
-  };
-
   // Sorting logic - FIXED
   const sortedDocuments = [...documents].sort((a, b) => {
     if (!sortOrder) return 0;
-    
+
     const dateA = parseIndonesianDate(a.date);
     const dateB = parseIndonesianDate(b.date);
 
@@ -82,8 +69,12 @@ export default function DocumentTable({
   };
 
   // Check if all current page documents are selected
-  const allSelected = currentDocuments.length > 0 && currentDocuments.every(doc => selectedDocuments.has(doc.id));
-  const someSelected = currentDocuments.some(doc => selectedDocuments.has(doc.id)) && !allSelected;
+  const allSelected =
+    currentDocuments.length > 0 &&
+    currentDocuments.every((doc) => selectedDocuments.has(doc.id));
+  const someSelected =
+    currentDocuments.some((doc) => selectedDocuments.has(doc.id)) &&
+    !allSelected;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
@@ -116,7 +107,11 @@ export default function DocumentTable({
           onClick={handleUploadClick}
           className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 w-full sm:w-auto justify-center"
         >
-          <img src={uploadIcon} className="w-4 h-4 lg:w-5 lg:h-5" alt="Upload" />
+          <img
+            src={uploadIcon}
+            className="w-4 h-4 lg:w-5 lg:h-5"
+            alt="Upload"
+          />
           Unggah Baru
         </button>
       </div>
@@ -130,7 +125,7 @@ export default function DocumentTable({
                 <input
                   type="checkbox"
                   checked={allSelected}
-                  ref={input => {
+                  ref={(input) => {
                     if (input) {
                       input.indeterminate = someSelected;
                     }
@@ -179,7 +174,9 @@ export default function DocumentTable({
             <div
               key={doc.id}
               className={`bg-gray-50 rounded-xl p-4 space-y-3 border ${
-                selectedDocuments.has(doc.id) ? "border-orange-300 bg-orange-50" : "border-gray-100"
+                selectedDocuments.has(doc.id)
+                  ? "border-orange-300 bg-orange-50"
+                  : "border-gray-100"
               }`}
             >
               <div className="flex items-start justify-between">
@@ -200,10 +197,10 @@ export default function DocumentTable({
                           doc.format.toLowerCase() === "pdf"
                             ? "bg-red-100 text-red-600"
                             : doc.format.toLowerCase() === "xlsx"
-                            ? "bg-green-100 text-green-600"
-                            : doc.format.toLowerCase() === "docx"
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-orange-100 text-orange-600"
+                              ? "bg-green-100 text-green-600"
+                              : doc.format.toLowerCase() === "docx"
+                                ? "bg-blue-100 text-blue-600"
+                                : "bg-orange-100 text-orange-600"
                         } rounded-full font-semibold`}
                       >
                         {doc.format}
@@ -211,11 +208,13 @@ export default function DocumentTable({
                       <span>{doc.size}</span>
                       <span>{doc.date}</span>
                       {doc.category && (
-                        <span className={`px-2 py-1 rounded-full font-semibold ${
-                          doc.category === "Keuangan"
-                            ? "bg-purple-100 text-purple-600"
-                            : "bg-amber-100 text-amber-600"
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full font-semibold ${
+                            doc.category === "Keuangan"
+                              ? "bg-purple-100 text-purple-600"
+                              : "bg-amber-100 text-amber-600"
+                          }`}
+                        >
                           {doc.category}
                         </span>
                       )}
@@ -254,9 +253,7 @@ export default function DocumentTable({
 
       {/* Footer - Pagination */}
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4 text-xs lg:text-sm text-gray-500">
-        <span className="font-semibold">
-          TOTAL {totalDocuments} DOKUMEN
-        </span>
+        <span className="font-semibold">TOTAL {totalDocuments} DOKUMEN</span>
 
         <div className="flex gap-2">
           <button

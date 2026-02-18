@@ -8,7 +8,11 @@ import { useFileUpload } from "../hooks/useFileUpload";
 import { formatFileSize } from "../utils/fileUtils";
 
 export default function UploadDocument() {
-  const [toast, setToast] = useState<ToastState>({ show: false, message: "", type: "info" });
+  const [toast, setToast] = useState<ToastState>({
+    show: false,
+    message: "",
+    type: "info",
+  });
 
   const showToast = (message: string, type: ToastState["type"]) => {
     setToast({ show: true, message, type });
@@ -29,7 +33,7 @@ export default function UploadDocument() {
     handleDrop,
     handleSubmit,
     handleCancel,
-    handleClickUploadArea
+    handleClickUploadArea,
   } = useFileUpload(showToast);
 
   return (
@@ -51,10 +55,12 @@ export default function UploadDocument() {
           </div>
 
           {/* Upload Form */}
-          <form onSubmit={handleSubmit} className="animate-slideUp animate-delay-100">
+          <form
+            onSubmit={handleSubmit}
+            className="animate-slideUp animate-delay-100"
+          >
             <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-
                 {/* LEFT SECTION - Document Information */}
                 <div className="space-y-6 animate-slideInLeft animate-delay-200">
                   {/* Section Header */}
@@ -177,9 +183,7 @@ export default function UploadDocument() {
                         />
                       </svg>
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800">
-                      Berkas
-                    </h2>
+                    <h2 className="text-xl font-bold text-gray-800">Berkas</h2>
                   </div>
 
                   {/* Upload Area */}
@@ -194,9 +198,10 @@ export default function UploadDocument() {
                       flex flex-col items-center justify-center
                       cursor-pointer transition-all duration-500
                       relative overflow-hidden
-                      ${isDragging
-                        ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
-                        : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
+                      ${
+                        isDragging
+                          ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                          : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
                       }
                       ${selectedFile ? "border-green-400 bg-gradient-to-br from-green-50 to-transparent" : ""}
                     `}
@@ -266,7 +271,10 @@ export default function UploadDocument() {
                     {/* Animated Background Elements */}
                     <div className="absolute inset-0 pointer-events-none opacity-20">
                       <div className="absolute top-0 left-0 w-32 h-32 bg-orange-400 rounded-full filter blur-3xl animate-pulse"></div>
-                      <div className="absolute bottom-0 right-0 w-32 h-32 bg-orange-600 rounded-full filter blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+                      <div
+                        className="absolute bottom-0 right-0 w-32 h-32 bg-orange-600 rounded-full filter blur-3xl animate-pulse"
+                        style={{ animationDelay: "1s" }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -291,7 +299,10 @@ export default function UploadDocument() {
                   <span className="relative flex items-center justify-center gap-2">
                     {isUploading ? (
                       <>
-                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <svg
+                          className="animate-spin h-5 w-5"
+                          viewBox="0 0 24 24"
+                        >
                           <circle
                             className="opacity-25"
                             cx="12"

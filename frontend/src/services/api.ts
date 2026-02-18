@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Impor ikon dipindahkan dari file service ini.
 // Komponen yang menampilkan data akan bertanggung jawab untuk menampilkan ikon.
@@ -23,7 +23,7 @@ export interface LoginResponse {
 
 // Membuat instance axios dengan URL dasar yang sudah ditentukan untuk backend kita.
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: "http://localhost:3001/api",
 });
 
 /**
@@ -32,7 +32,7 @@ const apiClient = axios.create({
  */
 export const getDocuments = async (): Promise<Document[]> => {
   try {
-    const response = await apiClient.get('/documents');
+    const response = await apiClient.get("/documents");
     return response.data;
   } catch (error) {
     console.error("Terjadi kesalahan saat mengambil data dokumen:", error);
@@ -50,14 +50,19 @@ export const getDocuments = async (): Promise<Document[]> => {
  */
 export const login = async (username, password): Promise<LoginResponse> => {
   try {
-    const response = await apiClient.post('/auth/login', { username, password });
+    const response = await apiClient.post("/auth/login", {
+      username,
+      password,
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       // Lemparkan kembali error dengan pesan dari backend agar bisa ditangkap di komponen
-      throw new Error(error.response.data.message || 'Terjadi kesalahan saat mencoba login.');
+      throw new Error(
+        error.response.data.message || "Terjadi kesalahan saat mencoba login.",
+      );
     }
     // Untuk error lainnya yang tidak terduga
-    throw new Error('Terjadi kesalahan yang tidak diketahui.');
+    throw new Error("Terjadi kesalahan yang tidak diketahui.");
   }
 };

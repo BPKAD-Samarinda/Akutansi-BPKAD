@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import { login } from "../services/api";
 import buildingImage from "../assets/images/logo-bpkad.png";
 import logoBpkad from "../assets/images/bpkad-building.png";
 import userIcon from "../assets/icons/profile.svg";
 import lockIcon from "../assets/icons/kunci.svg";
-=======
-import logoBpkad from "../assets/images/bpkad-building.png";
-import userIcon from "../assets/icons/profile.svg";
-import lockIcon from "../assets/icons/kunci.svg";
-import AuthHero from "../components/layout/AuthHero";
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,22 +12,18 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-<<<<<<< HEAD
   const [error, setError] = useState("");
-=======
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-<<<<<<< HEAD
     setError("");
 
     try {
       const data = await login(username, password);
       // Simpan token di localStorage untuk sesi
-      localStorage.setItem('authToken', data.token);
-      
+      localStorage.setItem("authToken", data.token);
+
       // Arahkan ke dasbor setelah berhasil login
       navigate("/dashboarddokumen");
     } catch (err: any) {
@@ -42,30 +31,15 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
-=======
-
-    // Simulasi loading
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsLoading(false);
-    navigate("/dashboarddokumen");
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
   };
 
   return (
     <div className="h-screen w-screen flex flex-col lg:flex-row bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif] overflow-hidden fixed inset-0">
       {/* LEFT SECTION - LOGIN FORM */}
-<<<<<<< HEAD
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-2 lg:order-1 animate-[slideInLeft_0.6s_ease-out]">
         <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-2xl shadow-orange-500/10 px-6 sm:px-12 py-10 sm:py-14 border border-orange-100/50 backdrop-blur-sm animate-[fadeIn_0.8s_ease-out_0.2s_both]">
           {/* LOGO ONLY (TEKS DIHAPUS) */}
           <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
-=======
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-2 lg:order-1 animate-slideInLeft">
-        <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-2xl shadow-orange-500/10 px-6 sm:px-12 py-10 sm:py-14 border border-orange-100/50 backdrop-blur-sm animate-fadeIn animate-delay-200">
-          {/* LOGO ONLY (TEKS DIHAPUS) */}
-          <div className="flex flex-col items-center mb-10 animate-scaleIn animate-delay-400">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
             <div className="relative mb-4">
               <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-2xl opacity-20 animate-pulse"></div>
               <img
@@ -77,20 +51,18 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
-<<<<<<< HEAD
             {/* ERROR MESSAGE */}
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative text-sm" role="alert">
+              <div
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative text-sm"
+                role="alert"
+              >
                 <span className="block sm:inline">{error}</span>
               </div>
             )}
-            
+
             {/* USERNAME INPUT */}
             <div className="animate-[slideUp_0.5s_ease-out_0.5s_both]">
-=======
-            {/* USERNAME INPUT */}
-            <div className="animate-slideUp animate-delay-500">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
               <label className="block text-xs font-bold text-gray-700 mb-2.5 tracking-wide uppercase">
                 Nama Pengguna
               </label>
@@ -113,11 +85,7 @@ export default function Login() {
             </div>
 
             {/* PASSWORD INPUT */}
-<<<<<<< HEAD
             <div className="animate-[slideUp_0.5s_ease-out_0.6s_both]">
-=======
-            <div className="animate-slideUp animate-delay-500">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
               <label className="block text-xs font-bold text-gray-700 mb-2.5 tracking-wide uppercase">
                 Kata Sandi
               </label>
@@ -132,11 +100,7 @@ export default function Login() {
                   placeholder="Masukkan kata sandi"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-<<<<<<< HEAD
                   maxLength={100}
-=======
-                  maxLength={15}
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
                   className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 font-medium"
                   required
                 />
@@ -144,11 +108,7 @@ export default function Login() {
             </div>
 
             {/* REMEMBER ME */}
-<<<<<<< HEAD
             <div className="flex items-center animate-[slideUp_0.5s_ease-out_0.7s_both]">
-=======
-            <div className="flex items-center animate-slideUp">
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
               <input
                 type="checkbox"
                 id="remember"
@@ -168,11 +128,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-<<<<<<< HEAD
               className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed animate-[slideUp_0.5s_ease-out_0.8s_both] overflow-hidden group"
-=======
-              className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed animate-slideUp overflow-hidden group"
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
               <span className="relative flex items-center justify-center gap-2">
@@ -182,7 +138,6 @@ export default function Login() {
           </form>
 
           {/* FOOTER */}
-<<<<<<< HEAD
           <div className="mt-8 text-center animate-[fadeIn_0.5s_ease-out_1s_both]">
             <p className="text-xs text-gray-500"></p>
           </div>
@@ -356,15 +311,6 @@ export default function Login() {
           }
         }
       `}</style>
-=======
-          <div className="mt-8 text-center animate-fadeIn animate-delay-400">
-            <p className="text-xs text-gray-500"></p>
-          </div>
-        </div>
-      </div>
-
-      <AuthHero />
->>>>>>> 8dbe5f218af1a3bfd472aaab41c4ac7f8c825655
     </div>
   );
 }
