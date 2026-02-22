@@ -29,6 +29,7 @@ export const loginController = async (req: Request, res: Response) => {
     const payload = {
       id: user.id,
       username: user.username,
+      role: user.role,
     };
 
     const secretKey = process.env.JWT_SECRET || 'nuno123';
