@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import profileIcon from "../../assets/icons/profile.svg";
 
@@ -11,20 +11,33 @@ interface DecodedToken {
   role: string;
 }
 
+interface UserInfo {
+  username: string;
+  role: string;
+}
+
+function getUserInfoFromToken(): UserInfo {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    return { username: "", role: "" };
+  }
+
+  try {
+    const decodedToken: DecodedToken = jwtDecode(token);
+    return {
+      username: decodedToken.username ?? "",
+      role: decodedToken.role ?? "",
+    };
+  } catch {
+    return { username: "", role: "" };
+  }
+}
+
 export default function Header({ title }: HeaderProps) {
-  const [username, setUsername] = useState("");
-  const [role, setRole] = useState("");
+  const [{ username, role }] = useState<UserInfo>(() => getUserInfoFromToken());
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken: DecodedToken = jwtDecode(token);
-      setUsername(decodedToken.username);
-      setRole(decodedToken.role);
-    }
-  }, []);
-
-  return (
+  return (  
     <header className="h-16 lg:h-20 bg-white flex items-center justify-between lg:justify-end px-4 lg:px-8 shadow-sm">
       {/* Mobile Title - Hidden on desktop */}
       {title && (
