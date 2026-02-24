@@ -54,12 +54,13 @@ export default function DocumentRow({
       }`}
     >
       {/* Checkbox */}
-      <td className="py-4 px-2 w-12 text-center">
+      <td className="py-4 px-2 w-12 text-center align-middle">
         <input
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(doc.id)}
           aria-label={`Select document ${doc.nama_sppd}`}
+          className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
         />
       </td>
 
@@ -69,7 +70,9 @@ export default function DocumentRow({
       </td>
 
       {/* Kategori */}
-      <td className="py-4 px-2 text-sm text-center text-gray-700">{doc.kategori}</td>
+      <td className="py-4 px-2 text-sm text-center text-gray-700">
+        {doc.kategori}
+      </td>
 
       {/* Format */}
       <td className="py-4 px-2 text-center">
