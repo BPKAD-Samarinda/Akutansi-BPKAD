@@ -5,20 +5,24 @@ import logoBpkad from "../../assets/images/bpkad-building.png";
 type LoginFormProps = {
   username: string;
   password: string;
+  rememberMe: boolean;
   isLoading: boolean;
   error: string;
   onUsernameChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
+  onRememberMeChange: (value: boolean) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export default function LoginForm({
   username,
   password,
+  rememberMe,
   isLoading,
   error,
   onUsernameChange,
   onPasswordChange,
+  onRememberMeChange,
   onSubmit,
 }: LoginFormProps) {
   return (
@@ -87,6 +91,19 @@ export default function LoginForm({
                 required
               />
             </div>
+          </div>
+
+          <div className="flex items-center gap-2 animate-[slideUp_0.5s_ease-out_0.7s_both]">
+            <input
+              id="rememberMe"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => onRememberMeChange(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-400"
+            />
+            <label htmlFor="rememberMe" className="text-sm text-gray-600">
+              Ingat saya
+            </label>
           </div>
 
           <button

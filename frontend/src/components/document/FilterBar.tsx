@@ -6,6 +6,7 @@ interface FilterBarProps {
   onSearch?: (query: string) => void;
   onDateRangeChange?: (startDate: string, endDate: string) => void;
   onCategoryChange?: (category: string) => void;
+  onRefresh?: () => void;
 }
 
 function DateRangePicker({
@@ -60,8 +61,8 @@ function DateRangePicker({
     startDate && endDate
       ? `${fmt(startDate)} — ${fmt(endDate)}`
       : startDate
-      ? fmt(startDate)
-      : "";
+        ? fmt(startDate)
+        : "";
 
   const getDaysInMonth = (year: number, month: number) =>
     new Date(year, month + 1, 0).getDate();
@@ -94,7 +95,7 @@ function DateRangePicker({
     if (startDate) {
       onChange?.(
         isoFmt(startDate),
-        endDate ? isoFmt(endDate) : isoFmt(startDate)
+        endDate ? isoFmt(endDate) : isoFmt(startDate),
       );
       setOpen(false);
     }
@@ -137,8 +138,18 @@ function DateRangePicker({
   const firstDay = getFirstDayOfMonth(year, month);
 
   const monthNames = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
   const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
@@ -148,7 +159,10 @@ function DateRangePicker({
 
   const calendarDays: (Date | null)[] = [
     ...Array(firstDay).fill(null),
-    ...Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1)),
+    ...Array.from(
+      { length: daysInMonth },
+      (_, i) => new Date(year, month, i + 1),
+    ),
   ];
 
   const canApply = mode === "single" ? !!startDate : !!(startDate && endDate);
@@ -199,13 +213,22 @@ function DateRangePicker({
           {/* Header navigasi: dropdown bulan & tahun + tombol panah */}
           <div className="flex items-center justify-between mb-4 gap-2">
             <button
-              onClick={() =>
-                setViewDate(new Date(year, month - 1, 1))
-              }
+              onClick={() => setViewDate(new Date(year, month - 1, 1))}
               className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
+              title="dropdown btn"
             >
-              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
 
@@ -216,6 +239,7 @@ function DateRangePicker({
                 setViewDate(new Date(year, parseInt(e.target.value), 1))
               }
               className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer flex-1"
+              title="dropdown btn"
             >
               {monthNames.map((name, idx) => (
                 <option key={name} value={idx}>
@@ -231,6 +255,7 @@ function DateRangePicker({
                 setViewDate(new Date(parseInt(e.target.value), month, 1))
               }
               className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer w-20"
+              title="dropdown btn"
             >
               {yearRange.map((y) => (
                 <option key={y} value={y}>
@@ -240,13 +265,22 @@ function DateRangePicker({
             </select>
 
             <button
-              onClick={() =>
-                setViewDate(new Date(year, month + 1, 1))
-              }
+              onClick={() => setViewDate(new Date(year, month + 1, 1))}
               className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
+              title="dropdown btn"
             >
-              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
@@ -254,7 +288,10 @@ function DateRangePicker({
           {/* Nama hari */}
           <div className="grid grid-cols-7 mb-2">
             {dayNames.map((d) => (
-              <div key={d} className="text-center text-xs font-semibold text-gray-400 py-1">
+              <div
+                key={d}
+                className="text-center text-xs font-semibold text-gray-400 py-1"
+              >
                 {d}
               </div>
             ))}
@@ -272,7 +309,10 @@ function DateRangePicker({
                 <div
                   key={day.toISOString()}
                   onMouseEnter={() =>
-                    mode === "range" && startDate && !endDate && setHoverDate(day)
+                    mode === "range" &&
+                    startDate &&
+                    !endDate &&
+                    setHoverDate(day)
                   }
                   onMouseLeave={() => setHoverDate(null)}
                   onClick={() => handleDayClick(day)}
@@ -312,7 +352,7 @@ function DateRangePicker({
             </button>
           </div>
         </div>,
-        document.body
+        document.body,
       )
     : null;
 
@@ -437,7 +477,11 @@ export default function FilterBar({
       {/* Active Filter Indicator */}
       {isActive && (
         <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 rounded-lg border border-orange-200 text-xs lg:text-sm">
-          <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            className="w-4 h-4 lg:w-5 lg:h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fillRule="evenodd"
               d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"

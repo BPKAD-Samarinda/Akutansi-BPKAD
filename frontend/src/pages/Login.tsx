@@ -8,7 +8,9 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(
+    () => localStorage.getItem("rememberMe") === "true",
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,8 +21,15 @@ export default function Login() {
 
     try {
       const data = await login(username, password);
-      // Simpan token di localStorage untuk sesi
-      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("rememberMe", String(rememberMe));
+
+      if (rememberMe) {
+        localStorage.setItem("authToken", data.token);
+        sessionStorage.removeItem("authToken");
+      } else {
+        sessionStorage.setItem("authToken", data.token);
+        localStorage.removeItem("authToken");
+      }
 
       // Arahkan ke dasbor setelah berhasil login
       navigate("/dashboarddokumen");
