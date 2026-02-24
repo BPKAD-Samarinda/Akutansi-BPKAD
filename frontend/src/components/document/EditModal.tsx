@@ -1,9 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Document } from "../../types";
-import {
-  indonesianDateToISO,
-  isoDateToIndonesian,
-} from "../../utils/documentDateUtils";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -13,153 +9,10 @@ interface EditModalProps {
 }
 
 type EditFormData = {
-  name: string;
-  date: string;
-  category: "Lampiran" | "Keuangan" | "";
+  nama_sppd: string;
+  kategori: "Lampiran" | "Keuangan" | "";
+  tanggal_sppd: string;
 };
-
-type FormInputProps = {
-  id: string;
-  name: "name" | "date";
-  label: string;
-  type: "text" | "date";
-  value: string;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => void;
-};
-
-function FormInput({ id, name, label, type, value, onChange }: FormInputProps) {
-  return (
-    <div className="group">
-      <label
-        htmlFor={id}
-        className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide"
-      >
-        {label}
-      </label>
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-        <input
-          type={type}
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white"
-          required
-        />
-      </div>
-    </div>
-  );
-}
-
-type CategorySelectProps = {
-  value: EditFormData["category"];
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => void;
-};
-
-function CategorySelect({ value, onChange }: CategorySelectProps) {
-  return (
-    <div className="group">
-      <label
-        htmlFor="edit-category"
-        className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide"
-      >
-        Kategori
-      </label>
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-        <select
-          id="edit-category"
-          name="category"
-          value={value}
-          onChange={onChange}
-          className="relative w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:shadow-lg focus:shadow-orange-500/20 transition-all duration-300 bg-gray-50 focus:bg-white appearance-none cursor-pointer"
-          required
-        >
-          <option value="">Pilih Kategori</option>
-          <option value="Lampiran">Lampiran</option>
-          <option value="Keuangan">Keuangan</option>
-        </select>
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <svg
-            className="w-5 h-5 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-type DocumentInfoCardProps = {
-  document: Document;
-};
-
-function DocumentInfoCard({ document }: DocumentInfoCardProps) {
-  return (
-    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-      <div className="flex items-start gap-3">
-        <svg
-          className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <div className="text-sm text-blue-800">
-          <p className="font-semibold mb-1">Informasi Dokumen</p>
-          <p className="text-xs">
-            Format: <span className="font-semibold">{document.format}</span>
-          </p>
-          <p className="text-xs">
-            Ukuran: <span className="font-semibold">{document.size}</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-type ModalActionsProps = {
-  onClose: () => void;
-};
-
-function ModalActions({ onClose }: ModalActionsProps) {
-  return (
-    <div className="flex gap-3 pt-4">
-      <button
-        type="button"
-        onClick={onClose}
-        className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-bold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
-      >
-        Batal
-      </button>
-      <button
-        type="submit"
-        className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 active:scale-95"
-      >
-        Simpan
-      </button>
-    </div>
-  );
-}
 
 export default function EditModal({
   isOpen,
@@ -167,16 +20,29 @@ export default function EditModal({
   onClose,
   onSave,
 }: EditModalProps) {
+
+  const today = new Date().toISOString().split("T")[0];
+
   const [formData, setFormData] = useState<EditFormData>({
-    name: document?.name || "",
-    date: document ? indonesianDateToISO(document.date) : "",
-    category: (document?.category || "") as "Lampiran" | "Keuangan" | "",
+    nama_sppd: "",
+    kategori: "",
+    tanggal_sppd: today,
   });
+
+  useEffect(() => {
+    if (document) {
+      setFormData({
+        nama_sppd: document.nama_sppd || "",
+        kategori: (document.kategori as "Lampiran" | "Keuangan") || "",
+        tanggal_sppd: document.tanggal_sppd || today,
+      });
+    }
+  }, [document]);
 
   if (!isOpen || !document) return null;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -189,95 +55,85 @@ export default function EditModal({
     e.preventDefault();
 
     onSave(document.id, {
-      name: formData.name,
-      date: isoDateToIndonesian(formData.date),
-      category: formData.category as "Lampiran" | "Keuangan" | undefined,
+      nama_sppd: formData.nama_sppd,
+      kategori: formData.kategori,
+      tanggal_sppd: formData.tanggal_sppd || today,
     });
+
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
-        <div
-          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-          onClick={onClose}
-        ></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+        <h2 className="text-xl font-bold mb-4">Edit Dokumen</h2>
 
-        {/* Modal panel */}
-        <div className="inline-block w-full max-w-lg my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl animate-scaleIn">
-          {/* Header */}
-          <div className="px-6 py-5 bg-gradient-to-r from-orange-500 to-orange-600">
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                <svg
-                  className="w-7 h-7"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                Edit Dokumen
-              </h3>
-              <button
-                onClick={onClose}
-                className="text-white hover:text-gray-200 transition-colors duration-200"
-                title="Tutup"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Nama SPPD */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Nama SPPD
+            </label>
+            <input
+              type="text"
+              name="nama_sppd"
+              value={formData.nama_sppd}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2"
+              required
+            />
           </div>
 
-          {/* Body */}
-          <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
-            <FormInput
-              id="edit-name"
-              name="name"
-              label="Nama Dokumen"
-              type="text"
-              value={formData.name}
-              onChange={handleInputChange}
-            />
+          {/* Kategori Dropdown */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Kategori
+            </label>
+            <select
+              name="kategori"
+              value={formData.kategori}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2"
+              required
+            >
+              <option value="">Pilih Kategori</option>
+              <option value="Lampiran">Lampiran</option>
+              <option value="Keuangan">Keuangan</option>
+            </select>
+          </div>
 
-            <FormInput
-              id="edit-date"
-              name="date"
-              label="Tanggal"
+          {/* Tanggal */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Tanggal
+            </label>
+            <input
               type="date"
-              value={formData.date}
-              onChange={handleInputChange}
+              name="tanggal_sppd"
+              value={formData.tanggal_sppd}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2"
             />
+          </div>
 
-            <CategorySelect
-              value={formData.category}
-              onChange={handleInputChange}
-            />
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border rounded-lg"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-orange-500 text-white rounded-lg"
+            >
+              Simpan
+            </button>
+          </div>
 
-            <DocumentInfoCard document={document} />
-
-            <ModalActions onClose={onClose} />
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   );

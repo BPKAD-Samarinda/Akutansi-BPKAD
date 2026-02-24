@@ -93,33 +93,42 @@ export function useFileUpload(
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.date ||
-      !formData.category ||
-      !selectedFile
-    ) {
-      showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
-      return;
-    }
+  if (!formData.name || !formData.date || !formData.category || !selectedFile) {
+    showToast("Mohon lengkapi semua kolom sebelum mengunggah!", "warning");
+    return;
+  }
 
-    setIsUploading(true);
+  setIsUploading(true);
 
-    // Simulasi upload
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    const data = new FormData();
+    data.append("nama_sppd", formData.name);
+    data.append("tanggal_sppd", formData.date);
+    data.append("kategori", formData.category);
+    data.append("file", selectedFile);
 
-    setIsUploading(false);
+    const response = await fetch("http://localhost:3001/api/documents", {
+      method: "POST",
+      body: data,
+    });
+
+    if (!response.ok) throw new Error("Upload gagal");
+
     showToast("Dokumen berhasil diunggah!", "success");
 
-    // Wait for toast to show then navigate
     setTimeout(() => {
       setFormData({ name: "", date: "", category: "" });
       setSelectedFile(null);
       navigate("/dashboarddokumen");
-    }, 1500);
-  };
+    }, 2000);
+  } catch (error) {
+    showToast("Gagal mengunggah dokumen", "error");
+  } finally {
+    setIsUploading(false);
+  }
+};
 
   const handleCancel = () => {
     if (formData.name || formData.date || formData.category || selectedFile) {

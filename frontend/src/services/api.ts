@@ -25,23 +25,16 @@ export const getDocuments = async (): Promise<Document[]> => {
   try {
     const response = await apiClient.get("/documents");
 
-    if (!Array.isArray(response.data)) {
-      return [];
-    }
-
-    return response.data.map((item: Partial<Document>, index: number) => ({
-      id: item.id ?? index,
-      name: item.name ?? "Dokumen Tanpa Nama",
-      format: item.format ?? "PDF",
-      size: item.size ?? "-",
-      date: item.date ?? "1 Januari 1970",
-      category: item.category,
-      file: item.file ?? null,
+    return response.data.map((item: any) => ({
+      id: item.id,
+      nama_sppd: item.nama_sppd,
+      tanggal_sppd: item.tanggal_sppd,
+      kategori: item.kategori,
+      file_path: item.file_path,
+      created_at: item.created_at,
     }));
   } catch (error) {
     console.error("Terjadi kesalahan saat mengambil data dokumen:", error);
-    // Di aplikasi nyata, Anda akan menangani error ini dengan lebih baik
-    // misalnya dengan menampilkan pesan kepada pengguna.
     return [];
   }
 };

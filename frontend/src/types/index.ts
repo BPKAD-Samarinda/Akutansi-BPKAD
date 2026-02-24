@@ -1,11 +1,10 @@
 export interface Document {
-  id: number | string;
-  name: string;
-  format: string;
-  size: string;
-  date: string;
-  file?: File | null;
-  category?: "Lampiran" | "Keuangan";
+  id: number;
+  nama_sppd: string;
+  tanggal_sppd: string;
+  kategori: string;
+  file_path: string;
+  created_at?: string;
 }
 
 export interface ToastState {

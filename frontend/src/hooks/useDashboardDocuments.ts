@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { getDocuments } from "../services/api";
 import { Document, ToastState } from "../types";
 import { useDocumentFilters } from "./useDocumentFilters";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "http://localhost:3001/api",
+});
+
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -143,22 +149,37 @@ export function useDashboardDocuments() {
     );
   };
 
-  const confirmDelete = () => {
+const confirmDelete = async () => {
+  try {
     if (confirmDialog.isMultiple) {
+
+      for (const id of selectedDocuments) {
+        await axios.delete(`http://localhost:3001/api/documents/${id}`);
+      }
+
       const updatedDocuments = documents.filter(
         (doc) => !selectedDocuments.has(doc.id),
       );
+
       setDocuments(updatedDocuments);
       setFilteredDocuments(updatedDocuments);
       setSelectedDocuments(new Set());
+
       showToast(
-        `${selectedDocuments.size} dokumen berhasil dihapus (secara lokal)!`,
+        `${selectedDocuments.size} dokumen berhasil dihapus!`,
         "success",
       );
+
     } else if (confirmDialog.documentId) {
+
+      await axios.delete(
+        `http://localhost:3001/api/documents/${confirmDialog.documentId}`
+      );
+
       const updatedDocuments = documents.filter(
         (doc) => doc.id !== confirmDialog.documentId,
       );
+
       setDocuments(updatedDocuments);
       setFilteredDocuments(updatedDocuments);
 
@@ -166,16 +187,20 @@ export function useDashboardDocuments() {
       newSelected.delete(confirmDialog.documentId);
       setSelectedDocuments(newSelected);
 
-      showToast("Dokumen berhasil dihapus (secara lokal)!", "success");
+      showToast("Dokumen berhasil dihapus!", "success");
     }
 
-    setConfirmDialog({
-      isOpen: false,
-      documentId: null,
-      documentName: "",
-      isMultiple: false,
-    });
-  };
+  } catch (error) {
+    showToast("Gagal menghapus dokumen dari server", "error");
+  }
+
+  setConfirmDialog({
+    isOpen: false,
+    documentId: null,
+    documentName: "",
+    isMultiple: false,
+  });
+};
 
   const cancelDelete = () => {
     setConfirmDialog({
