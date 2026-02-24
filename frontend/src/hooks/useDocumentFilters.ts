@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Document, ToastState } from "../types";
-import { parseIndonesianDate } from "../utils/dateUtils";
 
 export function useDocumentFilters(
   initialData: Document[],
@@ -15,21 +14,21 @@ export function useDocumentFilters(
     searchQuery?: string,
     startDate?: string,
     endDate?: string,
-    category?: string,
   ) => {
     let result = [...docs];
 
-    // Search filter
+    // 🔍 Search filter (cari di nama_sppd & kategori)
     if (searchQuery) {
       result = result.filter((doc) =>
-        doc.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        doc.nama_sppd.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.kategori.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Date range filter
+    // 📅 Date range filter (pakai tanggal_sppd langsung)
     if (startDate || endDate) {
       result = result.filter((doc) => {
-        const docDate = parseIndonesianDate(doc.date);
+        const docDate = new Date(doc.tanggal_sppd);
 
         if (startDate && endDate) {
           const start = new Date(startDate);
@@ -44,13 +43,9 @@ export function useDocumentFilters(
           end.setHours(23, 59, 59, 999);
           return docDate <= end;
         }
+
         return true;
       });
-    }
-
-    // Category filter
-    if (category) {
-      result = result.filter((doc) => doc.category === category);
     }
 
     return result;
@@ -74,21 +69,6 @@ export function useDocumentFilters(
     }
   };
 
-  const handleCategoryFilter = (category: string) => {
-    const filtered = applyFilters(
-      documents,
-      undefined,
-      undefined,
-      undefined,
-      category,
-    );
-    setFilteredDocuments(filtered);
-
-    if (category && filtered.length === 0) {
-      showToast(`Tidak ada dokumen kategori ${category}`, "info");
-    }
-  };
-
   const handleRefresh = () => {
     setFilteredDocuments(documents);
     showToast("Filter telah direset", "info");
@@ -101,7 +81,6 @@ export function useDocumentFilters(
     setFilteredDocuments,
     handleSearch,
     handleDateRangeFilter,
-    handleCategoryFilter,
     handleRefresh,
   };
 }

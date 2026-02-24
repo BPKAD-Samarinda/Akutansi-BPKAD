@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Document } from "../types";
-import { parseIndonesianDate } from "../utils/dateUtils";
 
 export type SortOrder = "newest" | "oldest" | null;
 
@@ -16,8 +15,8 @@ export function useDocumentTableState(
     return [...documents].sort((a, b) => {
       if (!sortOrder) return 0;
 
-      const dateA = parseIndonesianDate(a.date);
-      const dateB = parseIndonesianDate(b.date);
+      const dateA = new Date(a.tanggal_sppd);
+      const dateB = new Date(b.tanggal_sppd);
 
       if (sortOrder === "newest") {
         return dateB.getTime() - dateA.getTime();
