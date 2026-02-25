@@ -66,8 +66,10 @@ export default function DocumentRow({
       </td>
 
       {/* No SPPD */}
-      <td className="py-4 px-2 text-sm font-medium text-gray-800">
-        {doc.nama_sppd}
+      <td className="py-4 px-2 text-sm font-medium text-gray-800 max-w-0">
+        <span className="block truncate" title={doc.nama_sppd}>
+          {doc.nama_sppd}
+        </span>
       </td>
 
       {/* Kategori */}
