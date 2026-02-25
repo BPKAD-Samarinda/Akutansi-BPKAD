@@ -88,7 +88,11 @@ export default function DocumentRow({
 
       {/* Tanggal */}
       <td className="py-4 px-2 text-center text-sm text-gray-600">
-        {new Date(doc.tanggal_sppd).toLocaleDateString("id-ID")}
+        {new Date(doc.tanggal_sppd).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })}
       </td>
 
       {/* Aksi */}
