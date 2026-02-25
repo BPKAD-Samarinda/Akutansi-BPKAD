@@ -71,7 +71,7 @@ export default function DocumentTable({
         { autoAlpha: 0 },
         {
           autoAlpha: 1,
-          duration: 0.2,
+          duration: 1,
           ease: "power2.out",
           stagger: 0.025,
         },
