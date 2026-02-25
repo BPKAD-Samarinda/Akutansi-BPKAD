@@ -1,15 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Document } from "../types";
 
 export type SortOrder = "newest" | "oldest" | null;
 
-export function useDocumentTableState(
-  documents: Document[],
-  totalDocuments: number,
-) {
+export function useDocumentTableState(documents: Document[]) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const sortedDocuments = useMemo(() => {
     return [...documents].sort((a, b) => {
@@ -26,10 +23,23 @@ export function useDocumentTableState(
     });
   }, [documents, sortOrder]);
 
-  const totalPages = Math.ceil(totalDocuments / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedDocuments.length / rowsPerPage),
+  );
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
   const currentDocuments = sortedDocuments.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [rowsPerPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -45,8 +55,10 @@ export function useDocumentTableState(
     sortOrder,
     currentPage,
     totalPages,
+    rowsPerPage,
     currentDocuments,
     goToPage,
+    setRowsPerPage,
     handleSortClick,
   };
 }

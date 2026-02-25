@@ -32,10 +32,12 @@ export default function DocumentTable({
     sortOrder,
     currentPage,
     totalPages,
+    rowsPerPage,
     currentDocuments,
     goToPage,
+    setRowsPerPage,
     handleSortClick,
-  } = useDocumentTableState(documents, totalDocuments);
+  } = useDocumentTableState(documents);
 
   const handleUploadClick = () => {
     navigate("/upload");
@@ -81,7 +83,9 @@ export default function DocumentTable({
         totalDocuments={totalDocuments}
         currentPage={currentPage}
         totalPages={totalPages}
+        rowsPerPage={rowsPerPage}
         onPageChange={goToPage}
+        onRowsPerPageChange={setRowsPerPage}
       />
     </div>
   );
