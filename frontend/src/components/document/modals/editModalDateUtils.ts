@@ -1,25 +1,57 @@
 import { Document } from "../../../types";
 import { EditFormData, EditCategory } from "./editModalTypes";
 
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+const toLocalDateString = (date: Date) => {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+};
+
+const parseDateValue = (dateValue: string) => {
+  const dateOnlyMatch = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (dateOnlyMatch) {
+    const [, year, month, day] = dateOnlyMatch;
+    const localDate = new Date(Number(year), Number(month) - 1, Number(day));
+    if (!Number.isNaN(localDate.getTime())) {
+      return localDate;
+    }
+  }
+
+  const normalizedDateValue = dateValue.includes(" ")
+    ? dateValue.replace(" ", "T")
+    : dateValue;
+
+  const parsedDate = new Date(normalizedDateValue);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return null;
+  }
+
+  return parsedDate;
+};
+
 export const toDateInputValue = (
   dateValue: string | undefined,
   today: string,
 ) => {
   if (!dateValue) return today;
 
-  const parsedDate = new Date(dateValue);
-  if (Number.isNaN(parsedDate.getTime())) return today;
+  const parsedDate = parseDateValue(dateValue);
+  if (!parsedDate) return today;
 
-  return parsedDate.toISOString().split("T")[0];
+  return toLocalDateString(parsedDate);
 };
 
 export const toDateObject = (dateValue: string, today: string) => {
-  const parsedDate = new Date(dateValue);
-  return Number.isNaN(parsedDate.getTime()) ? new Date(today) : parsedDate;
+  const parsedDate = parseDateValue(dateValue);
+  if (parsedDate) {
+    return parsedDate;
+  }
+
+  return parseDateValue(today) ?? new Date();
 };
 
 export const fromDateToString = (date: Date) => {
-  return date.toISOString().split("T")[0];
+  return toLocalDateString(date);
 };
 
 export const formatDisplayDate = (dateValue: string, today: string) => {
