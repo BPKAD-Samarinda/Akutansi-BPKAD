@@ -51,6 +51,7 @@ export default function DocumentTableMobile({
           return (
             <div
               key={doc.id}
+              data-paginated-item
               className={`bg-gray-50 rounded-xl p-4 space-y-3 border ${
                 selectedDocuments.has(doc.id)
                   ? "border-orange-300 bg-orange-50"
