@@ -10,17 +10,18 @@ export default function AuthHero() {
         className="absolute inset-0 w-full h-full object-contain object-[100%_90%] animate-zoomIn"
       />
 
-      {/* Gradient Overlay with Animation */}
+      {/* Gradient Overlay */}
       <div
         className="
-    absolute inset-0
-    bg-gradient-to-t
-    from-[#FF5700]/60
-    via-[#FF5700]/10
-    to-transparent
-  "
+          absolute inset-0
+          bg-gradient-to-t
+          from-[#FF5700]/60
+          via-[#FF5700]/10
+          to-transparent
+        "
       />
-      {/* Animated Decorative Elements */}
+
+      {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[650px] lg:h-[650px] border-[3px] border-white/20 rotate-45 rounded-[60px] auth-hero-ring-primary" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] lg:w-[550px] lg:h-[550px] border-[2px] border-white/10 rotate-45 rounded-[50px] auth-hero-ring-secondary" />
@@ -29,6 +30,7 @@ export default function AuthHero() {
       {/* Info Card */}
       <div className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-4 right-4 sm:left-8 sm:right-8 lg:left-16 lg:right-16 max-w-xl mx-auto lg:mx-0 animate-slideInRight animate-delay-500">
         <div className="bg-gradient-to-br from-black/40 via-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-white/10 hover:border-white/20 transition-all duration-500 hover:scale-[1.02] group">
+          
           {/* Badge */}
           <div className="flex items-center text-xs font-bold mb-4 tracking-widest">
             <span className="relative flex h-3 w-3 mr-3">
@@ -36,25 +38,22 @@ export default function AuthHero() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
             </span>
             <span className="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-              LAYANAN AKUNTANSI DIGITAL
+              LAYANAN ARSIP AKUNTANSI DIGITAL
             </span>
           </div>
 
-          {/* Title with Gradient */}
+          {/* Title */}
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-4 group-hover:scale-[1.02] transition-transform duration-500">
             <span className="bg-gradient-to-r from-white via-orange-100 to-white bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-              Manajemen Dokumen Keuangan
+              Sistem Arsip
               <br />
-              yang Efisien dan
-              <br />
-              Terintegrasi
+              Dokumen Keuangan
             </span>
           </h1>
 
           {/* Description */}
           <p className="text-sm sm:text-base text-gray-200 leading-relaxed">
-            Sistem terintegrasi untuk pengelolaan data akuntansi yang aman dan
-            transparan di seluruh unit kerja.
+            Penyimpanan dan akses dokumen PDF untuk staf akuntansi secara terpusat, cepat, dan aman.
           </p>
 
           {/* Decorative Line */}
@@ -62,7 +61,7 @@ export default function AuthHero() {
         </div>
       </div>
 
-      {/* Floating Particles Animation */}
+      {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-1" />
         <div className="absolute w-2 h-2 bg-white/30 rounded-full animate-float auth-hero-particle-2" />
