@@ -26,7 +26,7 @@ export default function DocumentTableDesktop({
 }: DocumentTableDesktopProps) {
   return (
     <div className="hidden md:block overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full table-fixed text-sm">
         <thead className="text-gray-950 border-b border-gray-200">
           <tr>
             <th className="text-center align-middle py-4 px-2 font-bold w-12">
@@ -43,11 +43,11 @@ export default function DocumentTableDesktop({
                 className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 rounded cursor-pointer"
               />
             </th>
-            <th className="text-left py-4 px-2 font-bold">Nama</th>
-            <th className="text-center py-4 px-2 font-bold">Kategori</th>
-            <th className="text-center py-4 px-2 font-bold">Format</th>
-            <th className="text-center py-4 px-2 font-bold">Tanggal</th>
-            <th className="text-center py-4 px-2 font-bold">Aksi</th>
+            <th className="text-left py-4 px-2 font-bold w-1/5">Nama</th>
+            <th className="text-center py-4 px-2 font-bold w-1/5">Kategori</th>
+            <th className="text-center py-4 px-2 font-bold w-1/5">Format</th>
+            <th className="text-center py-4 px-2 font-bold w-1/5">Tanggal</th>
+            <th className="text-center py-4 px-2 font-bold w-1/5">Aksi</th>
           </tr>
         </thead>
 
