@@ -1,6 +1,6 @@
-import eyeIcon from "../../../assets/icons/eye.svg";
-import editIcon from "../../../assets/icons/edit.svg";
-import deleteIcon from "../../../assets/icons/delete.svg";
+import { MdEdit } from "react-icons/md";
+import { IoMdEye } from "react-icons/io";
+import { FaTrashAlt } from "react-icons/fa";
 import { Document } from "../../../types";
 
 interface DocumentRowProps {
@@ -93,26 +93,29 @@ export default function DocumentRow({
       {/* Aksi */}
       <td className="py-4 px-2">
         <div className="flex gap-3 justify-center">
-          <button onClick={() => onView?.(doc.id)}>
-            <img
-              src={eyeIcon}
-              alt="View document"
-              className="w-5 h-5 opacity-70"
-            />
+          <button
+            onClick={() => onView?.(doc.id)}
+            aria-label="View document"
+            title="Lihat dokumen"
+            className="text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <IoMdEye className="w-6 h-6" />
           </button>
-          <button onClick={() => onEdit?.(doc.id)}>
-            <img
-              src={editIcon}
-              alt="Edit document"
-              className="w-5 h-5 opacity-70"
-            />
+          <button
+            onClick={() => onEdit?.(doc.id)}
+            aria-label="Edit document"
+            title="Edit dokumen"
+            className="text-amber-500 hover:text-amber-600 transition-colors"
+          >
+            <MdEdit className="w-6 h-6" />
           </button>
-          <button onClick={() => onDelete?.(doc.id)}>
-            <img
-              src={deleteIcon}
-              alt="Delete document"
-              className="w-5 h-5 opacity-70"
-            />
+          <button
+            onClick={() => onDelete?.(doc.id)}
+            aria-label="Delete document"
+            title="Hapus dokumen"
+            className="text-red-600 hover:text-red-700 transition-colors"
+          >
+            <FaTrashAlt className="w-5 h-5" />
           </button>
         </div>
       </td>
