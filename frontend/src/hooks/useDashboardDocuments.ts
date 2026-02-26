@@ -106,17 +106,7 @@ export function useDashboardDocuments() {
 
     const fileUrl = `http://localhost:3001/uploads/${normalizedPath}`;
     const previewUrl = `${window.location.origin}/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`;
-    const newTab = window.open(previewUrl, "_blank", "noopener,noreferrer");
-
-    if (!newTab) {
-      showToast(
-        "Gagal membuka file. Izinkan pop-up pada browser Anda.",
-        "error",
-      );
-      return;
-    }
-
-    showToast(`Membuka ${doc.nama_sppd}...`, "info");
+    window.open(previewUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleEdit = (id: number | string) => {
