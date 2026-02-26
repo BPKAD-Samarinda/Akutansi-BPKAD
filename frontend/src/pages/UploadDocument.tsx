@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
-import Toast from "../components/layout/ui/Toast";
+import { Toast } from "../components/snackbar";
 import UploadDocumentInfoSection from "../components/document/forms/UploadDocumentInfoSection";
 import UploadFileSection from "../components/document/forms/UploadFileSection";
 import UploadFormActions from "../components/document/forms/UploadFormActions";

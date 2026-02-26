@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Uploads
+# Mengabaikan semua isi folder uploads kecuali file .gitkeep
+/uploads/*
+!/uploads/.gitkeep
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,6 +28,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# Environment variables
 .env
 .env.*
 !.env.example

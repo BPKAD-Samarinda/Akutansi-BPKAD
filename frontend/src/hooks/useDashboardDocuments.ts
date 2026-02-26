@@ -88,10 +88,25 @@ export function useDashboardDocuments() {
 
   const handleView = (id: number | string) => {
     const doc = documents.find((item) => item.id === id);
-    showToast(
-      `Melihat ${doc?.nama_sppd || "dokumen"}... (fungsi preview belum diimplementasikan)`,
-      "info",
-    );
+
+    if (!doc) {
+      showToast("Dokumen tidak ditemukan", "error");
+      return;
+    }
+
+    if (!doc.file_path) {
+      showToast("File dokumen tidak tersedia", "error");
+      return;
+    }
+
+    const normalizedPath = doc.file_path
+      .replace(/\\/g, "/")
+      .replace(/^\/?uploads\/?/i, "")
+      .replace(/^\/+/, "");
+
+    const fileUrl = `http://localhost:3001/uploads/${normalizedPath}`;
+    const previewUrl = `${window.location.origin}/preview-document?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(doc.nama_sppd)}`;
+    window.open(previewUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleEdit = (id: number | string) => {
@@ -181,7 +196,7 @@ export function useDashboardDocuments() {
 
         showToast("Dokumen berhasil dihapus!", "success");
       }
-    } catch (error) {
+    } catch {
       showToast("Gagal menghapus dokumen dari server", "error");
     }
 
