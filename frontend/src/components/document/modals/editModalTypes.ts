@@ -12,5 +12,8 @@ export interface EditModalProps {
   isOpen: boolean;
   document: Document | null;
   onClose: () => void;
-  onSave: (id: number | string, updatedData: Partial<Document>) => void;
+  onSave: (
+    id: number | string,
+    updatedData: Partial<Document>,
+  ) => Promise<boolean>;
 }

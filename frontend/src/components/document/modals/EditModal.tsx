@@ -10,6 +10,7 @@ export default function EditModal({
 }: EditModalProps) {
   const {
     formData,
+    isSaving,
     shouldRender,
     isCalendarOpen,
     isCategoryOpen,
@@ -54,6 +55,7 @@ export default function EditModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           <EditModalFormFields
             formData={formData}
+            isSaving={isSaving}
             isCategoryOpen={isCategoryOpen}
             isCalendarOpen={isCalendarOpen}
             categoryWrapperRef={categoryWrapperRef}

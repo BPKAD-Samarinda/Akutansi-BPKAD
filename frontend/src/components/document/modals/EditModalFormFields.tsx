@@ -4,6 +4,7 @@ import { EditFormData } from "./editModalTypes";
 
 type EditModalFormFieldsProps = {
   formData: EditFormData;
+  isSaving: boolean;
   isCategoryOpen: boolean;
   isCalendarOpen: boolean;
   categoryWrapperRef: React.RefObject<HTMLDivElement | null>;
@@ -23,6 +24,7 @@ type EditModalFormFieldsProps = {
 
 export default function EditModalFormFields({
   formData,
+  isSaving,
   isCategoryOpen,
   isCalendarOpen,
   categoryWrapperRef,
@@ -133,15 +135,17 @@ export default function EditModalFormFields({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 border rounded-lg"
+          disabled={isSaving}
+          className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Batal
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-orange-500 text-white rounded-lg"
+          disabled={isSaving}
+          className="px-4 py-2 bg-orange-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Simpan
+          {isSaving ? "Menyimpan..." : "Simpan"}
         </button>
       </div>
     </>

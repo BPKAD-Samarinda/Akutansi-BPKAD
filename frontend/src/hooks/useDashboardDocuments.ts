@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDocuments } from "../services/api";
+import { getDocuments, updateDocument } from "../services/api";
 import { Document, ToastState } from "../types";
 import { useDocumentFilters } from "./useDocumentFilters";
 import axios from "axios";
@@ -116,16 +116,25 @@ export function useDashboardDocuments() {
     }
   };
 
-  const handleSaveEdit = (
+  const handleSaveEdit = async (
     id: number | string,
     updatedData: Partial<Document>,
-  ) => {
-    const updatedDocuments = documents.map((doc) =>
-      doc.id === id ? { ...doc, ...updatedData } : doc,
-    );
-    setDocuments(updatedDocuments);
-    setFilteredDocuments(updatedDocuments);
-    showToast("Dokumen berhasil diperbarui (secara lokal)!", "success");
+  ): Promise<boolean> => {
+    try {
+      await updateDocument(id, updatedData);
+
+      const updatedDocuments = documents.map((doc) =>
+        doc.id === id ? { ...doc, ...updatedData } : doc,
+      );
+
+      setDocuments(updatedDocuments);
+      setFilteredDocuments(updatedDocuments);
+      showToast("Dokumen berhasil diperbarui!", "success");
+      return true;
+    } catch {
+      showToast("Gagal memperbarui dokumen", "error");
+      return false;
+    }
   };
 
   const handleDelete = (id: number | string) => {

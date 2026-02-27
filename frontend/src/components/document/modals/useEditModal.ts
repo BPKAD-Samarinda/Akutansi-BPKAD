@@ -13,7 +13,10 @@ type UseEditModalParams = {
   isOpen: boolean;
   editingDocument: Document | null;
   onClose: () => void;
-  onSave: (id: number | string, updatedData: Partial<Document>) => void;
+  onSave: (
+    id: number | string,
+    updatedData: Partial<Document>,
+  ) => Promise<boolean>;
 };
 
 export function useEditModal({
@@ -29,6 +32,7 @@ export function useEditModal({
   );
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [shouldRender, setShouldRender] = useState(isOpen && !!editingDocument);
 
   const calendarPopoverRef = useRef<HTMLDivElement | null>(null);
@@ -255,24 +259,32 @@ export function useEditModal({
     setIsCalendarOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!editingDocument) return;
     if (!formData.kategori) return;
 
-    onSave(editingDocument.id, {
-      nama_sppd: formData.nama_sppd,
-      kategori: formData.kategori,
-      tanggal_sppd: formData.tanggal_sppd || today,
-    });
+    setIsSaving(true);
+    try {
+      const isSaved = await onSave(editingDocument.id, {
+        nama_sppd: formData.nama_sppd,
+        kategori: formData.kategori,
+        tanggal_sppd: formData.tanggal_sppd || today,
+      });
 
-    handleCloseWithAnimation();
+      if (isSaved) {
+        handleCloseWithAnimation();
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return {
     today,
     formData,
+    isSaving,
     shouldRender,
     isCalendarOpen,
     isCategoryOpen,

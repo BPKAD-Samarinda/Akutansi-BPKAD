@@ -39,6 +39,13 @@ export const getDocuments = async (): Promise<Document[]> => {
   }
 };
 
+export const updateDocument = async (
+  id: number | string,
+  updatedData: Partial<Document>,
+): Promise<void> => {
+  await apiClient.put(`/documents/${id}`, updatedData);
+};
+
 /**
  * Mengirim permintaan login ke backend.
  * @param username Nama pengguna.
