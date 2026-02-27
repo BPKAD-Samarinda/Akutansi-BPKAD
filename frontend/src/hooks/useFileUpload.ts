@@ -122,7 +122,7 @@ export function useFileUpload(
         setSelectedFile(null);
         navigate("/dashboarddokumen");
       }, 2000);
-    } catch (error) {
+    } catch  {
       showToast("Gagal mengunggah dokumen", "error");
     } finally {
       setIsUploading(false);
