@@ -8,7 +8,7 @@ export default function UploadFormActions({
   onCancel,
 }: UploadFormActionsProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-end mt-10 lg:mt-12 animate-slideUp animate-delay-300">
+    <div className="flex flex-col sm:flex-row gap-4 justify-end mt-10 lg:mt-12">
       <button
         type="button"
         onClick={onCancel}

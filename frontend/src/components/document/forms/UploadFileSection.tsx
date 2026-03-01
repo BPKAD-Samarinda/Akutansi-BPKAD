@@ -27,7 +27,7 @@ export default function UploadFileSection({
   onRemoveFile,
 }: UploadFileSectionProps) {
   return (
-    <div className="space-y-6 animate-slideInRight animate-delay-200">
+    <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-400">
           <svg

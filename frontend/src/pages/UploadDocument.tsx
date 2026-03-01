@@ -40,45 +40,44 @@ export default function UploadDocument() {
     <div className="min-h-screen flex bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-fadeIn">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Unggah Dokumen" />
 
         <main className="flex-1 p-4 lg:p-8">
-          {/* Upload Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="animate-slideUp animate-delay-100"
-          >
-            <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                <UploadDocumentInfoSection
-                  formData={formData}
-                  onInputChange={handleInputChange}
-                />
+          <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
+            <form onSubmit={handleSubmit}>
+              <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                  <UploadDocumentInfoSection
+                    formData={formData}
+                    onInputChange={handleInputChange}
+                  />
 
-                <UploadFileSection
-                  fileInputRef={fileInputRef}
-                  selectedFile={selectedFile}
-                  isDragging={isDragging}
-                  onFileInputChange={handleFileInputChange}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClickUploadArea={handleClickUploadArea}
-                  onRemoveFile={handleRemoveFile}
-                />
+                  <UploadFileSection
+                    fileInputRef={fileInputRef}
+                    selectedFile={selectedFile}
+                    isDragging={isDragging}
+                    onFileInputChange={handleFileInputChange}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClickUploadArea={handleClickUploadArea}
+                    onRemoveFile={handleRemoveFile}
+                  />
+                </div>
+
+                <div className="animate-[slideUp_0.6s_ease-out_0.2s_both]">
+                  <UploadFormActions
+                    isUploading={isUploading}
+                    onCancel={handleCancel}
+                  />
+                </div>
               </div>
-
-              <UploadFormActions
-                isUploading={isUploading}
-                onCancel={handleCancel}
-              />
-            </div>
-          </form>
+            </form>
+          </div>
         </main>
       </div>
 
-      {/* Toast Notification */}
       {toast.show && (
         <Toast
           message={toast.message}
