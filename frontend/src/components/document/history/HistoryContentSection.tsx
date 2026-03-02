@@ -56,6 +56,8 @@ export default function HistoryContentSection({
   onPageSizeChange,
 }: HistoryContentSectionProps) {
   const selectedToolbarRef = useRef<HTMLDivElement | null>(null);
+  const tableContentRef = useRef<HTMLDivElement | null>(null);
+  const previousSelectedCountRef = useRef<number>(selectedRestorableCount);
 
   useEffect(() => {
     if (selectedRestorableCount <= 0 || !selectedToolbarRef.current) {
@@ -68,6 +70,34 @@ export default function HistoryContentSection({
       { autoAlpha: 0, y: -8 },
       { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" },
     );
+  }, [selectedRestorableCount]);
+
+  useEffect(() => {
+    const previousCount = previousSelectedCountRef.current;
+    const isToolbarJustShown =
+      previousCount <= 0 && selectedRestorableCount > 0;
+    const isToolbarJustHidden =
+      previousCount > 0 && selectedRestorableCount <= 0;
+
+    if (isToolbarJustShown && tableContentRef.current) {
+      gsap.killTweensOf(tableContentRef.current);
+      gsap.fromTo(
+        tableContentRef.current,
+        { y: -10 },
+        { y: 0, duration: 0.32, ease: "power2.out" },
+      );
+    }
+
+    if (isToolbarJustHidden && tableContentRef.current) {
+      gsap.killTweensOf(tableContentRef.current);
+      gsap.fromTo(
+        tableContentRef.current,
+        { y: 8 },
+        { y: 0, duration: 0.28, ease: "power2.out" },
+      );
+    }
+
+    previousSelectedCountRef.current = selectedRestorableCount;
   }, [selectedRestorableCount]);
 
   return (
@@ -100,33 +130,35 @@ export default function HistoryContentSection({
         </div>
       )}
 
-      {loading || error || items.length === 0 ? (
-        <HistoryState
-          loading={loading}
-          error={error}
-          isEmpty={items.length === 0}
-        />
-      ) : (
-        <>
-          <HistoryTable
-            items={items}
-            restoringId={restoringId}
-            selectedIds={selectedIds}
-            allRestorableSelected={allRestorableSelected}
-            onToggleSelectAll={onToggleSelectAll}
-            onToggleSelect={onToggleSelect}
-            onRestore={onRestore}
+      <div ref={tableContentRef}>
+        {loading || error || items.length === 0 ? (
+          <HistoryState
+            loading={loading}
+            error={error}
+            isEmpty={items.length === 0}
           />
-          <HistoryPagination
-            page={page}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            pageSize={pageSize}
-            onPageChange={onPageChange}
-            onPageSizeChange={onPageSizeChange}
-          />
-        </>
-      )}
+        ) : (
+          <>
+            <HistoryTable
+              items={items}
+              restoringId={restoringId}
+              selectedIds={selectedIds}
+              allRestorableSelected={allRestorableSelected}
+              onToggleSelectAll={onToggleSelectAll}
+              onToggleSelect={onToggleSelect}
+              onRestore={onRestore}
+            />
+            <HistoryPagination
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              pageSize={pageSize}
+              onPageChange={onPageChange}
+              onPageSizeChange={onPageSizeChange}
+            />
+          </>
+        )}
+      </div>
     </section>
   );
 }
