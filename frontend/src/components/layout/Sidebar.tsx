@@ -1,12 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import dashboardIcon from "../../assets/icons/Dashboard.svg";
 import homeIcon from "../../assets/icons/home.svg";
-<<<<<<< HEAD
 import documentIcon from "../../assets/icons/upload.svg";
 import historyIcon from "../../assets/icons/refresh.svg";
-=======
-import uploadIcon from "../../assets/icons/upload.svg";
->>>>>>> fe/halaman-dashboard
 import logoutIcon from "../../assets/icons/logout.svg";
 import AppTooltip from "../ui/app-tooltip";
 
@@ -15,6 +11,7 @@ export default function Sidebar() {
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
+  const handleLogout = () => navigate("/login");
 
   return (
     <aside
@@ -34,18 +31,31 @@ export default function Sidebar() {
       <div className="w-12 h-px bg-white/30 mb-6"></div>
 
       <nav className="flex flex-col gap-4 flex-1">
-<<<<<<< HEAD
         <AppTooltip content="Dashboard">
           <button
-            onClick={() => navigate("/dashboarddokumen")}
+            onClick={() => navigate("/dashboard")}
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
             ${
-              isActive("/dashboarddokumen")
+              isActive("/dashboard")
                 ? "bg-white/30 shadow-lg scale-105"
                 : "hover:bg-white/20"
             }`}
           >
-            <img src={homeIcon} className="w-6 h-6" alt="Dashboard" />
+            <img src={dashboardIcon} className="w-6 h-6" alt="Dashboard" />
+          </button>
+        </AppTooltip>
+
+        <AppTooltip content="Dokumen Management">
+          <button
+            onClick={() => navigate("/dokumen-management")}
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${
+              isActive("/dokumen-management")
+                ? "bg-white/30 shadow-lg scale-105"
+                : "hover:bg-white/20"
+            }`}
+          >
+            <img src={homeIcon} className="w-6 h-6" alt="Dokumen Management" />
           </button>
         </AppTooltip>
 
@@ -76,49 +86,10 @@ export default function Sidebar() {
             <img src={historyIcon} className="w-6 h-6" alt="Riwayat Unggah" />
           </button>
         </AppTooltip>
-=======
-        <button
-          onClick={() => navigate("/dashboard")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-            isActive("/dashboard")
-              ? "bg-white/30 shadow-lg scale-105"
-              : "hover:bg-white/20"
-          }`}
-          title="Dashboard"
-        >
-          <img src={dashboardIcon} className="w-6 h-6" alt="Dashboard" />
-        </button>
-
-        <button
-          onClick={() => navigate("/dokumen-management")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-            isActive("/dokumen-management")
-              ? "bg-white/30 shadow-lg scale-105"
-              : "hover:bg-white/20"
-          }`}
-          title="Dokumen Management"
-        >
-          <img src={homeIcon} className="w-6 h-6" alt="Dokumen Management" />
-        </button>
-
-        <button
-          onClick={() => navigate("/upload")}
-          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-            isActive("/upload")
-              ? "bg-white/30 shadow-lg scale-105"
-              : "hover:bg-white/20"
-          }`}
-          title="Upload Dokumen"
-        >
-          <img src={uploadIcon} className="w-6 h-6" alt="Upload Dokumen" />
-        </button>
->>>>>>> fe/halaman-dashboard
       </nav>
 
       <div className="w-12 h-px bg-white/30 mb-6"></div>
 
-<<<<<<< HEAD
-      {/* LOGOUT - SEPARATED */}
       <AppTooltip content="Keluar">
         <button
           onClick={handleLogout}
@@ -131,19 +102,6 @@ export default function Sidebar() {
           />
         </button>
       </AppTooltip>
-=======
-      <button
-        onClick={() => navigate("/login")}
-        className="w-12 h-12 rounded-xl hover:bg-red-500/30 flex items-center justify-center transition-all group"
-        title="Keluar"
-      >
-        <img
-          src={logoutIcon}
-          className="w-6 h-6 group-hover:scale-110 transition-transform"
-          alt="Logout"
-        />
-      </button>
->>>>>>> fe/halaman-dashboard
     </aside>
   );
 }

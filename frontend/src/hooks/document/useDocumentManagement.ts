@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  apiClient,
-  getDocuments,
-  updateDocument,
-  uploadsBaseUrl,
-} from "../../services/api";
+import { getDocuments, updateDocument, uploadsBaseUrl } from "../../services/api";
 import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
-<<<<<<< HEAD:frontend/src/hooks/useDashboardDocuments.ts
 import {
   getHiddenDocumentIds,
   moveDocumentsToLocalHistory,
-} from "../utils/uploadHistoryLocal";
-=======
->>>>>>> fe/halaman-dashboard:frontend/src/hooks/document/useDocumentManagement.ts
+} from "../../utils/uploadHistoryLocal";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -187,17 +179,10 @@ export function useDocumentManagement() {
   const confirmDelete = async () => {
     try {
       if (confirmDialog.isMultiple) {
-<<<<<<< HEAD:frontend/src/hooks/useDashboardDocuments.ts
         const documentsToMove = documents.filter((doc) =>
           selectedDocuments.has(doc.id),
         );
-
         moveDocumentsToLocalHistory(documentsToMove);
-=======
-        for (const id of selectedDocuments) {
-          await apiClient.delete(`/documents/${id}`);
-        }
->>>>>>> fe/halaman-dashboard:frontend/src/hooks/document/useDocumentManagement.ts
 
         const updatedDocuments = documents.filter(
           (doc) => !selectedDocuments.has(doc.id),
@@ -212,13 +197,9 @@ export function useDocumentManagement() {
           "success",
         );
       } else if (confirmDialog.documentId) {
-<<<<<<< HEAD:frontend/src/hooks/useDashboardDocuments.ts
         const documentToMove = documents.find(
           (doc) => doc.id === confirmDialog.documentId,
         );
-=======
-        await apiClient.delete(`/documents/${confirmDialog.documentId}`);
->>>>>>> fe/halaman-dashboard:frontend/src/hooks/document/useDocumentManagement.ts
 
         if (documentToMove) {
           moveDocumentsToLocalHistory([documentToMove]);
