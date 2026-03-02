@@ -39,18 +39,18 @@ export default function HistoryTable({
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
           </colgroup>
-          <thead className="bg-gray-50">
+          <thead className="bg-gradient-to-r from-orange-500 to-orange-600">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Nama Dokumen
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Tanggal Upload
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Informasi
               </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Aksi
               </th>
             </tr>
