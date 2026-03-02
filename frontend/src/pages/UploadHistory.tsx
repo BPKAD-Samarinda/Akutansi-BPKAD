@@ -1,4 +1,3 @@
-import { useState } from "react";
 import HistoryToolbar from "../components/document/history/HistoryToolbar";
 import HistoryTable from "../components/document/history/HistoryTable";
 import HistoryPagination from "../components/document/history/HistoryPagination";
@@ -6,15 +5,12 @@ import HistoryState from "../components/document/history/HistoryState";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import { Toast } from "../components/snackbar";
-import { ToastState } from "../types";
 import { useUploadHistory } from "../hooks/useUploadHistory";
+import { useToastState } from "../hooks/useToastState";
+import { getRestoreToastType } from "../utils/historyToastUtils";
 
 export default function UploadHistory() {
-  const [toast, setToast] = useState<ToastState>({
-    show: false,
-    message: "",
-    type: "info",
-  });
+  const { toast, showToast, closeToast } = useToastState("info");
 
   const {
     items,
@@ -34,17 +30,9 @@ export default function UploadHistory() {
     handleRestore,
   } = useUploadHistory();
 
-  const showToast = (message: string, type: ToastState["type"]) => {
-    setToast({ show: true, message, type });
-  };
-
   const handleRestoreClick = async (id: number | string) => {
     const message = await handleRestore(id);
-    const toastType: ToastState["type"] = message.includes("berhasil")
-      ? "success"
-      : message.includes("belum tersedia")
-        ? "warning"
-        : "error";
+    const toastType = getRestoreToastType(message);
 
     showToast(message, toastType);
   };
@@ -104,11 +92,7 @@ export default function UploadHistory() {
       </div>
 
       {toast.show && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast((prev) => ({ ...prev, show: false }))}
-        />
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       )}
     </div>
   );
