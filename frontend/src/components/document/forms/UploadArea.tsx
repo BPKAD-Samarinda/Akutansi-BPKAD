@@ -7,12 +7,21 @@ export default function UploadArea() {
       <div>
         <label className="block mb-2">Nama Dokumen</label>
         <AppTooltip content="Nama Dokumen">
-          <input className="w-full border rounded-xl px-4 py-3 mb-6" />
+          <input
+            title=""
+            aria-label="Nama Dokumen"
+            className="w-full border rounded-xl px-4 py-3 mb-6"
+          />
         </AppTooltip>
 
         <label className="block mb-2">Tanggal</label>
         <AppTooltip content="Tanggal">
-          <input type="date" className="w-full border rounded-xl px-4 py-3" />
+          <input
+            type="date"
+            title=""
+            aria-label="Tanggal"
+            className="w-full border rounded-xl px-4 py-3"
+          />
         </AppTooltip>
       </div>
 

@@ -104,6 +104,8 @@ export default function Toast({
         <AppTooltip content="Close">
           <button
             onClick={onClose}
+            title=""
+            aria-label="Close"
             className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
           >
             <svg

@@ -230,6 +230,8 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
           <AppTooltip content="Bulan sebelumnya">
             <button
               onClick={() => setViewDate(new Date(year, month - 1, 1))}
+              title=""
+              aria-label="Bulan sebelumnya"
               className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
             >
               <svg
@@ -251,6 +253,8 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
           <AppTooltip content="Pilih bulan">
             <select
               value={month}
+              title=""
+              aria-label="Pilih bulan"
               onChange={(e) =>
                 setViewDate(new Date(year, Number(e.target.value), 1))
               }
@@ -267,6 +271,8 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
           <AppTooltip content="Pilih tahun">
             <select
               value={year}
+              title=""
+              aria-label="Pilih tahun"
               onChange={(e) =>
                 setViewDate(new Date(Number(e.target.value), month, 1))
               }
@@ -283,6 +289,8 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
           <AppTooltip content="Bulan berikutnya">
             <button
               onClick={() => setViewDate(new Date(year, month + 1, 1))}
+              title=""
+              aria-label="Bulan berikutnya"
               className="p-1.5 hover:bg-gray-100 rounded-lg transition shrink-0"
             >
               <svg

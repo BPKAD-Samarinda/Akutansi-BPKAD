@@ -52,6 +52,8 @@ export default function EditModalFormFields({
             name="nama_sppd"
             value={formData.nama_sppd}
             onChange={onInputChange}
+            title=""
+            aria-label="Nama SPPD"
             className="w-full border rounded-lg px-3 py-2"
             required
           />
