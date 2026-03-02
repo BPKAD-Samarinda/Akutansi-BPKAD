@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import HistoryToolbar from "./HistoryToolbar";
 import HistoryTable from "./HistoryTable";
 import HistoryPagination from "./HistoryPagination";
@@ -53,6 +55,21 @@ export default function HistoryContentSection({
   onPageChange,
   onPageSizeChange,
 }: HistoryContentSectionProps) {
+  const selectedToolbarRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedRestorableCount <= 0 || !selectedToolbarRef.current) {
+      return;
+    }
+
+    gsap.killTweensOf(selectedToolbarRef.current);
+    gsap.fromTo(
+      selectedToolbarRef.current,
+      { autoAlpha: 0, y: -8 },
+      { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" },
+    );
+  }, [selectedRestorableCount]);
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
       <div className="mb-4">
@@ -65,7 +82,10 @@ export default function HistoryContentSection({
       </div>
 
       {selectedRestorableCount > 0 && (
-        <div className="mb-4 flex items-center justify-between rounded-lg border border-orange-100 bg-orange-50 px-3 py-2">
+        <div
+          ref={selectedToolbarRef}
+          className="mb-4 flex items-center justify-between rounded-lg border border-orange-100 bg-orange-50 px-3 py-2"
+        >
           <p className="text-xs font-medium text-orange-700">
             {selectedRestorableCount} dokumen dipilih
           </p>

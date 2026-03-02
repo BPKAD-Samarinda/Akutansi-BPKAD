@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+
 type HistoryPaginationProps = {
   page: number;
   totalPages: number;
@@ -15,6 +18,21 @@ export default function HistoryPagination({
   onPageChange,
   onPageSizeChange,
 }: HistoryPaginationProps) {
+  const pageSizeSelectRef = useRef<HTMLSelectElement | null>(null);
+
+  useEffect(() => {
+    if (!pageSizeSelectRef.current) {
+      return;
+    }
+
+    gsap.killTweensOf(pageSizeSelectRef.current);
+    gsap.fromTo(
+      pageSizeSelectRef.current,
+      { autoAlpha: 0, y: 6 },
+      { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" },
+    );
+  }, []);
+
   const start = totalItems === 0 ? 0 : (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, totalItems);
 
@@ -26,6 +44,7 @@ export default function HistoryPagination({
 
       <div className="flex items-center gap-2">
         <select
+          ref={pageSizeSelectRef}
           title="pilih halaman"
           value={pageSize}
           onChange={(event) => onPageSizeChange(Number(event.target.value))}
