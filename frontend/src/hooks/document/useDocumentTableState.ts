@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Document } from "../types";
+import { Document } from "../../types";
 
 export type SortOrder = "newest" | "oldest" | null;
 

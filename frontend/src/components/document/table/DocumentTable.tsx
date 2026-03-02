@@ -6,7 +6,7 @@ import DocumentTableDesktop from "./DocumentTableDesktop";
 import DocumentTableMobile from "./DocumentTableMobile";
 import DocumentTablePagination from "./DocumentTablePagination";
 import { Document } from "../../../types";
-import { useDocumentTableState } from "../../../hooks/useDocumentTableState";
+import { useDocumentTableState } from "../../../hooks/document/useDocumentTableState";
 
 interface DocumentTableProps {
   documents: Document[];

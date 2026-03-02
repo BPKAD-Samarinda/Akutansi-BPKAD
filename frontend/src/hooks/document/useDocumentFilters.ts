@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Document, ToastState } from "../types";
+import { Document, ToastState } from "../../types";
 
 export function useDocumentFilters(
   initialData: Document[],

@@ -17,7 +17,8 @@ interface UserInfo {
 }
 
 function getUserInfoFromToken(): UserInfo {
-  const token = localStorage.getItem("authToken");
+  const token =
+    sessionStorage.getItem("authToken") ?? localStorage.getItem("authToken");
 
   if (!token) {
     return { username: "", role: "" };

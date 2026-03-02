@@ -6,7 +6,7 @@ import UploadDocumentInfoSection from "../components/document/forms/UploadDocume
 import UploadFileSection from "../components/document/forms/UploadFileSection";
 import UploadFormActions from "../components/document/forms/UploadFormActions";
 import { ToastState } from "../types";
-import { useFileUpload } from "../hooks/useFileUpload";
+import { useFileUpload } from "../hooks/document/useFileUpload";
 
 export default function UploadDocument() {
   const [toast, setToast] = useState<ToastState>({

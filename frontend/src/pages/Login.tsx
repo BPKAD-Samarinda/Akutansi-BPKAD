@@ -32,7 +32,7 @@ export default function Login() {
         localStorage.removeItem("authToken");
       }
 
-      navigate("/dashboarddokumen");
+      navigate("/dashboard");
     } catch (err: Error | unknown) {
       const errorMessage =
         err instanceof Error ? err.message : "Terjadi kesalahan";

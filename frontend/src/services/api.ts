@@ -28,8 +28,29 @@ type DocumentApiItem = {
 };
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:3001/api",
+  timeout: 15000,
 });
+
+apiClient.interceptors.request.use((config) => {
+  const token =
+    sessionStorage.getItem("authToken") ?? localStorage.getItem("authToken");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+const resolvedBaseUrl = apiClient.defaults.baseURL?.replace(/\/+$/, "") ?? "";
+const apiSuffix = "/api";
+const serverOrigin = resolvedBaseUrl.endsWith(apiSuffix)
+  ? resolvedBaseUrl.slice(0, -apiSuffix.length)
+  : resolvedBaseUrl;
+
+export const uploadsBaseUrl = `${serverOrigin}/uploads`;
+export { apiClient };
 
 export const getDocuments = async (): Promise<Document[]> => {
   try {

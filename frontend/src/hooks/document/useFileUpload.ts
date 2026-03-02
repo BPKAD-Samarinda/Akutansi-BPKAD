@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastState } from "../types";
+import { ToastState } from "../../types";
+import { apiClient } from "../../services/api";
+
 
 export function useFileUpload(
   showToast: (message: string, type: ToastState["type"]) => void,
@@ -113,19 +115,14 @@ export function useFileUpload(
       data.append("kategori", formData.category);
       data.append("file", selectedFile);
 
-      const response = await fetch("http://localhost:3001/api/documents", {
-        method: "POST",
-        body: data,
-      });
-
-      if (!response.ok) throw new Error("Upload gagal");
+      await apiClient.post("/documents", data);
 
       showToast("Dokumen berhasil diunggah!", "success");
 
       setTimeout(() => {
         setFormData({ name: "", date: "", category: "" });
         setSelectedFile(null);
-        navigate("/dashboarddokumen");
+        navigate("/dokumen-management");
       }, 2000);
     } catch {
       showToast("Gagal mengunggah dokumen", "error");

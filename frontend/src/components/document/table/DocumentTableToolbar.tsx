@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SortOrder } from "../../../hooks/useDocumentTableState";
+import { SortOrder } from "../../../hooks/document/useDocumentTableState";
 import uploadIcon from "../../../assets/icons/upload.svg";
 import refreshIcon from "../../../assets/icons/refresh.svg";
 import AppTooltip from "../../ui/app-tooltip";
