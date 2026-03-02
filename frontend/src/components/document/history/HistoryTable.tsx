@@ -32,19 +32,19 @@ export default function HistoryTable({
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-100">
+        <table className="min-w-full table-fixed divide-y divide-gray-100">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="w-[34%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Nama Dokumen
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="w-[20%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Tanggal Upload
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="w-[30%] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Informasi
               </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <th className="w-[16%] px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Aksi
               </th>
             </tr>
@@ -53,7 +53,10 @@ export default function HistoryTable({
             {items.map((item) => (
               <tr key={item.id}>
                 <td className="px-4 py-4 align-top">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div
+                    className="truncate text-sm font-medium text-gray-900"
+                    title={item.documentName}
+                  >
                     {item.documentName}
                   </div>
                   <div className="mt-1 text-xs text-gray-500">
@@ -63,8 +66,13 @@ export default function HistoryTable({
                 <td className="px-4 py-4 text-sm text-gray-700 align-top">
                   {formatDate(item.uploadedAt)}
                 </td>
-                <td className="px-4 py-4 align-top text-sm text-gray-600">
-                  Diunggah oleh {item.uploadedBy}
+                <td
+                  className="px-4 py-4 align-top text-sm text-gray-600"
+                  title={`Diunggah oleh ${item.uploadedBy}`}
+                >
+                  <span className="block truncate">
+                    Diunggah oleh {item.uploadedBy}
+                  </span>
                 </td>
                 <td className="px-4 py-4 text-right align-top">
                   <button
