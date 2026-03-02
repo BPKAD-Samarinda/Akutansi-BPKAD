@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import homeIcon from "../../assets/icons/home.svg";
 import documentIcon from "../../assets/icons/upload.svg";
+import historyIcon from "../../assets/icons/refresh.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 
 export default function Sidebar() {
@@ -58,6 +59,19 @@ export default function Sidebar() {
           title="Upload Dokumen"
         >
           <img src={documentIcon} className="w-6 h-6" alt="Upload" />
+        </button>
+
+        <button
+          onClick={() => navigate("/riwayat")}
+          className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${
+              isActive("/riwayat")
+                ? "bg-white/30 shadow-lg scale-105"
+                : "hover:bg-white/20"
+            }`}
+          title="Riwayat Unggah"
+        >
+          <img src={historyIcon} className="w-6 h-6" alt="Riwayat Unggah" />
         </button>
       </nav>
 
