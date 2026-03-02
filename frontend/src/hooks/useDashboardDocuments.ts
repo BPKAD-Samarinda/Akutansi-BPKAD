@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { getDocuments, updateDocument } from "../services/api";
 import { Document, ToastState } from "../types";
 import { useDocumentFilters } from "./useDocumentFilters";
-import axios from "axios";
+import {
+  getHiddenDocumentIds,
+  moveDocumentsToLocalHistory,
+} from "../utils/uploadHistoryLocal";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -49,8 +52,13 @@ export function useDashboardDocuments() {
       setLoading(true);
       try {
         const data = await getDocuments();
-        setDocuments(data);
-        setFilteredDocuments(data);
+        const hiddenDocumentIds = new Set(getHiddenDocumentIds().map(String));
+        const visibleDocuments = data.filter(
+          (document) => !hiddenDocumentIds.has(String(document.id)),
+        );
+
+        setDocuments(visibleDocuments);
+        setFilteredDocuments(visibleDocuments);
       } catch {
         showToast("Gagal mengambil data dokumen", "error");
       } finally {
@@ -171,9 +179,11 @@ export function useDashboardDocuments() {
   const confirmDelete = async () => {
     try {
       if (confirmDialog.isMultiple) {
-        for (const id of selectedDocuments) {
-          await axios.delete(`http://localhost:3001/api/documents/${id}`);
-        }
+        const documentsToMove = documents.filter((doc) =>
+          selectedDocuments.has(doc.id),
+        );
+
+        moveDocumentsToLocalHistory(documentsToMove);
 
         const updatedDocuments = documents.filter(
           (doc) => !selectedDocuments.has(doc.id),
@@ -184,13 +194,17 @@ export function useDashboardDocuments() {
         setSelectedDocuments(new Set());
 
         showToast(
-          `${selectedDocuments.size} dokumen berhasil dihapus!`,
+          `${selectedDocuments.size} dokumen dipindahkan ke riwayat!`,
           "success",
         );
       } else if (confirmDialog.documentId) {
-        await axios.delete(
-          `http://localhost:3001/api/documents/${confirmDialog.documentId}`,
+        const documentToMove = documents.find(
+          (doc) => doc.id === confirmDialog.documentId,
         );
+
+        if (documentToMove) {
+          moveDocumentsToLocalHistory([documentToMove]);
+        }
 
         const updatedDocuments = documents.filter(
           (doc) => doc.id !== confirmDialog.documentId,
@@ -203,10 +217,10 @@ export function useDashboardDocuments() {
         newSelected.delete(confirmDialog.documentId);
         setSelectedDocuments(newSelected);
 
-        showToast("Dokumen berhasil dihapus!", "success");
+        showToast("Dokumen dipindahkan ke riwayat!", "success");
       }
     } catch {
-      showToast("Gagal menghapus dokumen dari server", "error");
+      showToast("Gagal memindahkan dokumen ke riwayat", "error");
     }
 
     setConfirmDialog({
