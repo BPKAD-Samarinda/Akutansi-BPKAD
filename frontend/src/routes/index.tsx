@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import UploadDocument from "../pages/UploadDocument";
 import DocumentPreview from "../pages/DocumentPreview";
+import UploadHistory from "../pages/UploadHistory";
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboarddokumen" element={<Dashboard />} />
       <Route path="/upload" element={<UploadDocument />} />
+      <Route path="/riwayat" element={<UploadHistory />} />
       <Route path="/preview-document" element={<DocumentPreview />} />
 
       {/* Redirect root to login */}
