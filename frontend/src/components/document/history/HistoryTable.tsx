@@ -3,6 +3,10 @@ import { UploadHistory } from "../../../types";
 type HistoryTableProps = {
   items: UploadHistory[];
   restoringId: number | string | null;
+  selectedIds: Set<string>;
+  allRestorableSelected: boolean;
+  onToggleSelectAll: (checked: boolean) => void;
+  onToggleSelect: (id: number | string, checked: boolean) => void;
   onRestore: (id: number | string) => void;
 };
 
@@ -27,6 +31,10 @@ const formatDate = (dateValue: string) => {
 export default function HistoryTable({
   items,
   restoringId,
+  selectedIds,
+  allRestorableSelected,
+  onToggleSelectAll,
+  onToggleSelect,
   onRestore,
 }: HistoryTableProps) {
   return (
@@ -34,13 +42,23 @@ export default function HistoryTable({
       <div className="overflow-x-auto">
         <table className="w-full table-fixed divide-y divide-gray-100">
           <colgroup>
-            <col style={{ width: "44%" }} />
+            <col style={{ width: "6%" }} />
+            <col style={{ width: "38%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
           </colgroup>
           <thead className="bg-gradient-to-r from-orange-500 to-orange-600">
             <tr>
+              <th className="px-3 py-3 text-center">
+                <input
+                  type="checkbox"
+                  checked={allRestorableSelected}
+                  onChange={(event) => onToggleSelectAll(event.target.checked)}
+                  className="h-4 w-4 rounded border-white/50 bg-transparent accent-orange-600"
+                  aria-label="Pilih semua dokumen terhapus"
+                />
+              </th>
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Nama Dokumen
               </th>
@@ -58,6 +76,18 @@ export default function HistoryTable({
           <tbody className="divide-y divide-gray-100 bg-white">
             {items.map((item) => (
               <tr key={item.id}>
+                <td className="px-3 py-4 text-center align-top">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(String(item.id))}
+                    disabled={!item.isDeleted}
+                    onChange={(event) =>
+                      onToggleSelect(item.id, event.target.checked)
+                    }
+                    className="h-4 w-4 rounded border-gray-300 accent-orange-600 disabled:opacity-40"
+                    aria-label={`Pilih dokumen ${item.documentName}`}
+                  />
+                </td>
                 <td className="max-w-0 px-4 py-4 align-top">
                   <div
                     className="block w-full truncate text-sm font-medium text-gray-900"

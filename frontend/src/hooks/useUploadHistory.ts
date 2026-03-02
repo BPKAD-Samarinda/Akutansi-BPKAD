@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { getUploadHistories, restoreUploadHistory } from "../services/api";
+import {
+  getUploadHistories,
+  restoreUploadHistories,
+  restoreUploadHistory,
+} from "../services/api";
 import { UploadHistory } from "../types";
 
 type UseUploadHistoryParams = {
@@ -15,6 +19,9 @@ export function useUploadHistory({
   const [items, setItems] = useState<UploadHistory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [restoringId, setRestoringId] = useState<number | string | null>(null);
+  const [isRestoringSelected, setIsRestoringSelected] =
+    useState<boolean>(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string>("");
 
   const [searchInput, setSearchInput] = useState<string>("");
@@ -27,6 +34,21 @@ export function useUploadHistory({
     const value = Math.ceil(total / limit);
     return value > 0 ? value : 1;
   }, [limit, total]);
+
+  const restorableItems = useMemo(
+    () => items.filter((item) => item.isDeleted),
+    [items],
+  );
+
+  const selectedRestorableCount = useMemo(
+    () =>
+      restorableItems.filter((item) => selectedIds.has(String(item.id))).length,
+    [restorableItems, selectedIds],
+  );
+
+  const allRestorableSelected =
+    restorableItems.length > 0 &&
+    restorableItems.every((item) => selectedIds.has(String(item.id)));
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
@@ -52,6 +74,29 @@ export function useUploadHistory({
     fetchHistory();
   }, [fetchHistory]);
 
+  useEffect(() => {
+    if (items.length === 0) {
+      setSelectedIds(new Set());
+      return;
+    }
+
+    const validSelectedIds = new Set(
+      items.filter((item) => item.isDeleted).map((item) => String(item.id)),
+    );
+
+    setSelectedIds((previous) => {
+      const next = new Set(
+        Array.from(previous).filter((id) => validSelectedIds.has(id)),
+      );
+
+      if (next.size === previous.size) {
+        return previous;
+      }
+
+      return next;
+    });
+  }, [items]);
+
   const handleSearchSubmit = () => {
     setPage(1);
     setSearchQuery(searchInput.trim());
@@ -59,6 +104,28 @@ export function useUploadHistory({
 
   const handleRefresh = () => {
     fetchHistory();
+  };
+
+  const handleToggleSelect = (id: number | string, checked: boolean) => {
+    const stringId = String(id);
+    setSelectedIds((previous) => {
+      const next = new Set(previous);
+      if (checked) {
+        next.add(stringId);
+      } else {
+        next.delete(stringId);
+      }
+      return next;
+    });
+  };
+
+  const handleToggleSelectAll = (checked: boolean) => {
+    if (!checked) {
+      setSelectedIds(new Set());
+      return;
+    }
+
+    setSelectedIds(new Set(restorableItems.map((item) => String(item.id))));
   };
 
   const handleRestore = async (id: number | string): Promise<string> => {
@@ -79,11 +146,35 @@ export function useUploadHistory({
     }
   };
 
+  const handleRestoreSelected = async (): Promise<string> => {
+    if (selectedIds.size === 0) {
+      return "Pilih minimal satu dokumen yang sudah dihapus.";
+    }
+
+    setIsRestoringSelected(true);
+
+    try {
+      const selectedRestorableIds = Array.from(selectedIds);
+      const response = await restoreUploadHistories(selectedRestorableIds);
+      await fetchHistory();
+      setSelectedIds(new Set());
+      return response.message;
+    } catch {
+      return "Gagal merestorasi dokumen terpilih.";
+    } finally {
+      setIsRestoringSelected(false);
+    }
+  };
+
   return {
     items,
     loading,
     error,
     restoringId,
+    isRestoringSelected,
+    selectedIds,
+    selectedRestorableCount,
+    allRestorableSelected,
     searchInput,
     page,
     limit,
@@ -94,6 +185,9 @@ export function useUploadHistory({
     setLimit,
     handleSearchSubmit,
     handleRefresh,
+    handleToggleSelect,
+    handleToggleSelectAll,
     handleRestore,
+    handleRestoreSelected,
   };
 }

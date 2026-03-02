@@ -135,6 +135,44 @@ export const restoreUploadHistory = async (
   return { message: "Dokumen berhasil direstorasi." };
 };
 
+export const restoreUploadHistories = async (
+  ids: Array<number | string>,
+): Promise<{ message: string; restoredCount: number; failedCount: number }> => {
+  let restoredCount = 0;
+  let failedCount = 0;
+
+  for (const id of ids) {
+    const result = await restoreUploadHistory(id);
+    if (result.message.toLowerCase().includes("berhasil")) {
+      restoredCount += 1;
+    } else {
+      failedCount += 1;
+    }
+  }
+
+  if (restoredCount === 0) {
+    return {
+      message: "Tidak ada dokumen yang berhasil direstorasi.",
+      restoredCount,
+      failedCount,
+    };
+  }
+
+  if (failedCount > 0) {
+    return {
+      message: `${restoredCount} dokumen berhasil direstorasi, ${failedCount} gagal.`,
+      restoredCount,
+      failedCount,
+    };
+  }
+
+  return {
+    message: `${restoredCount} dokumen berhasil direstorasi.`,
+    restoredCount,
+    failedCount,
+  };
+};
+
 export const updateDocument = async (
   id: number | string,
   updatedData: Partial<Document>,

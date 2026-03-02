@@ -14,6 +14,10 @@ export default function UploadHistory() {
     loading,
     error,
     restoringId,
+    isRestoringSelected,
+    selectedIds,
+    selectedRestorableCount,
+    allRestorableSelected,
     searchInput,
     page,
     limit,
@@ -24,11 +28,21 @@ export default function UploadHistory() {
     setLimit,
     handleSearchSubmit,
     handleRefresh,
+    handleToggleSelect,
+    handleToggleSelectAll,
     handleRestore,
+    handleRestoreSelected,
   } = useUploadHistory();
 
   const handleRestoreClick = async (id: number | string) => {
     const message = await handleRestore(id);
+    const toastType = getRestoreToastType(message);
+
+    showToast(message, toastType);
+  };
+
+  const handleRestoreSelectedClick = async () => {
+    const message = await handleRestoreSelected();
     const toastType = getRestoreToastType(message);
 
     showToast(message, toastType);
@@ -48,6 +62,10 @@ export default function UploadHistory() {
               loading={loading}
               error={error}
               restoringId={restoringId}
+              isRestoringSelected={isRestoringSelected}
+              selectedIds={selectedIds}
+              selectedRestorableCount={selectedRestorableCount}
+              allRestorableSelected={allRestorableSelected}
               searchValue={searchInput}
               page={page}
               pageSize={limit}
@@ -56,7 +74,10 @@ export default function UploadHistory() {
               onSearchValueChange={setSearchInput}
               onSearchSubmit={handleSearchSubmit}
               onRefresh={handleRefresh}
+              onToggleSelectAll={handleToggleSelectAll}
+              onToggleSelect={handleToggleSelect}
               onRestore={handleRestoreClick}
+              onRestoreSelected={handleRestoreSelectedClick}
               onPageChange={setPage}
               onPageSizeChange={(value) => {
                 setPage(1);
