@@ -18,6 +18,26 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface DashboardApiDocument {
+  id: number;
+  nama_sppd: string | null;
+  kategori: string;
+  tanggal_sppd?: string | null;
+  created_at?: string | null;
+}
+
+export interface DashboardApiLoginActivity {
+  id: number;
+  username: string;
+  role: string;
+  login_at: string;
+}
+
+export interface DashboardAnalyticsResponse {
+  documents: DashboardApiDocument[];
+  loginActivities: DashboardApiLoginActivity[];
+}
+
 type DocumentApiItem = {
   id: number;
   nama_sppd: string;
@@ -238,4 +258,11 @@ export const login = async (
     }
     throw new Error("Terjadi kesalahan yang tidak diketahui.");
   }
+};
+
+export const getDashboardAnalytics = async (): Promise<DashboardAnalyticsResponse> => {
+  const response = await apiClient.get<DashboardAnalyticsResponse>(
+    "/dashboard/analytics",
+  );
+  return response.data;
 };
