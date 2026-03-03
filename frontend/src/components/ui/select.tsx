@@ -73,7 +73,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-[12.5rem] min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md origin-[--radix-select-content-transform-origin]",
+        "relative z-50 max-h-[12.5rem] min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md origin-[--radix-select-content-transform-origin] data-[state=open]:animate-none data-[state=closed]:animate-none",
         className
       )}
       sideOffset={4}
@@ -82,10 +82,11 @@ const SelectContent = React.forwardRef<
     >
       <SelectPrimitive.Viewport
         className={cn(
-          "max-h-[12.5rem] overflow-y-auto p-1",
+          "max-h-[12.5rem] overflow-y-auto scroll-auto p-1",
           position === "popper" &&
             "w-full min-w-[var(--radix-select-trigger-width)]"
         )}
+        style={{ scrollBehavior: "auto" }}
       >
         {children}
       </SelectPrimitive.Viewport>

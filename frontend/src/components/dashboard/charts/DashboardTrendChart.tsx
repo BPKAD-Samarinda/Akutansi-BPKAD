@@ -85,6 +85,18 @@ function DashboardTrendChart({
           from: 0,
         },
       },
+      transitions: {
+        resize: {
+          animation: {
+            duration: 0,
+          },
+        },
+        active: {
+          animation: {
+            duration: 0,
+          },
+        },
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -109,9 +121,8 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 transition " +
-    "focus:outline-none focus:ring-0 focus:border-slate-200 " +
-    "data-[state=open]:border-orange-300 data-[state=open]:ring-2 data-[state=open]:ring-orange-200";
+    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
+    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
@@ -166,7 +177,7 @@ function DashboardTrendChart({
       </div>
 
       <div className="h-[260px] sm:h-[300px]">
-        <Line key={chartKey} data={chartData} options={options} />
+        <Line key={chartKey} data={chartData} options={options} updateMode="none" />
       </div>
     </div>
   );
