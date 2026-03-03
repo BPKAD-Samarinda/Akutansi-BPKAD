@@ -1,7 +1,7 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
-import type { ChartOptions } from "chart.js";
+import type { ChartOptions, ScriptableContext } from "chart.js";
 import {
   Select,
   SelectContent,
@@ -37,11 +37,35 @@ function DashboardTrendChart({
   monthOptions,
   yearOptions,
 }: Props) {
-  const chartKey = useMemo(
-    () =>
-      `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`,
-    [selectedCategory, selectedMonth, selectedYear, data],
-  );
+  const [animationSeed, setAnimationSeed] = useState(1);
+  const [allowAnimation, setAllowAnimation] = useState(true);
+  const prevFiltersRef = useRef({
+    selectedCategory,
+    selectedMonth,
+    selectedYear,
+  });
+
+  const chartKey = useMemo(() => `trend-${animationSeed}`, [animationSeed]);
+
+  useEffect(() => {
+    const prev = prevFiltersRef.current;
+    const hasChanged =
+      prev.selectedCategory !== selectedCategory ||
+      prev.selectedMonth !== selectedMonth ||
+      prev.selectedYear !== selectedYear;
+
+    if (hasChanged) {
+      setAllowAnimation(true);
+      setAnimationSeed((v) => v + 1);
+      prevFiltersRef.current = { selectedCategory, selectedMonth, selectedYear };
+    }
+  }, [selectedCategory, selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    if (!allowAnimation) return;
+    const timer = setTimeout(() => setAllowAnimation(false), 1300);
+    return () => clearTimeout(timer);
+  }, [allowAnimation, animationSeed]);
 
   const chartData = useMemo(
     () => ({
@@ -73,18 +97,36 @@ function DashboardTrendChart({
         mode: "index",
         intersect: false,
       },
-      animation: {
-        duration: 1200,
-        easing: "easeOutCubic",
-      },
-      animations: {
-        y: {
-          duration: 1000,
-          easing: "easeOutQuart",
-          delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 80 : 0),
-          from: 0,
-        },
-      },
+      animation: allowAnimation
+        ? {
+            duration: 0,
+            easing: "easeOutCubic",
+          }
+        : false,
+      animations: allowAnimation
+        ? {
+            x: {
+              from: (ctx: ScriptableContext<"line">) => {
+                if (ctx.type !== "data") return 0;
+                return ctx.chart.chartArea?.left ?? 0;
+              },
+              duration: 900,
+              easing: "easeOutQuart",
+              delay: (ctx: ScriptableContext<"line">) =>
+                ctx.type === "data" ? ctx.dataIndex * 75 : 0,
+            },
+            y: {
+              duration: 900,
+              easing: "easeOutQuart",
+              from: (ctx: ScriptableContext<"line">) => {
+                if (ctx.type !== "data") return 0;
+                return ctx.chart.scales.y.getPixelForValue(0);
+              },
+              delay: (ctx: ScriptableContext<"line">) =>
+                ctx.type === "data" ? ctx.dataIndex * 75 : 0,
+            },
+          }
+        : {},
       transitions: {
         resize: {
           animation: {
@@ -117,7 +159,7 @@ function DashboardTrendChart({
         },
       },
     }),
-    [],
+    [allowAnimation],
   );
 
   const selectClass =
