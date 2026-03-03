@@ -47,7 +47,16 @@ export const indonesianDateToISO = (dateStr: string): string => {
 };
 
 export const isoDateToIndonesian = (isoDate: string): string => {
-  const dateObj = new Date(isoDate);
+  const raw = (isoDate || "").trim();
+  if (!raw) return "";
+
+  const exactDateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (exactDateOnly) {
+    const [, year, month, day] = exactDateOnly;
+    return `${Number(day)} ${MONTHS_INDO[Number(month) - 1]} ${year}`;
+  }
+
+  const dateObj = new Date(raw.replace(" ", "T"));
 
   if (Number.isNaN(dateObj.getTime())) {
     return "";

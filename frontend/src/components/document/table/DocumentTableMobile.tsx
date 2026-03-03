@@ -1,5 +1,6 @@
 import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
+import { formatIndonesianDate } from "../../../utils/localDate";
 
 type DocumentTableMobileProps = {
   documents: Document[];
@@ -40,15 +41,6 @@ export default function DocumentTableMobile({
       default:
         return "bg-gray-100 text-gray-600";
     }
-  };
-
-  const formatTanggal = (value: string) => {
-    const dateOnly = (value || "").slice(0, 10);
-    const [year, month, day] = dateOnly.split("-").map(Number);
-
-    if (!year || !month || !day) return value || "-";
-
-    return new Date(year, month - 1, day).toLocaleDateString("id-ID");
   };
 
   return (
@@ -97,7 +89,7 @@ export default function DocumentTableMobile({
                       </span>
 
                       <span className="text-gray-500">
-                        {formatTanggal(doc.tanggal_sppd)}
+                        {formatIndonesianDate(doc.tanggal_sppd)}
                       </span>
                     </div>
                   </div>

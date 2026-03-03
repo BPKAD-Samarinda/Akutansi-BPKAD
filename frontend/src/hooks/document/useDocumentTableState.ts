@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { Document } from "../../types";
+import { toLocalDateOnly } from "../../utils/localDate";
 
 export type SortOrder = "newest" | "oldest" | null;
 
 const toTimestamp = (value: string) => {
-  const dateOnly = (value || "").slice(0, 10);
+  const dateOnly = toLocalDateOnly(value || "");
   const [year, month, day] = dateOnly.split("-").map(Number);
   if (!year || !month || !day) return 0;
   return new Date(year, month - 1, day).getTime();

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Document, ToastState } from "../../types";
+import { toLocalDateOnly } from "../../utils/localDate";
 
 export function useDocumentFilters(
   initialData: Document[],
@@ -30,8 +31,8 @@ export function useDocumentFilters(
     // Date range filter (aman dari masalah timezone)
     if (startDate || endDate) {
       result = result.filter((doc) => {
-        // Ambil format YYYY-MM-DD dari data dokumen
-        const docDate = (doc.tanggal_sppd || "").slice(0, 10);
+        // Normalisasi ke local date agar tidak mundur 1 hari karena timezone/UTC.
+        const docDate = toLocalDateOnly(doc.tanggal_sppd || "");
 
         if (!docDate) return false;
 
