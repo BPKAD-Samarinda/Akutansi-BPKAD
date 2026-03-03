@@ -3,6 +3,20 @@ import pool from '../config/db';
 // import bcrypt from 'bcrypt';belom kunyalakan
 import jwt from 'jsonwebtoken';
 
+const ensureLoginActivitiesTable = async () => {
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS login_activities (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT NULL,
+      username VARCHAR(255) NOT NULL,
+      role VARCHAR(50) NOT NULL,
+      login_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_login_activities_login_at (login_at),
+      INDEX idx_login_activities_user_id (user_id)
+    )
+  `);
+};
+
 export const loginController = async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
@@ -34,6 +48,12 @@ export const loginController = async (req: Request, res: Response) => {
 
     const secretKey = process.env.JWT_SECRET || 'nuno123';
     const token = jwt.sign(payload, secretKey, { expiresIn: '1d' });
+
+    await ensureLoginActivitiesTable();
+    await pool.execute(
+      "INSERT INTO login_activities (user_id, username, role, login_at) VALUES (?, ?, ?, NOW())",
+      [user.id ?? null, user.username, user.role],
+    );
 
     res.status(200).json({
       message: 'Login berhasil',
