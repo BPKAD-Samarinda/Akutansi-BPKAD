@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import type { ChartOptions } from "chart.js";
@@ -24,7 +25,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   STS: "#6366F1",
 };
 
-export default function DashboardDistributionChart(props: Props) {
+function DashboardDistributionChart(props: Props) {
   const {
     data,
     selectedCategory,
@@ -37,46 +38,56 @@ export default function DashboardDistributionChart(props: Props) {
     monthOptions,
     yearOptions,
   } = props;
-  const chartKey = `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`;
+  const chartKey = useMemo(
+    () =>
+      `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`,
+    [selectedCategory, selectedMonth, selectedYear, data],
+  );
 
-  const chartData = {
-    labels: data.map((d) => d.label),
-    datasets: [
-      {
-        label: "Jumlah Upload",
-        data: data.map((d) => d.value),
-        backgroundColor: data.map((d) => CATEGORY_COLORS[d.label] ?? "#94A3B8"),
-        borderRadius: 10,
-        maxBarThickness: 52,
-      },
-    ],
-  };
+  const chartData = useMemo(
+    () => ({
+      labels: data.map((d) => d.label),
+      datasets: [
+        {
+          label: "Jumlah Upload",
+          data: data.map((d) => d.value),
+          backgroundColor: data.map((d) => CATEGORY_COLORS[d.label] ?? "#94A3B8"),
+          borderRadius: 10,
+          maxBarThickness: 52,
+        },
+      ],
+    }),
+    [data],
+  );
 
   const selectClass =
     "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
     "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300";
 
-  const options: ChartOptions<"bar"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {
-      duration: 950,
-      easing: "easeOutQuart",
-      delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 110 : 0),
-    },
-    animations: {
-      y: {
-        from: 0,
-        duration: 850,
-        easing: "easeOutCubic",
+  const options: ChartOptions<"bar"> = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 950,
+        easing: "easeOutQuart",
+        delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 110 : 0),
       },
-    },
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { beginAtZero: true, ticks: { precision: 0 } },
-      x: { grid: { display: false } },
-    },
-  };
+      animations: {
+        y: {
+          from: 0,
+          duration: 850,
+          easing: "easeOutCubic",
+        },
+      },
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 } },
+        x: { grid: { display: false } },
+      },
+    }),
+    [],
+  );
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
@@ -130,3 +141,5 @@ export default function DashboardDistributionChart(props: Props) {
     </div>
   );
 }
+
+export default memo(DashboardDistributionChart);
