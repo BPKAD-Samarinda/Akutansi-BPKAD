@@ -10,6 +10,39 @@ import {
 
 type CategoryFilter = "all" | DashboardCategory;
 
+function toIsoDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatDateTime(dateText: string, hourSeed: number) {
+  const hour = String(8 + (hourSeed % 9)).padStart(2, "0");
+  const minute = String((hourSeed * 7) % 60).padStart(2, "0");
+  return `${dateText} ${hour}:${minute}`;
+}
+
+function formatDateLabel(dateText: string) {
+  const [year, month, day] = dateText.split("-");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mei",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des",
+  ];
+  const monthIndex = Number(month) - 1;
+  return `${day} ${monthNames[monthIndex]} ${year}`;
+}
+
 export function useDashboardAnalytics() {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
@@ -69,6 +102,36 @@ export function useDashboardAnalytics() {
   const totalLogins = filteredLogins.length;
   const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
+  const todayUploadCount = useMemo(() => {
+    const todayIso = toIsoDate(new Date());
+    return uploadRecords.filter((record) => record.uploadedAt === todayIso).length;
+  }, []);
+
+  const latestUploadedDocument = useMemo(() => {
+    if (!uploadRecords.length) return null;
+
+    const latest = [...uploadRecords].sort((a, b) =>
+      a.uploadedAt < b.uploadedAt ? 1 : -1,
+    )[0];
+
+    return {
+      name: `Dokumen_${latest.kategori}_${latest.id}.pdf`,
+      uploadedAt: formatDateTime(latest.uploadedAt, latest.id),
+    };
+  }, []);
+
+  const uploadActivityRows = useMemo(() => {
+    return [...uploadRecords]
+      .sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))
+      .slice(0, 7)
+      .map((record) => ({
+        id: record.id,
+        name: `Dokumen_${record.kategori}_${record.id}.pdf`,
+        kategori: record.kategori,
+        tanggal: formatDateLabel(record.uploadedAt),
+      }));
+  }, []);
+
   return {
     selectedYear,
     setSelectedYear,
@@ -82,6 +145,9 @@ export function useDashboardAnalytics() {
     totalDocuments,
     totalStaffUsers,
     totalLogins,
+    todayUploadCount,
+    latestUploadedDocument,
+    uploadActivityRows,
     distributionData,
     trendData,
     filteredLogins,

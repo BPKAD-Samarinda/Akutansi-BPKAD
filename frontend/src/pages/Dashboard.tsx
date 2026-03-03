@@ -5,6 +5,7 @@ import Header from "../components/layout/Header";
 import DashboardDistributionChart from "../components/dashboard/charts/DashboardDistributionChart";
 import DashboardTrendChart from "../components/dashboard/charts/DashboardTrendChart";
 import DashboardLoginActivity from "../components/dashboard/tables/DashboardLoginActivity";
+import DashboardUploadActivityCard from "../components/dashboard/cards/DashboardUploadActivityCard";
 import DashboardPieChart from "../components/dashboard/charts/DashboardPieChart";
 import { useDashboardAnalytics } from "../hooks/dashboard/useDashboardAnalytics";
 
@@ -83,12 +84,17 @@ export default function Dashboard() {
             />
           </div>
 
-          <div data-animate-item>
+          <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <DashboardPieChart data={pie.distributionData} />
+            <DashboardLoginActivity data={login.filteredLogins} />
           </div>
 
           <div data-animate-item>
-            <DashboardLoginActivity data={login.filteredLogins} />
+            <DashboardUploadActivityCard
+              todayUploadCount={summary.todayUploadCount}
+              latestDocument={summary.latestUploadedDocument}
+              rows={summary.uploadActivityRows}
+            />
           </div>
         </main>
       </div>
