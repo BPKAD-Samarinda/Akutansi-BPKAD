@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import type { ChartOptions, ScriptableContext } from "chart.js";
@@ -45,35 +45,11 @@ function DashboardDistributionChart(props: Props) {
     monthOptions,
     yearOptions,
   } = props;
-  const [animationSeed, setAnimationSeed] = useState(1);
-  const [allowAnimation, setAllowAnimation] = useState(true);
-  const prevFiltersRef = useRef({
-    selectedCategory,
-    selectedMonth,
-    selectedYear,
-  });
-
-  const chartKey = useMemo(() => `dist-${animationSeed}`, [animationSeed]);
-
-  useEffect(() => {
-    const prev = prevFiltersRef.current;
-    const hasChanged =
-      prev.selectedCategory !== selectedCategory ||
-      prev.selectedMonth !== selectedMonth ||
-      prev.selectedYear !== selectedYear;
-
-    if (hasChanged) {
-      setAllowAnimation(true);
-      setAnimationSeed((v) => v + 1);
-      prevFiltersRef.current = { selectedCategory, selectedMonth, selectedYear };
-    }
-  }, [selectedCategory, selectedMonth, selectedYear]);
-
-  useEffect(() => {
-    if (!allowAnimation) return;
-    const timer = setTimeout(() => setAllowAnimation(false), 1200);
-    return () => clearTimeout(timer);
-  }, [allowAnimation, animationSeed]);
+  const chartKey = useMemo(
+    () =>
+      `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`,
+    [selectedCategory, selectedMonth, selectedYear, data],
+  );
 
   const chartData = useMemo(
     () => ({
@@ -99,26 +75,22 @@ function DashboardDistributionChart(props: Props) {
     () => ({
       responsive: true,
       maintainAspectRatio: false,
-      animation: allowAnimation
-        ? {
-            duration: 0,
-            easing: "easeOutQuart",
-          }
-        : false,
-      animations: allowAnimation
-        ? {
-            y: {
-              from: (ctx: ScriptableContext<"bar">) => {
-                if (ctx.type !== "data") return 0;
-                return ctx.chart.scales.y.getPixelForValue(0);
-              },
-              duration: 850,
-              easing: "easeOutCubic",
-              delay: (ctx: ScriptableContext<"bar">) =>
-                ctx.type === "data" ? ctx.dataIndex * 110 : 0,
-            },
-          }
-        : {},
+      animation: {
+        duration: 0,
+        easing: "easeOutQuart",
+      },
+      animations: {
+        y: {
+          from: (ctx: ScriptableContext<"bar">) => {
+            if (ctx.type !== "data") return 0;
+            return ctx.chart.scales.y.getPixelForValue(0);
+          },
+          duration: 850,
+          easing: "easeOutCubic",
+          delay: (ctx: ScriptableContext<"bar">) =>
+            ctx.type === "data" ? ctx.dataIndex * 110 : 0,
+        },
+      },
       transitions: {
         resize: {
           animation: {
@@ -137,7 +109,7 @@ function DashboardDistributionChart(props: Props) {
         x: { grid: { display: false } },
       },
     }),
-    [allowAnimation],
+    [],
   );
 
   return (
