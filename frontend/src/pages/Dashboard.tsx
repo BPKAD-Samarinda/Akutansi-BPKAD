@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
@@ -9,28 +9,25 @@ import DashboardPieChart from "../components/dashboard/charts/DashboardPieChart"
 import { useDashboardAnalytics } from "../hooks/dashboard/useDashboardAnalytics";
 
 export default function Dashboard() {
-  const dist = useDashboardAnalytics();
+  // Pisah state per-card agar filter tidak saling mempengaruhi.
+  const summary = useDashboardAnalytics();
+  const distribution = useDashboardAnalytics();
   const trend = useDashboardAnalytics();
+  const pie = useDashboardAnalytics();
+  const login = useDashboardAnalytics();
+
   const pageRef = useRef<HTMLDivElement | null>(null);
-  const [trendPeriod, setTrendPeriod] = useState<"week" | "month" | "year">("year");
 
   useEffect(() => {
     if (!pageRef.current) return;
-
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        "[data-animate-item]",
-        { y: 28, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.6,
-          ease: "power2.out",
-          stagger: 0.1,
-          delay: 0.1,
-          clearProps: "transform,opacity,visibility",
-        },
-      );
+      gsap.from("[data-animate-item]", {
+        y: 20,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power2.out",
+        stagger: 0.08,
+      });
     }, pageRef);
 
     return () => ctx.revert();
@@ -39,58 +36,59 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col">
         <Header title="Dashboard" />
 
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
           <div data-animate-item className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white rounded-2xl border border-orange-100 p-5">
               <p className="text-sm font-medium text-gray-500">Total Dokumen</p>
-              <p className="text-3xl font-bold text-orange-500">{dist.totalDocuments}</p>
+              <p className="text-3xl font-bold text-orange-500">{summary.totalDocuments}</p>
             </div>
             <div className="bg-white rounded-2xl border border-blue-100 p-5">
               <p className="text-sm font-medium text-gray-500">Total User Staff</p>
-              <p className="text-3xl font-bold text-blue-500">{dist.totalStaffUsers}</p>
+              <p className="text-3xl font-bold text-blue-500">{summary.totalStaffUsers}</p>
             </div>
             <div className="bg-white rounded-2xl border border-teal-100 p-5">
               <p className="text-sm font-medium text-gray-500">Total Login</p>
-              <p className="text-3xl font-bold text-teal-500">{dist.totalLogins}</p>
+              <p className="text-3xl font-bold text-teal-500">{summary.totalLogins}</p>
             </div>
           </div>
 
           <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <DashboardDistributionChart
-              data={dist.distributionData}
-              selectedCategory={dist.selectedCategory}
-              selectedMonth={dist.selectedMonth}
-              selectedYear={dist.selectedYear}
-              onChangeCategory={dist.setSelectedCategory}
-              onChangeMonth={dist.setSelectedMonth}
-              onChangeYear={dist.setSelectedYear}
-              categoryOptions={dist.categoryOptions}
-              monthOptions={dist.monthOptions}
-              yearOptions={dist.yearOptions}
+              data={distribution.distributionData}
+              selectedCategory={distribution.selectedCategory}
+              selectedMonth={distribution.selectedMonth}
+              selectedYear={distribution.selectedYear}
+              onChangeCategory={distribution.setSelectedCategory}
+              onChangeMonth={distribution.setSelectedMonth}
+              onChangeYear={distribution.setSelectedYear}
+              categoryOptions={distribution.categoryOptions}
+              monthOptions={distribution.monthOptions}
+              yearOptions={distribution.yearOptions}
             />
 
             <DashboardTrendChart
               data={trend.trendData}
               selectedCategory={trend.selectedCategory}
+              selectedMonth={trend.selectedMonth}
               selectedYear={trend.selectedYear}
-              selectedPeriod={trendPeriod}
               onChangeCategory={trend.setSelectedCategory}
+              onChangeMonth={trend.setSelectedMonth}
               onChangeYear={trend.setSelectedYear}
-              onChangePeriod={setTrendPeriod}
               categoryOptions={trend.categoryOptions}
+              monthOptions={trend.monthOptions}
               yearOptions={trend.yearOptions}
             />
           </div>
 
           <div data-animate-item>
-            <DashboardPieChart data={dist.distributionData} />
+            <DashboardPieChart data={pie.distributionData} />
           </div>
 
           <div data-animate-item>
-            <DashboardLoginActivity data={dist.filteredLogins} />
+            <DashboardLoginActivity data={login.filteredLogins} />
           </div>
         </main>
       </div>

@@ -37,7 +37,8 @@ export const monthOptions = [
   { value: 12, label: "Desember" },
 ];
 
-export const yearOptions = [2025, 2026, 2027];
+export const yearOptions = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029];
+
 
 export const uploadRecords: UploadRecord[] = [
   { id: 1, kategori: "Lampiran", uploadedAt: "2026-01-03" },
@@ -60,6 +61,26 @@ export const uploadRecords: UploadRecord[] = [
   { id: 18, kategori: "Lampiran", uploadedAt: "2026-11-11" },
   { id: 19, kategori: "Keuangan", uploadedAt: "2026-11-17" },
   { id: 20, kategori: "STS", uploadedAt: "2026-12-29" },
+  { id: 21, kategori: "Lampiran", uploadedAt: "2027-01-03" },
+  { id: 22, kategori: "Keuangan", uploadedAt: "2027-01-05" }, 
+  { id: 23, kategori: "BPKU", uploadedAt: "2027-01-10" },
+  { id: 24, kategori: "STS", uploadedAt: "2027-01-11" },
+  { id: 25, kategori: "Lampiran", uploadedAt: "2027-02-12" },
+  { id: 26, kategori: "Keuangan", uploadedAt: "2027-02-15" },
+  { id: 27, kategori: "BPKU", uploadedAt: "2027-03-02" },
+  { id: 28, kategori: "STS", uploadedAt: "2027-03-09" },
+  { id: 29, kategori: "STS", uploadedAt: "2027-04-18" },
+  { id: 30, kategori: "Lampiran", uploadedAt: "2027-04-20" },
+  { id: 31, kategori: "Keuangan", uploadedAt: "2027-05-03" },
+  { id: 32, kategori: "BPKU", uploadedAt: "2027-06-10" },
+  { id: 33, kategori: "STS", uploadedAt: "2027-06-21" },
+  { id: 34, kategori: "Lampiran", uploadedAt: "2027-07-02" },
+  { id: 35, kategori: "Keuangan", uploadedAt: "2027-08-14" },
+  { id: 36, kategori: "BPKU", uploadedAt: "2027-09-01" },
+  { id: 37, kategori: "STS", uploadedAt: "2027-10-05" },
+  { id: 38, kategori: "Lampiran", uploadedAt: "2027-11-11" },
+  { id: 39, kategori: "Keuangan", uploadedAt: "2027-11-17" },
+  { id: 40, kategori: "STS", uploadedAt: "2027-12-29" },
 ];
 
 export const loginActivities: LoginActivity[] = [

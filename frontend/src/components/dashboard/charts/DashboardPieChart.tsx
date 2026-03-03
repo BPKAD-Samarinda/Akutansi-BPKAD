@@ -94,10 +94,7 @@ export default function DashboardPieChart({ data }: Props) {
       `}</style>
 
       <div className="mb-4">
-        <h3 className="text-2xl font-bold text-gray-800">Komposisi Dokumen</h3>
-        <p className="text-sm text-slate-500 mt-1">
-          Distribusi dokumen berdasarkan kategori dengan persentase kontribusi.
-        </p>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800">Persentase Dokumen per Kategori</h3>
       </div>
 
       {!hasData ? (

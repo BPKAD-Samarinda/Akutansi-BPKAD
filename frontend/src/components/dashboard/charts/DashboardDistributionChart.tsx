@@ -1,5 +1,6 @@
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
+import type { ChartOptions } from "chart.js";
 
 type CategoryValue = "all" | "Lampiran" | "Keuangan" | "BPKU" | "STS";
 
@@ -36,8 +37,7 @@ export default function DashboardDistributionChart(props: Props) {
     monthOptions,
     yearOptions,
   } = props;
-
-  const chartKey = `${selectedCategory}-${selectedMonth}-${selectedYear}-${JSON.stringify(data)}`;
+  const chartKey = `${selectedCategory}-${selectedMonth}-${selectedYear}-${data.map((d) => `${d.label}:${d.value}`).join("|")}`;
 
   const chartData = {
     labels: data.map((d) => d.label),
@@ -53,15 +53,39 @@ export default function DashboardDistributionChart(props: Props) {
   };
 
   const selectClass =
-    "h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
+    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
     "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-300";
+
+  const options: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 950,
+      easing: "easeOutQuart",
+      delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 110 : 0),
+    },
+    animations: {
+      y: {
+        from: 0,
+        duration: 850,
+        easing: "easeOutCubic",
+      },
+    },
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { precision: 0 } },
+      x: { grid: { display: false } },
+    },
+  };
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
-      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <h3 className="text-lg font-semibold text-slate-900">Distribusi Upload per Kategori</h3>
+      <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 whitespace-nowrap">
+          Jumlah Dokumen
+        </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full lg:w-auto">
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
           <select
             value={selectedCategory}
             onChange={(e) => onChangeCategory(e.target.value as CategoryValue)}
@@ -69,7 +93,7 @@ export default function DashboardDistributionChart(props: Props) {
           >
             {categoryOptions.map((c) => (
               <option key={c} value={c}>
-                {c === "all" ? "Pilih Kategori" : c}
+                {c === "all" ? "Kategori" : c}
               </option>
             ))}
           </select>
@@ -101,34 +125,7 @@ export default function DashboardDistributionChart(props: Props) {
       </div>
 
       <div className="h-[300px]">
-        <Bar
-          key={chartKey}
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: {
-              duration: 1200,
-              easing: "easeOutQuart",
-              delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 140 : 0),
-            },
-            animations: {
-              y: {
-                duration: 900,
-                easing: "easeOutBack",
-                from: (ctx) => {
-                  const yScale = ctx.chart.scales.y;
-                  return yScale.getPixelForValue(0); // start dari bawah (baseline)
-                },
-              },
-            },
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, ticks: { precision: 0 } },
-              x: { grid: { display: false } },
-            },
-          }}
-        />
+        <Bar key={chartKey} data={chartData} options={options} />
       </div>
     </div>
   );

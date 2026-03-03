@@ -67,6 +67,7 @@ export function useDashboardAnalytics() {
     filteredLogins.filter((x) => x.role === "Staff").map((x) => x.username),
   ).size;
   const totalLogins = filteredLogins.length;
+  const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
   return {
     selectedYear,
@@ -77,7 +78,7 @@ export function useDashboardAnalytics() {
     setSelectedCategory,
     monthOptions,
     yearOptions,
-    categoryOptions: ["all", ...categories] as const,
+    categoryOptions,
     totalDocuments,
     totalStaffUsers,
     totalLogins,
