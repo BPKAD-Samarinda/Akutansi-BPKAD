@@ -58,7 +58,7 @@ export default function HistoryToolbar({
           >
             <SelectValue placeholder="Semua Status" />
           </SelectTrigger>
-          <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif]">
+          <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif] ">
             <SelectItem
               value="all"
               className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
