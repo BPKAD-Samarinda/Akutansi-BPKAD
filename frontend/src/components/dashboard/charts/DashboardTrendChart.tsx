@@ -17,6 +17,7 @@ type Props = {
   trendMode: "monthly" | "daily";
   trendUploadDays: number;
   trendEmptyDays: number;
+  trendUploadCount: number;
   selectedCategory: CategoryValue;
   selectedMonth: number;
   selectedYear: number;
@@ -33,6 +34,7 @@ function DashboardTrendChart({
   trendMode,
   trendUploadDays,
   trendEmptyDays,
+  trendUploadCount,
   selectedCategory,
   selectedMonth,
   selectedYear,
@@ -54,7 +56,7 @@ function DashboardTrendChart({
       labels: data.map((d) => d.label),
       datasets: [
         {
-          label: trendMode === "daily" ? "Upload per Hari" : "Upload per Bulan",
+          label: trendMode === "daily" ? "Status Upload Harian (1/0)" : "Upload per Bulan",
           data: data.map((d) => d.value),
           borderColor: "#3B82F6",
           backgroundColor: "rgba(59,130,246,0.16)",
@@ -64,7 +66,8 @@ function DashboardTrendChart({
           pointRadius: 4,
           pointHoverRadius: 6,
           fill: true,
-          tension: 0.42,
+          tension: 0.65,
+          cubicInterpolationMode: "default",
         },
       ],
     }),
@@ -123,12 +126,30 @@ function DashboardTrendChart({
           backgroundColor: "#0F172A",
           displayColors: false,
           padding: 10,
+          callbacks:
+            trendMode === "daily"
+              ? {
+                  title: (items) => {
+                    const dayLabel = items[0]?.label ?? "";
+                    return `Tanggal ${dayLabel}`;
+                  },
+                  label: (ctx) =>
+                    Number(ctx.raw ?? 0) > 0
+                      ? "1 (Upload)"
+                      : "0 (Tidak Upload)",
+                }
+              : undefined,
         },
       },
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { precision: 0, color: "#64748B" },
+          suggestedMax: trendMode === "daily" ? 1 : undefined,
+          ticks: {
+            precision: 0,
+            color: "#64748B",
+            stepSize: trendMode === "daily" ? 1 : undefined,
+          },
           grid: { color: "rgba(148,163,184,0.2)" },
         },
         x: {
@@ -150,6 +171,7 @@ function DashboardTrendChart({
   const selectClass =
     "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
     "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
+  const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
@@ -204,16 +226,24 @@ function DashboardTrendChart({
         </div>
       </div>
 
-      {trendMode === "daily" && (
+      {canRenderChart && trendMode === "daily" && (
         <div className="mb-3 text-sm text-slate-600">
           Hari upload: <span className="font-semibold text-slate-800">{trendUploadDays}</span>
           {" | "}
           Hari kosong: <span className="font-semibold text-slate-800">{trendEmptyDays}</span>
+          {" | "}
+          Jumlah unggah: <span className="font-semibold text-slate-800">{trendUploadCount}</span>
         </div>
       )}
 
       <div className="h-[260px] sm:h-[300px]">
-        <Line key={chartKey} data={chartData} options={options} updateMode="none" />
+        {!canRenderChart ? (
+          <div className="h-full rounded-xl border border-dashed border-slate-200 flex items-center justify-center text-sm text-slate-500">
+            Pilih tahun untuk menampilkan data bulan yang dipilih.
+          </div>
+        ) : (
+          <Line key={chartKey} data={chartData} options={options} updateMode="none" />
+        )}
       </div>
     </div>
   );
@@ -223,6 +253,7 @@ function arePropsEqual(prev: Props, next: Props) {
   if (prev.trendMode !== next.trendMode) return false;
   if (prev.trendUploadDays !== next.trendUploadDays) return false;
   if (prev.trendEmptyDays !== next.trendEmptyDays) return false;
+  if (prev.trendUploadCount !== next.trendUploadCount) return false;
   if (prev.selectedCategory !== next.selectedCategory) return false;
   if (prev.selectedMonth !== next.selectedMonth) return false;
   if (prev.selectedYear !== next.selectedYear) return false;
