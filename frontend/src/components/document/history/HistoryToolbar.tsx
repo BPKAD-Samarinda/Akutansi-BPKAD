@@ -1,4 +1,11 @@
 import { Search, RefreshCcw } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
 
 type HistoryToolbarProps = {
   searchValue: string;
@@ -37,21 +44,27 @@ export default function HistoryToolbar({
           />
         </div>
 
-        <select
+        <Select
           value={statusValue}
-          onChange={(event) =>
+          onValueChange={(value) =>
             onStatusValueChange(
-              event.target.value as "all" | "diunggah" | "dihapus" | "diedit",
+              value as "all" | "diunggah" | "dihapus" | "diedit",
             )
           }
-          className="h-10 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 md:w-52"
-          aria-label="Filter status riwayat"
         >
-          <option value="all">Semua Status</option>
-          <option value="diunggah">Diunggah</option>
-          <option value="dihapus">Dihapus</option>
-          <option value="diedit">Diedit</option>
-        </select>
+          <SelectTrigger
+            className="h-10 w-full rounded-lg border-gray-200 bg-white text-sm text-gray-700 transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 md:w-52"
+            aria-label="Filter status riwayat"
+          >
+            <SelectValue placeholder="Semua Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Status</SelectItem>
+            <SelectItem value="diunggah">Diunggah</SelectItem>
+            <SelectItem value="dihapus">Dihapus</SelectItem>
+            <SelectItem value="diedit">Diedit</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <button
