@@ -3,6 +3,7 @@ import { IoMdEye } from "react-icons/io";
 import { FaTrashAlt } from "react-icons/fa";
 import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
+import { formatIndonesianDate } from "../../../utils/localDate";
 
 interface DocumentRowProps {
   doc: Document;
@@ -45,19 +46,6 @@ export default function DocumentRow({
     }
   };
 
-  const formatTanggal = (value: string) => {
-    const dateOnly = (value || "").slice(0, 10); // YYYY-MM-DD
-    const [year, month, day] = dateOnly.split("-").map(Number);
-
-    if (!year || !month || !day) return value || "-";
-
-    return new Date(year, month - 1, day).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
   const format = getFileFormat(doc.file_path);
 
   return (
@@ -98,7 +86,7 @@ export default function DocumentRow({
       </td>
 
       <td className="py-4 px-2 text-center text-sm text-gray-600">
-        {formatTanggal(doc.tanggal_sppd)}
+        {formatIndonesianDate(doc.tanggal_sppd)}
       </td>
 
       <td className="py-4 px-2">

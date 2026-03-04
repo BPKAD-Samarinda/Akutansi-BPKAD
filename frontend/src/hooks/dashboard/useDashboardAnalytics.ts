@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
-  DashboardAnalyticsResponse,
   DashboardApiDocument,
   DashboardApiLoginActivity,
 } from "../../services/api";
 import { getDashboardAnalytics, getDocuments } from "../../services/api";
+import {
+  getHiddenDocumentIds,
+  getPermanentDeletedDocumentIds,
+} from "../../utils/uploadHistoryLocal";
 import {
   categories,
   formatDateLabel,
   isInCurrentLocalWeek,
   isSameLocalDay,
   monthOptions,
+  yearOptions,
   normalizeDateOnly,
   normalizeDateTime,
   normalizeRole,
@@ -22,28 +26,19 @@ import {
   type NormalizedUpload,
 } from "./dashboardAnalytics.helpers";
 const LOGIN_RESET_MODE: LoginResetMode = "daily";
-
-let analyticsCache: DashboardAnalyticsResponse | null = null;
-let analyticsPromise: Promise<DashboardAnalyticsResponse> | null = null;
+type TrendMode = "daily" | "monthly";
 
 async function loadAnalyticsShared() {
-  if (analyticsCache) return analyticsCache;
-  if (!analyticsPromise) {
-    analyticsPromise = getDashboardAnalytics().then((result) => {
-      analyticsCache = result;
-      return result;
-    });
-  }
-  return analyticsPromise;
+  return getDashboardAnalytics();
 }
 
 export function useDashboardAnalytics() {
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [selectedYear, setSelectedYear] = useState<number>(0);
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
+  const [staffUsersCount, setStaffUsersCount] = useState<number>(0);
   const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
 
   useEffect(() => {
@@ -78,13 +73,16 @@ export function useDashboardAnalytics() {
     loadAnalyticsShared()
       .then((payload) => {
         if (!mounted) return;
+        const hiddenIds = new Set(
+          [...getHiddenDocumentIds(), ...getPermanentDeletedDocumentIds()].map((id) =>
+            String(id),
+          ),
+        );
 
         const normalizedUploads = payload.documents
+          .filter((doc: DashboardApiDocument) => !hiddenIds.has(String(doc.id)))
           .map((doc: DashboardApiDocument) => {
-            const dateOnly =
-              normalizeDateOnly(doc.created_at) ||
-              normalizeDateOnly(doc.tanggal_sppd) ||
-              null;
+            const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
             if (!dateOnly) return null;
 
             return {
@@ -107,6 +105,7 @@ export function useDashboardAnalytics() {
 
         setUploads(normalizedUploads);
         setLogins(normalizedLogins);
+        setStaffUsersCount(Number(payload.totalStaffUsers ?? 0));
       })
       .catch((error) => {
         console.error("Gagal memuat analytics dashboard:", error);
@@ -115,12 +114,15 @@ export function useDashboardAnalytics() {
         getDocuments()
           .then((docs) => {
             if (!mounted) return;
+            const hiddenIds = new Set(
+              [...getHiddenDocumentIds(), ...getPermanentDeletedDocumentIds()].map((id) =>
+                String(id),
+              ),
+            );
             const fallbackUploads = docs
+              .filter((doc) => !hiddenIds.has(String(doc.id)))
               .map((doc) => {
-                const dateOnly =
-                  normalizeDateOnly(doc.created_at) ||
-                  normalizeDateOnly(doc.tanggal_sppd) ||
-                  null;
+                const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
                 if (!dateOnly) return null;
                 return {
                   id: doc.id,
@@ -131,6 +133,7 @@ export function useDashboardAnalytics() {
               })
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
+            setStaffUsersCount(0);
           })
           .catch((fallbackError) => {
             console.error("Fallback dokumen dashboard gagal:", fallbackError);
@@ -142,28 +145,17 @@ export function useDashboardAnalytics() {
     };
   }, []);
 
-  const yearOptions = useMemo(() => {
-    const years = uploads
-      .map((u) => new Date(u.uploadedAt).getFullYear())
-      .filter((y) => !Number.isNaN(y));
-    const uniqueYears = Array.from(new Set(years)).sort((a, b) => a - b);
-    if (uniqueYears.length === 0) return [currentYear];
-    return uniqueYears;
-  }, [uploads, currentYear]);
-
-  const effectiveSelectedYear = yearOptions.includes(selectedYear)
-    ? selectedYear
-    : yearOptions[yearOptions.length - 1];
-
   const filteredUploads = useMemo(() => {
     return uploads.filter((r) => {
-      const d = new Date(r.uploadedAt);
-      const yearMatch = d.getFullYear() === effectiveSelectedYear;
-      const monthMatch = selectedMonth === 0 || d.getMonth() + 1 === selectedMonth;
+      const [yearText, monthText] = r.uploadedAt.split("-");
+      const yearValue = Number(yearText);
+      const monthValue = Number(monthText);
+      const yearMatch = selectedYear === 0 || yearValue === selectedYear;
+      const monthMatch = selectedMonth === 0 || monthValue === selectedMonth;
       const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
       return yearMatch && monthMatch && categoryMatch;
     });
-  }, [uploads, effectiveSelectedYear, selectedMonth, selectedCategory]);
+  }, [uploads, selectedYear, selectedMonth, selectedCategory]);
 
   const distributionData = useMemo(() => {
     const target = selectedCategory === "all" ? categories : [selectedCategory];
@@ -174,21 +166,60 @@ export function useDashboardAnalytics() {
   }, [filteredUploads, selectedCategory]);
 
   const trendData = useMemo(() => {
+    if (selectedYear !== 0 && selectedMonth !== 0) {
+      const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+      const daily = Array.from({ length: daysInMonth }, (_, idx) => ({
+        label: String(idx + 1),
+        value: 0,
+      }));
+
+      uploads.forEach((r) => {
+        const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
+        if (!categoryMatch) return;
+        const [yearText, monthText, dayText] = r.uploadedAt.split("-");
+        const yearValue = Number(yearText);
+        const monthValue = Number(monthText);
+        const dayValue = Number(dayText);
+        if (yearValue !== selectedYear) return;
+        if (monthValue !== selectedMonth) return;
+        if (dayValue < 1 || dayValue > daysInMonth) return;
+        daily[dayValue - 1].value += 1;
+      });
+
+      return daily;
+    }
+
     const base = Array.from({ length: 12 }, (_, i) => ({
       label: monthOptions[i + 1].label.slice(0, 3),
       value: 0,
     }));
 
     uploads.forEach((r) => {
-      const d = new Date(r.uploadedAt);
-      const yearMatch = d.getFullYear() === effectiveSelectedYear;
+      const [yearText, monthText] = r.uploadedAt.split("-");
+      const yearValue = Number(yearText);
+      const monthValue = Number(monthText);
+      const yearMatch = selectedYear === 0 || yearValue === selectedYear;
       const categoryMatch = selectedCategory === "all" || r.kategori === selectedCategory;
       if (!yearMatch || !categoryMatch) return;
-      base[d.getMonth()].value += 1;
+      if (monthValue < 1 || monthValue > 12) return;
+      base[monthValue - 1].value += 1;
     });
 
     return base;
-  }, [uploads, effectiveSelectedYear, selectedCategory]);
+  }, [uploads, selectedYear, selectedMonth, selectedCategory]);
+
+  const trendMode: TrendMode =
+    selectedYear !== 0 && selectedMonth !== 0 ? "daily" : "monthly";
+
+  const trendUploadDays = useMemo(
+    () => trendData.filter((item) => item.value > 0).length,
+    [trendData],
+  );
+
+  const trendEmptyDays = useMemo(
+    () => trendData.filter((item) => item.value === 0).length,
+    [trendData],
+  );
 
   const filteredLogins = useMemo(() => {
     return [...logins]
@@ -200,9 +231,7 @@ export function useDashboardAnalytics() {
   }, [logins, todayKey]);
 
   const totalDocuments = filteredUploads.length;
-  const totalStaffUsers = new Set(
-    filteredLogins.filter((x) => x.role === "Staff").map((x) => x.username),
-  ).size;
+  const totalStaffUsers = staffUsersCount;
   const totalLogins = filteredLogins.length;
   const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
@@ -246,7 +275,7 @@ export function useDashboardAnalytics() {
   }, [uploads]);
 
   return {
-    selectedYear: effectiveSelectedYear,
+    selectedYear,
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,
@@ -264,6 +293,9 @@ export function useDashboardAnalytics() {
     latestUploadRows,
     distributionData,
     trendData,
+    trendMode,
+    trendUploadDays,
+    trendEmptyDays,
     filteredLogins,
   };
 }

@@ -36,6 +36,7 @@ export interface DashboardApiLoginActivity {
 export interface DashboardAnalyticsResponse {
   documents: DashboardApiDocument[];
   loginActivities: DashboardApiLoginActivity[];
+  totalStaffUsers?: number;
 }
 
 type DocumentApiItem = {
@@ -263,6 +264,7 @@ export const login = async (
 export const getDashboardAnalytics = async (): Promise<DashboardAnalyticsResponse> => {
   const response = await apiClient.get<DashboardAnalyticsResponse>(
     "/dashboard/analytics",
+    { params: { _t: Date.now() } },
   );
   return response.data;
 };

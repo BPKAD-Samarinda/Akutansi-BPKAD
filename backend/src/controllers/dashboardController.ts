@@ -36,6 +36,7 @@ export const getDashboardAnalytics = async (_req: Request, res: Response) => {
     );
 
     let loginRows: unknown[] = [];
+    let totalStaffUsers = 0;
     try {
       await ensureLoginActivitiesTable();
       const [rows] = await db.query(
@@ -50,9 +51,21 @@ export const getDashboardAnalytics = async (_req: Request, res: Response) => {
       console.warn("Dashboard login activity fallback:", loginError);
     }
 
+    try {
+      const [staffRows]: any = await db.query(
+        `SELECT COUNT(*) AS total
+         FROM users
+         WHERE LOWER(role) = 'staff'`,
+      );
+      totalStaffUsers = Number(staffRows?.[0]?.total ?? 0);
+    } catch (staffError) {
+      console.warn("Dashboard staff count fallback:", staffError);
+    }
+
     return res.status(200).json({
       documents: documentRows,
       loginActivities: loginRows,
+      totalStaffUsers,
     });
   } catch (error) {
     console.error("Dashboard analytics error:", error);

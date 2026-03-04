@@ -40,6 +40,8 @@ export const monthOptions = [
   { value: 12, label: "Desember" },
 ] as const;
 
+export const yearOptions = Array.from({ length: 11 }, (_, idx) => 2020 + idx);
+
 export function toLocalIsoDate(value: Date): string {
   const year = value.getFullYear();
   const month = String(value.getMonth() + 1).padStart(2, "0");

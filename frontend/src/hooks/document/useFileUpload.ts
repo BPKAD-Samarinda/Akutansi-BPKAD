@@ -125,7 +125,7 @@ export function useFileUpload(
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
-      }, 2000);
+      }, 500);
     } catch {
       showToast("Gagal mengunggah dokumen", "error");
     } finally {

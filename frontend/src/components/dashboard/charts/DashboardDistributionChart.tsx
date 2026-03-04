@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import type { ChartOptions } from "chart.js";
+import type { ChartOptions, ScriptableContext } from "chart.js";
 import {
   Select,
   SelectContent,
@@ -76,15 +76,19 @@ function DashboardDistributionChart(props: Props) {
       responsive: true,
       maintainAspectRatio: false,
       animation: {
-        duration: 950,
+        duration: 0,
         easing: "easeOutQuart",
-        delay: (ctx) => (ctx.type === "data" ? ctx.dataIndex * 110 : 0),
       },
       animations: {
         y: {
-          from: 0,
+          from: (ctx: ScriptableContext<"bar">) => {
+            if (ctx.type !== "data") return 0;
+            return ctx.chart.scales.y.getPixelForValue(0);
+          },
           duration: 850,
           easing: "easeOutCubic",
+          delay: (ctx: ScriptableContext<"bar">) =>
+            ctx.type === "data" ? ctx.dataIndex * 110 : 0,
         },
       },
       transitions: {
@@ -150,6 +154,7 @@ function DashboardDistributionChart(props: Props) {
               <SelectValue placeholder="Tahun" />
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
+              <SelectItem value="0">Tahun</SelectItem>
               {yearOptions.map((y) => (
                 <SelectItem key={y} value={String(y)}>
                   {y}

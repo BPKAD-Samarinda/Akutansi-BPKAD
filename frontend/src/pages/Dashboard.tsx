@@ -107,6 +107,9 @@ export default function Dashboard() {
 
             <DashboardTrendChart
               data={trend.trendData}
+              trendMode={trend.trendMode}
+              trendUploadDays={trend.trendUploadDays}
+              trendEmptyDays={trend.trendEmptyDays}
               selectedCategory={trend.selectedCategory}
               selectedMonth={trend.selectedMonth}
               selectedYear={trend.selectedYear}
