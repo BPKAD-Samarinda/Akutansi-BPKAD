@@ -1,6 +1,13 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import AppTooltip from "../../ui/app-tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
 
 type HistoryPaginationProps = {
   page: number;
@@ -19,7 +26,7 @@ export default function HistoryPagination({
   onPageChange,
   onPageSizeChange,
 }: HistoryPaginationProps) {
-  const pageSizeSelectRef = useRef<HTMLSelectElement | null>(null);
+  const pageSizeSelectRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!pageSizeSelectRef.current) {
@@ -32,7 +39,7 @@ export default function HistoryPagination({
       { autoAlpha: 0, y: 6 },
       { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" },
     );
-  }, []);
+  }, [pageSize]);
 
   const start = totalItems === 0 ? 0 : (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, totalItems);
@@ -45,18 +52,51 @@ export default function HistoryPagination({
 
       <div className="flex items-center gap-2">
         <AppTooltip content="Pilih jumlah data per halaman">
-          <select
-            ref={pageSizeSelectRef}
-            title=""
-            aria-label="Pilih jumlah data per halaman"
-            value={pageSize}
-            onChange={(event) => onPageSizeChange(Number(event.target.value))}
-            className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 outline-none"
-          >
-            <option value={5}>5 / halaman</option>
-            <option value={10}>10 / halaman</option>
-            <option value={20}>20 / halaman</option>
-          </select>
+          <div ref={pageSizeSelectRef}>
+            <Select
+              value={String(pageSize)}
+              onValueChange={(value) => onPageSizeChange(Number(value))}
+            >
+              <SelectTrigger
+                aria-label="Pilih jumlah data per halaman"
+                className="h-7 w-[72px] min-w-[72px] rounded-md border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 shadow-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+              >
+                <SelectValue placeholder="Pilih halaman" />
+              </SelectTrigger>
+              <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif] !w-[var(--radix-select-trigger-width)] !min-w-[var(--radix-select-trigger-width)] [&_[data-radix-select-viewport]]:w-full [&_[data-radix-select-viewport]]:min-w-0">
+                <SelectItem
+                  value="5"
+                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+                >
+                  5
+                </SelectItem>
+                <SelectItem
+                  value="10"
+                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+                >
+                  10
+                </SelectItem>
+                <SelectItem
+                  value="20"
+                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+                >
+                  20
+                </SelectItem>
+                <SelectItem
+                  value="50"
+                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+                >
+                  50
+                </SelectItem>
+                <SelectItem
+                  value="100"
+                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
+                >
+                  100
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </AppTooltip>
 
         <button
