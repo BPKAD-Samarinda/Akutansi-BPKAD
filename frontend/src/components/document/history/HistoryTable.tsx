@@ -66,7 +66,7 @@ export default function HistoryTable({
         <table className="w-full table-fixed divide-y divide-gray-100">
           <colgroup>
             <col style={{ width: "6%" }} />
-            <col style={{ width: "38%" }} />
+            <col style={{ width: "70%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
