@@ -18,7 +18,7 @@ export default function DashboardLoginActivity({ data }: Props) {
         </h3>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-100">
+      <div className="max-h-[420px] overflow-y-auto overflow-x-auto rounded-xl border border-slate-100">
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr className="text-slate-500 border-y border-slate-100">
