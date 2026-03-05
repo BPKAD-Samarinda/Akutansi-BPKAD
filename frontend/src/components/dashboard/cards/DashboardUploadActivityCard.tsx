@@ -17,6 +17,9 @@ export default function DashboardUploadActivityCard({
   todayRows,
   latestRows,
 }: Props) {
+  const todayShouldScroll = todayRows.length > 10;
+  const latestShouldScroll = latestRows.length > 10;
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
       <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-4">
@@ -29,7 +32,9 @@ export default function DashboardUploadActivityCard({
             <h4 className="text-sm font-semibold text-orange-700">Aktivitas Hari Ini</h4>
           </div>
 
-          <div className="overflow-x-auto">
+          <div
+            className={`overflow-x-auto ${todayShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
+          >
             <table className="w-full text-sm">
               <thead className="bg-gray-50">
                 <tr className="text-gray-500">
@@ -63,7 +68,9 @@ export default function DashboardUploadActivityCard({
             <h4 className="text-sm font-semibold text-blue-700">Dokumen Terakhir Diunggah</h4>
           </div>
 
-          <div className="overflow-x-auto">
+          <div
+            className={`overflow-x-auto ${latestShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
+          >
             <table className="w-full text-sm">
               <thead className="bg-gray-50">
                 <tr className="text-gray-500">
