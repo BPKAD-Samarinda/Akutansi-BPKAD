@@ -2,6 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import AppTooltip from "../../../ui/app-tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../ui/select";
 
 type DateRangePickerProps = {
   onChange?: (start: string, end: string) => void;
@@ -32,11 +39,27 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      const path = typeof e.composedPath === "function" ? e.composedPath() : [];
+      const clickedInsideKnownLayer = path.some((node) => {
+        if (!(node instanceof Element)) return false;
+        return (
+          node.classList.contains("date-picker-inline-select-trigger") ||
+          node.classList.contains("date-picker-inline-select-content") ||
+          node.matches("[data-radix-popper-content-wrapper]") ||
+          node.matches('[role="listbox"]')
+        );
+      });
+
+      if (clickedInsideKnownLayer) return;
+
+      const targetNode = e.target as Node | null;
+      if (!targetNode) return;
+
       if (
         triggerRef.current &&
-        !triggerRef.current.contains(e.target as Node) &&
+        !triggerRef.current.contains(targetNode) &&
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+        !dropdownRef.current.contains(targetNode)
       ) {
         setOpen(false);
       }
@@ -172,6 +195,9 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
 
   const currentYear = today.getFullYear();
   const yearRange = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i);
+  const calendarSelectClass =
+    "h-8 rounded-lg border border-gray-200 bg-gray-50 px-2 text-xs font-semibold text-gray-700 " +
+    "focus:ring-0 focus:ring-offset-0 focus:border-orange-400";
 
   const calendarDays: (Date | null)[] = [
     ...Array(firstDay).fill(null),
@@ -251,39 +277,51 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
           </AppTooltip>
 
           <AppTooltip content="Pilih bulan">
-            <select
-              value={month}
-              title=""
-              aria-label="Pilih bulan"
-              onChange={(e) =>
-                setViewDate(new Date(year, Number(e.target.value), 1))
-              }
-              className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer flex-1"
-            >
-              {monthNames.map((name, idx) => (
-                <option key={name} value={idx}>
-                  {name}
-                </option>
-              ))}
-            </select>
+            <div className="flex-1 min-w-0">
+              <Select
+                value={String(month)}
+                onValueChange={(value) =>
+                  setViewDate(new Date(year, Number(value), 1))
+                }
+              >
+                <SelectTrigger
+                  className={`${calendarSelectClass} date-picker-inline-select-trigger`}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-48 z-[100000] date-picker-inline-select-content">
+                  {monthNames.map((name, idx) => (
+                    <SelectItem key={name} value={String(idx)}>
+                      {name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </AppTooltip>
 
           <AppTooltip content="Pilih tahun">
-            <select
-              value={year}
-              title=""
-              aria-label="Pilih tahun"
-              onChange={(e) =>
-                setViewDate(new Date(Number(e.target.value), month, 1))
-              }
-              className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-orange-400 cursor-pointer w-20"
-            >
-              {yearRange.map((optionYear) => (
-                <option key={optionYear} value={optionYear}>
-                  {optionYear}
-                </option>
-              ))}
-            </select>
+            <div className="w-24 shrink-0">
+              <Select
+                value={String(year)}
+                onValueChange={(value) =>
+                  setViewDate(new Date(Number(value), month, 1))
+                }
+              >
+                <SelectTrigger
+                  className={`${calendarSelectClass} date-picker-inline-select-trigger`}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-48 z-[100000] date-picker-inline-select-content">
+                  {yearRange.map((optionYear) => (
+                    <SelectItem key={optionYear} value={String(optionYear)}>
+                      {optionYear}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </AppTooltip>
 
           <AppTooltip content="Bulan berikutnya">

@@ -12,6 +12,8 @@ export default function FilterBar({
 }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -23,14 +25,35 @@ export default function FilterBar({
     onCategoryChange?.(value);
   };
 
-  const isActive = searchQuery || category;
+  const handleDateChange = (start: string, end: string) => {
+    setStartDate(start);
+    setEndDate(end);
+    onDateRangeChange?.(start, end);
+  };
+
+  const activeItems: string[] = [];
+  if (searchQuery.trim()) {
+    activeItems.push(`Pencarian: ${searchQuery.trim()}`);
+  }
+  if (category) {
+    activeItems.push(`Kategori: ${category}`);
+  }
+  if (startDate || endDate) {
+    if (startDate && endDate) {
+      activeItems.push(`Tanggal: ${startDate} - ${endDate}`);
+    } else {
+      activeItems.push(`Tanggal: ${startDate || endDate}`);
+    }
+  }
+
+  const isActive = activeItems.length > 0;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
 
-        <DateRangePicker onChange={(s, e) => onDateRangeChange?.(s, e)} />
+        <DateRangePicker onChange={handleDateChange} />
 
         <CategoryFilterSelect
           value={category}
@@ -38,7 +61,7 @@ export default function FilterBar({
         />
       </div>
 
-      {isActive && <ActiveFilterIndicator />}
+      {isActive && <ActiveFilterIndicator items={activeItems} />}
     </div>
   );
 }
