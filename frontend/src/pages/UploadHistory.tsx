@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import HistoryContentSection from "../components/document/history/HistoryContentSection";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
@@ -7,6 +9,7 @@ import { useToastState } from "../hooks/useToastState";
 import { getRestoreToastType } from "../utils/historyToastUtils";
 
 export default function UploadHistory() {
+  const pageRef = useRef<HTMLDivElement | null>(null);
   const { toast, showToast, closeToast } = useToastState("info");
 
   const {
@@ -41,15 +44,34 @@ export default function UploadHistory() {
     showToast(message, toastType);
   };
 
+  useEffect(() => {
+    if (!pageRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from("[data-history-animate]", {
+        y: 20,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power2.out",
+        stagger: 0.08,
+      });
+    }, pageRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
+    <div
+      ref={pageRef}
+      className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]"
+    >
       <Sidebar />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col">
         <Header title="Riwayat Unggah" />
 
-        <main className="flex-1 p-1 md:p-8">
-          <div className="mx-auto w-full max-w-none space-y-6">
+        <main className="flex-1 p-1 md:p-8" data-history-animate>
+          <div className="mx-auto w-full max-w-none space-y-6" data-history-animate>
             <HistoryContentSection
               items={items}
               loading={loading}
