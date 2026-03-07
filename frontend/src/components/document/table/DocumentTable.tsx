@@ -87,14 +87,14 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 lg:p-6">
       <DocumentTableToolbar
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
         onUploadClick={handleUploadClick}
       />
 
-      <div ref={documentsContentRef} className="overflow-hidden">
+      <div ref={documentsContentRef} className="overflow-hidden rounded-xl border border-slate-100">
         <DocumentTableDesktop
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}

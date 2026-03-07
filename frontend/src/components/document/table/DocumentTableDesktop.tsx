@@ -28,9 +28,9 @@ export default function DocumentTableDesktop({
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full table-fixed text-sm">
-        <thead className="text-gray-950 border-b border-gray-200">
+        <thead className="bg-slate-50 text-gray-950 border-b border-slate-200">
           <tr>
-            <th className="text-center align-middle py-4 px-2 font-bold w-12">
+            <th className="text-center align-middle py-4 px-3 font-semibold w-12">
               <AppTooltip content="Pilih Semua">
                 <input
                   type="checkbox"
@@ -47,11 +47,11 @@ export default function DocumentTableDesktop({
                 />
               </AppTooltip>
             </th>
-            <th className="text-left py-4 px-2 font-bold w-1/5">Nama</th>
-            <th className="text-center py-4 px-2 font-bold w-1/5">Kategori</th>
-            <th className="text-center py-4 px-2 font-bold w-1/5">Format</th>
-            <th className="text-center py-4 px-2 font-bold w-1/5">Tanggal</th>
-            <th className="text-center py-4 px-2 font-bold w-1/5">Aksi</th>
+            <th className="text-left py-4 px-3 font-semibold w-1/5">Nama</th>
+            <th className="text-center py-4 px-3 font-semibold w-1/5">Kategori</th>
+            <th className="text-center py-4 px-3 font-semibold w-1/5">Format</th>
+            <th className="text-center py-4 px-3 font-semibold w-1/5">Tanggal</th>
+            <th className="text-center py-4 px-3 font-semibold w-1/5">Aksi</th>
           </tr>
         </thead>
 

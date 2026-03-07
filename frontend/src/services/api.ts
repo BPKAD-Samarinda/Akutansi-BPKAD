@@ -12,6 +12,7 @@ import {
   permanentlyDeleteDocumentFromLocalHistory,
   restoreDocumentFromLocalHistory,
 } from "../utils/uploadHistoryLocal";
+import { clearAuthToken, getAuthToken } from "../utils/auth";
 
 export interface LoginResponse {
   message: string;
@@ -56,8 +57,7 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token =
-    sessionStorage.getItem("authToken") ?? localStorage.getItem("authToken");
+  const token = getAuthToken();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -65,6 +65,20 @@ apiClient.interceptors.request.use((config) => {
 
   return config;
 });
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401) {
+      clearAuthToken();
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  },
+);
 
 const resolvedBaseUrl = apiClient.defaults.baseURL?.replace(/\/+$/, "") ?? "";
 const apiSuffix = "/api";

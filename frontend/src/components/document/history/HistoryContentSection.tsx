@@ -71,7 +71,7 @@ export default function HistoryContentSection({
     gsap.fromTo(
       selectedToolbarRef.current,
       { autoAlpha: 0, y: -8 },
-      { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" },
+      { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
     );
   }, [selectedRestorableCount]);
 
@@ -87,7 +87,7 @@ export default function HistoryContentSection({
       gsap.fromTo(
         tableContentRef.current,
         { y: -10 },
-        { y: 0, duration: 0.32, ease: "power2.out" },
+        { y: 0, duration: 0.55, ease: "power2.out" },
       );
     }
 
@@ -96,7 +96,7 @@ export default function HistoryContentSection({
       gsap.fromTo(
         tableContentRef.current,
         { y: 8 },
-        { y: 0, duration: 0.28, ease: "power2.out" },
+        { y: 0, duration: 0.55, ease: "power2.out" },
       );
     }
 
@@ -117,7 +117,7 @@ export default function HistoryContentSection({
     gsap.fromTo(
       tableContentRef.current,
       { autoAlpha: 0.5, y: 10 },
-      { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
+      { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
     );
   }, [statusValue]);
 

@@ -51,11 +51,11 @@ export default function DocumentRow({
   return (
     <tr
       data-paginated-item
-      className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+      className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${
         isSelected ? "bg-orange-50" : ""
       }`}
     >
-      <td className="py-4 px-2 w-12 text-center align-middle">
+      <td className="py-4 px-3 w-12 text-center align-middle">
         <input
           type="checkbox"
           checked={isSelected}
@@ -65,19 +65,19 @@ export default function DocumentRow({
         />
       </td>
 
-      <td className="py-4 px-2 text-sm font-medium text-gray-800 max-w-0">
+      <td className="py-4 px-3 text-sm font-medium text-gray-800 max-w-0">
         <AppTooltip content={doc.nama_sppd}>
           <span className="block truncate">{doc.nama_sppd}</span>
         </AppTooltip>
       </td>
 
-      <td className="py-4 px-2 text-sm text-center text-gray-700">
+      <td className="py-4 px-3 text-sm text-center text-gray-700">
         {doc.kategori}
       </td>
 
-      <td className="py-4 px-2 text-center">
+      <td className="py-4 px-3 text-center">
         <span
-          className={`px-3 py-1 ${getFormatStyle(
+          className={`inline-flex min-w-[52px] justify-center px-3 py-1 ${getFormatStyle(
             doc.file_path,
           )} rounded-full text-xs font-semibold`}
         >
@@ -85,37 +85,37 @@ export default function DocumentRow({
         </span>
       </td>
 
-      <td className="py-4 px-2 text-center text-sm text-gray-600">
+      <td className="py-4 px-3 text-center text-sm text-gray-600">
         {formatIndonesianDate(doc.tanggal_sppd)}
       </td>
 
-      <td className="py-4 px-2">
-        <div className="flex gap-3 justify-center">
+      <td className="py-4 px-3">
+        <div className="flex gap-1.5 justify-center">
           <AppTooltip content="Lihat dokumen">
             <button
               onClick={() => onView?.(doc.id)}
               aria-label="View document"
-              className="text-blue-600 hover:text-blue-700 transition-colors"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
             >
-              <IoMdEye className="w-6 h-6" />
+              <IoMdEye className="w-5 h-5" />
             </button>
           </AppTooltip>
           <AppTooltip content="Edit dokumen">
             <button
               onClick={() => onEdit?.(doc.id)}
               aria-label="Edit document"
-              className="text-amber-500 hover:text-amber-600 transition-colors"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
             >
-              <MdEdit className="w-6 h-6" />
+              <MdEdit className="w-5 h-5" />
             </button>
           </AppTooltip>
           <AppTooltip content="Hapus dokumen">
             <button
               onClick={() => onDelete?.(doc.id)}
               aria-label="Delete document"
-              className="text-red-600 hover:text-red-700 transition-colors"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
             >
-              <FaTrashAlt className="w-5 h-5" />
+              <FaTrashAlt className="w-4 h-4" />
             </button>
           </AppTooltip>
         </div>

@@ -39,7 +39,7 @@ export default function DocumentManagement() {
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
       <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-        <Header title="Dokumen Management" />
+        <Header title="Manajemen Dokumen" />
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <FilterBar
