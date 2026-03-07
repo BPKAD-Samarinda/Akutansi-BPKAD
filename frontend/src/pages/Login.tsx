@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../services/api";
 import AuthHero from "../components/layout/AuthHero";
 import LoginForm from "../components/layout/LoginForm";
+import { sanitizeCredentialInput } from "../utils/auth";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,11 +18,19 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const safeUsername = sanitizeCredentialInput(username, 50);
+    const safePassword = password.slice(0, 100);
+
+    if (!safeUsername || !safePassword) {
+      setError("Nama pengguna dan kata sandi wajib diisi.");
+      return;
+    }
+
     setIsLoading(true);
     setError("");
 
     try {
-      const data = await login(username, password);
+      const data = await login(safeUsername, safePassword);
       localStorage.setItem("rememberMe", String(rememberMe));
 
       if (rememberMe) {
