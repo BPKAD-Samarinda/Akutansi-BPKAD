@@ -64,10 +64,18 @@ export const createDocument = async (req: Request, res: Response) => {
     console.log("FILE:", req.file);
 
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
-    const file_path = req.file ? `uploads/${req.file.filename}` : null;
 
-    if (!nama_sppd || !tanggal_sppd || !kategori || !file_path) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!req.file) {
+      return res.status(400).json({
+        message:
+          "File upload failed. Please check if the file is a valid type (PDF, DOC, DOCX, PNG, JPG) and under 10MB.",
+      });
+    }
+
+    const file_path = `uploads/${req.file.filename}`;
+
+    if (!nama_sppd || !tanggal_sppd || !kategori) {
+      return res.status(400).json({ message: "All text fields are required" });
     }
 
     const [result] = await db.execute(
