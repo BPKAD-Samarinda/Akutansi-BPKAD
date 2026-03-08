@@ -4,6 +4,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
 import { formatIndonesianDate } from "../../../utils/localDate";
+import { getUser } from "../../../utils/auth";
 
 interface DocumentRowProps {
   doc: Document;
@@ -25,6 +26,8 @@ export default function DocumentRow({
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";
   };
+
+  const user = getUser();
 
   const getFormatStyle = (filePath: string) => {
     const format = getFileFormat(filePath);
@@ -100,24 +103,28 @@ export default function DocumentRow({
               <IoMdEye className="w-5 h-5" />
             </button>
           </AppTooltip>
-          <AppTooltip content="Edit dokumen">
-            <button
-              onClick={() => onEdit?.(doc.id)}
-              aria-label="Edit document"
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-            >
-              <MdEdit className="w-5 h-5" />
-            </button>
-          </AppTooltip>
-          <AppTooltip content="Hapus dokumen">
-            <button
-              onClick={() => onDelete?.(doc.id)}
-              aria-label="Delete document"
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
-            >
-              <FaTrashAlt className="w-4 h-4" />
-            </button>
-          </AppTooltip>
+          {user && user.role === "Admin Akuntansi" && (
+            <>
+              <AppTooltip content="Edit dokumen">
+                <button
+                  onClick={() => onEdit?.(doc.id)}
+                  aria-label="Edit document"
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+                >
+                  <MdEdit className="w-5 h-5" />
+                </button>
+              </AppTooltip>
+              <AppTooltip content="Hapus dokumen">
+                <button
+                  onClick={() => onDelete?.(doc.id)}
+                  aria-label="Delete document"
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+                >
+                  <FaTrashAlt className="w-4 h-4" />
+                </button>
+              </AppTooltip>
+            </>
+          )}
         </div>
       </td>
     </tr>
