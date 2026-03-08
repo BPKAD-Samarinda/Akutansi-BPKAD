@@ -152,10 +152,15 @@ export default function Dashboard() {
             )}
           </div>
 
-          <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            <DashboardPieChart data={pie.distributionData} />
-            {user?.role === "Admin Akuntansi" && <DashboardLoginActivity data={login.filteredLogins} />}
-          </div>
+          {user?.role === "Admin Akuntansi" && (
+            <div
+              data-animate-item
+              className="grid grid-cols-1 xl:grid-cols-2 gap-4"
+            >
+              <DashboardPieChart data={pie.distributionData} />
+              <DashboardLoginActivity data={login.filteredLogins} />
+            </div>
+          )}
 
           <div data-animate-item>
             <DashboardUploadActivityCard
