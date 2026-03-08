@@ -9,6 +9,7 @@ import DashboardUploadActivityCard from "../components/dashboard/cards/Dashboard
 import DashboardPieChart from "../components/dashboard/charts/DashboardPieChart";
 import { useDashboardAnalytics } from "../hooks/dashboard/useDashboardAnalytics";
 import { useChartFilterAnimation } from "../hooks/dashboard/useChartFilterAnimation";
+import { getUser } from "../utils/auth";
 
 type AnimatedStatNumberProps = {
   value: number;
@@ -40,6 +41,7 @@ function AnimatedStatNumber({ value, duration = 900 }: AnimatedStatNumberProps) 
 }
 
 export default function Dashboard() {
+  const user = getUser();
   // Pisah state per-card agar filter tidak saling mempengaruhi.
   const summary = useDashboardAnalytics();
   const distribution = useDashboardAnalytics();
@@ -152,7 +154,7 @@ export default function Dashboard() {
 
           <div data-animate-item className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <DashboardPieChart data={pie.distributionData} />
-            <DashboardLoginActivity data={login.filteredLogins} />
+            {user?.role === "Admin Akuntansi" && <DashboardLoginActivity data={login.filteredLogins} />}
           </div>
 
           <div data-animate-item>
