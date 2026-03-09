@@ -36,3 +36,12 @@ npm run dev
 ## Pengembangan
 
 Lihat README di masing-masing folder untuk detail lebih lanjut.
+
+## Deploy VPS
+
+Template konfigurasi deploy tersedia di:
+
+- `deploy/vps/README.md`
+- `deploy/vps/nginx-app.conf`
+- `deploy/vps/nginx-api.conf`
+- `deploy/vps/ecosystem.config.cjs`
