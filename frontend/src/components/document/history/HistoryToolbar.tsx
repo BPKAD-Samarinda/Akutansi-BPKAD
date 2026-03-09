@@ -75,7 +75,7 @@ export default function HistoryToolbar({
               value="dihapus"
               className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700"
             >
-              Dihapus
+              Dihapus Sementara
             </SelectItem>
             <SelectItem
               value="diedit"

@@ -6,10 +6,8 @@ type HistoryTableProps = {
   items: UploadHistory[];
   selectedIds: Set<string>;
   allRestorableSelected: boolean;
-  permanentlyDeletingId: number | string | null;
   onToggleSelectAll: (checked: boolean) => void;
   onToggleSelect: (id: number | string, checked: boolean) => void;
-  onPermanentDelete: (id: number | string) => void;
 };
 
 const getHistoryStatus = (item: UploadHistory) => {
@@ -20,7 +18,7 @@ const getHistoryStatus = (item: UploadHistory) => {
   }
 
   if (normalizedStatus === "dihapus" || item.isDeleted) {
-    return "Dihapus";
+    return "Dihapus Sementara";
   }
 
   return "Diunggah";
@@ -31,7 +29,7 @@ const getStatusStyles = (status: string) => {
     return "bg-blue-50 text-blue-700";
   }
 
-  if (status === "Dihapus") {
+  if (status === "Dihapus Sementara") {
     return "bg-red-50 text-red-700";
   }
 
@@ -60,10 +58,8 @@ export default function HistoryTable({
   items,
   selectedIds,
   allRestorableSelected,
-  permanentlyDeletingId,
   onToggleSelectAll,
   onToggleSelect,
-  onPermanentDelete,
 }: HistoryTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100">
@@ -75,7 +71,6 @@ export default function HistoryTable({
             <col style={{ width: "20%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
-            <col style={{ width: "18%" }} />
           </colgroup>
           <thead className="bg-gradient-to-r from-orange-500 to-orange-600">
             <tr>
@@ -99,9 +94,6 @@ export default function HistoryTable({
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                 Status
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-primary-foreground">
-                Aksi
               </th>
             </tr>
           </thead>
@@ -149,21 +141,6 @@ export default function HistoryTable({
                     >
                       {status}
                     </span>
-                  </td>
-                  <td className="px-4 py-4 align-top">
-                    <button
-                      type="button"
-                      onClick={() => onPermanentDelete(item.id)}
-                      disabled={
-                        !item.isDeleted ||
-                        String(permanentlyDeletingId) === String(item.id)
-                      }
-                      className="inline-flex items-center justify-center rounded-md bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {String(permanentlyDeletingId) === String(item.id)
-                        ? "Menghapus..."
-                        : "Hapus Permanen"}
-                    </button>
                   </td>
                 </tr>
               );
