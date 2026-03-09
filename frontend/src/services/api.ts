@@ -30,7 +30,7 @@ export interface DashboardApiLoginActivity {
 export interface DashboardAnalyticsResponse {
   documents: DashboardApiDocument[];
   loginActivities: DashboardApiLoginActivity[];
-  totalStaffUsers?: number;
+  totalUsers?: number;
 }
 
 type DocumentApiItem = {

@@ -100,7 +100,7 @@ export default function Dashboard() {
             <div className="bg-white rounded-2xl border border-blue-100 p-5">
               <p className="text-sm font-medium text-gray-500">Total User</p>
               <p className="text-3xl font-bold text-blue-500">
-                <AnimatedStatNumber value={summary.totalStaffUsers} />
+                <AnimatedStatNumber value={summary.totalUsers} />
               </p>
             </div>
             <div className="bg-white rounded-2xl border border-teal-100 p-5">

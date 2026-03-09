@@ -10,7 +10,8 @@ export type NormalizedUpload = {
   id: number;
   name: string;
   kategori: DashboardCategory;
-  uploadedAt: string; // YYYY-MM-DD
+  uploadedAt: string; // YYYY-MM-DD (tanggal_sppd)
+  createdAt: string; // YYYY-MM-DD (waktu upload real)
 };
 
 export type NormalizedLogin = {

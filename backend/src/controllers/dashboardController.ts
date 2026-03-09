@@ -61,16 +61,16 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
       }
     }
 
-    const [staffRows]: any = await db.query(
-      "SELECT COUNT(id) as total FROM users WHERE role = 'Staff Akuntansi'",
+    const [userRows]: any = await db.query(
+      "SELECT COUNT(id) as total FROM users",
     );
 
-    const totalStaffUsers = staffRows[0]?.total || 0;
+    const totalUsers = userRows[0]?.total || 0;
 
     return res.status(200).json({
       documents: documentRows,
       loginActivities: loginRows,
-      totalStaffUsers: totalStaffUsers,
+      totalUsers,
     });
   } catch (error) {
     console.error("Dashboard analytics error:", error);

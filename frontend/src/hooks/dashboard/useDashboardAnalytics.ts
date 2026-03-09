@@ -54,7 +54,7 @@ export function useDashboardAnalytics() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
-  const [staffUsersCount, setStaffUsersCount] = useState<number>(0);
+  const [usersCount, setUsersCount] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [todayKey, setTodayKey] = useState<string>(() => toIsoDate(new Date()));
 
@@ -94,6 +94,7 @@ export function useDashboardAnalytics() {
         const normalizedUploads = payload.documents
           .map((doc: DashboardApiDocument) => {
             const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
+            const createdAtOnly = normalizeDateOnly(doc.created_at) || null;
             if (!dateOnly) return null;
 
             return {
@@ -101,6 +102,7 @@ export function useDashboardAnalytics() {
               name: doc.nama_sppd || `Dokumen_${doc.id}.pdf`,
               kategori: toDashboardCategory(doc.kategori),
               uploadedAt: dateOnly,
+              createdAt: createdAtOnly || dateOnly,
             };
           })
           .filter((item): item is NormalizedUpload => item !== null);
@@ -116,7 +118,7 @@ export function useDashboardAnalytics() {
 
         setUploads(normalizedUploads);
         setLogins(normalizedLogins);
-        setStaffUsersCount(Number(payload.totalStaffUsers ?? 0));
+        setUsersCount(Number(payload.totalUsers ?? 0));
         setIsLoaded(true);
       })
       .catch((error) => {
@@ -135,11 +137,12 @@ export function useDashboardAnalytics() {
                   name: doc.nama_sppd || `Dokumen_${doc.id}.pdf`,
                   kategori: toDashboardCategory(doc.kategori),
                   uploadedAt: dateOnly,
+                  createdAt: normalizeDateOnly(doc.created_at) || dateOnly,
                 };
               })
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
-            setStaffUsersCount(0);
+            setUsersCount(0);
             setIsLoaded(true);
           })
           .catch((fallbackError) => {
@@ -261,13 +264,13 @@ export function useDashboardAnalytics() {
   }, [logins, todayKey]);
 
   const totalDocuments = filteredUploads.length;
-  const totalStaffUsers = staffUsersCount;
+  const totalUsers = usersCount;
   const totalLogins = filteredLogins.length;
   const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
   const todayUploadCount = useMemo(() => {
     const todayIso = toIsoDate(new Date());
-    return uploads.filter((record) => record.uploadedAt === todayIso).length;
+    return uploads.filter((record) => record.createdAt === todayIso).length;
   }, [uploads]);
 
   const latestUploadedDocument = useMemo(() => {
@@ -282,13 +285,13 @@ export function useDashboardAnalytics() {
   const todayUploadRows = useMemo(() => {
     const todayIso = toIsoDate(new Date());
     return uploads
-      .filter((record) => record.uploadedAt === todayIso)
+      .filter((record) => record.createdAt === todayIso)
       .sort((a, b) => (a.id < b.id ? 1 : -1))
       .map((record) => ({
         id: record.id,
         name: record.name,
         kategori: record.kategori,
-        tanggal: formatDateLabel(record.uploadedAt),
+        tanggal: formatDateLabel(record.createdAt),
       }));
   }, [uploads]);
 
@@ -315,7 +318,7 @@ export function useDashboardAnalytics() {
     yearOptions,
     categoryOptions,
     totalDocuments,
-    totalStaffUsers,
+    totalUsers,
     totalLogins,
     todayUploadCount,
     latestUploadedDocument,
