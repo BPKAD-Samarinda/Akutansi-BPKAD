@@ -5,13 +5,6 @@ import {
   UploadHistoryQuery,
   UploadHistoryResult,
 } from "../types";
-import {
-  getHiddenDocumentIds,
-  getLocalUploadHistoryItems,
-  getPermanentDeletedDocumentIds,
-  permanentlyDeleteDocumentFromLocalHistory,
-  restoreDocumentFromLocalHistory,
-} from "../utils/uploadHistoryLocal";
 import { clearAuthToken, getAuthToken } from "../utils/auth";
 
 export interface LoginResponse {
@@ -112,118 +105,64 @@ export const getUploadHistories = async (
 ): Promise<UploadHistoryResult> => {
   const page = Math.max(query.page || 1, 1);
   const limit = Math.max(query.limit || 10, 1);
-  const searchText = (query.search || "").trim().toLowerCase();
-  const statusFilter = query.status || "all";
+  const search = (query.search || "").trim();
+  const status = query.status || "all";
 
-  const documents = await getDocuments();
-  const localHistoryItems = getLocalUploadHistoryItems();
-  const hiddenIds = new Set(getHiddenDocumentIds().map(String));
-  const permanentDeletedIds = new Set(
-    getPermanentDeletedDocumentIds().map(String),
-  );
-
-  const localHistoryById = new Map<string, UploadHistory>();
-  for (const historyItem of localHistoryItems) {
-    localHistoryById.set(String(historyItem.id), historyItem);
+  if (status === "diunggah" || status === "diedit") {
+    return {
+      items: [],
+      total: 0,
+      page,
+      limit,
+    };
   }
 
-  const documentHistoryItems: UploadHistory[] = documents.map((document) => {
-    const localHistory = localHistoryById.get(String(document.id));
-
-    return {
-      id: document.id,
-      documentName: localHistory?.documentName || document.nama_sppd,
-      uploadedAt:
-        localHistory?.uploadedAt ||
-        document.created_at ||
-        document.tanggal_sppd ||
-        "",
-      uploadedBy: localHistory?.uploadedBy || "-",
-      fileSize: localHistory?.fileSize || "-",
-      filePath: localHistory?.filePath || document.file_path,
-      status: hiddenIds.has(String(document.id))
-        ? "dihapus"
-        : (localHistory?.status ?? "diunggah"),
-      isDeleted: hiddenIds.has(String(document.id)),
-    };
+  const response = await apiClient.get<{
+    items: Array<{
+      id: number | string;
+      document_name: string;
+      uploaded_at: string;
+      uploaded_by: string;
+      file_size: string;
+      file_path: string;
+    }>;
+    total: number;
+    page: number;
+    limit: number;
+  }>("/documents/history", {
+    params: {
+      page,
+      limit,
+      search: search || undefined,
+    },
   });
 
-  const extraHistoryItems = localHistoryItems
-    .filter(
-      (historyItem) =>
-        !documentHistoryItems.some(
-          (documentItem) => String(documentItem.id) === String(historyItem.id),
-        ),
-    )
-    .map((historyItem) => ({
-      ...historyItem,
-      status: hiddenIds.has(String(historyItem.id))
-        ? "dihapus"
-        : (historyItem.status ?? "diunggah"),
-      isDeleted: hiddenIds.has(String(historyItem.id)),
-    }));
-
-  const allItems = [...documentHistoryItems, ...extraHistoryItems].sort(
-    (itemA, itemB) => {
-      const timeA = new Date(itemA.uploadedAt).getTime();
-      const timeB = new Date(itemB.uploadedAt).getTime();
-
-      return (
-        (Number.isNaN(timeB) ? 0 : timeB) - (Number.isNaN(timeA) ? 0 : timeA)
-      );
-    },
-  );
-
-  const statusFilteredItems =
-    statusFilter === "all"
-      ? allItems
-      : allItems.filter((item) => {
-          const normalizedStatus = item.status?.toLowerCase();
-
-          if (statusFilter === "dihapus") {
-            return normalizedStatus === "dihapus" || item.isDeleted;
-          }
-
-          if (statusFilter === "diedit") {
-            return normalizedStatus === "diedit";
-          }
-
-          return normalizedStatus === "diunggah" || !item.isDeleted;
-        });
-
-  const filteredItems =
-    searchText.length === 0
-      ? statusFilteredItems.filter(
-          (item) => !permanentDeletedIds.has(String(item.id)),
-        )
-      : statusFilteredItems.filter(
-          (item) =>
-            item.documentName.toLowerCase().includes(searchText) &&
-            !permanentDeletedIds.has(String(item.id)),
-        );
-
-  const total = filteredItems.length;
-  const start = (page - 1) * limit;
-  const items = filteredItems.slice(start, start + limit);
+  const items: UploadHistory[] = response.data.items.map((item) => ({
+    id: item.id,
+    documentName: item.document_name,
+    uploadedAt: item.uploaded_at || "",
+    uploadedBy: item.uploaded_by || "-",
+    fileSize: item.file_size || "-",
+    filePath: item.file_path || "",
+    status: "dihapus",
+    isDeleted: true,
+  }));
 
   return {
     items,
-    total,
-    page,
-    limit,
+    total: response.data.total,
+    page: response.data.page,
+    limit: response.data.limit,
   };
 };
 
 export const restoreUploadHistory = async (
   id: number | string,
 ): Promise<{ message: string }> => {
-  const restored = restoreDocumentFromLocalHistory(id);
-
-  if (!restored) {
-    return { message: "Data riwayat tidak ditemukan." };
-  }
-
-  return { message: "Dokumen berhasil direstorasi." };
+  const response = await apiClient.post<{ message: string }>(
+    `/documents/history/${id}/restore`,
+  );
+  return { message: response.data.message || "Dokumen berhasil direstorasi." };
 };
 
 export const restoreUploadHistories = async (
@@ -267,13 +206,9 @@ export const restoreUploadHistories = async (
 export const permanentlyDeleteUploadHistory = async (
   id: number | string,
 ): Promise<{ message: string }> => {
-  const deleted = permanentlyDeleteDocumentFromLocalHistory(id);
-
-  if (!deleted) {
-    return { message: "Data riwayat tidak ditemukan." };
-  }
-
-  return { message: "Dokumen berhasil dihapus permanen." };
+  return {
+    message: `Hapus permanen belum tersedia di backend untuk dokumen ${id}.`,
+  };
 };
 
 export const updateDocument = async (
@@ -281,6 +216,10 @@ export const updateDocument = async (
   updatedData: Partial<Document>,
 ): Promise<void> => {
   await apiClient.put(`/documents/${id}`, updatedData);
+};
+
+export const deleteDocument = async (id: number | string): Promise<void> => {
+  await apiClient.delete(`/documents/${id}`);
 };
 
 export const login = async (

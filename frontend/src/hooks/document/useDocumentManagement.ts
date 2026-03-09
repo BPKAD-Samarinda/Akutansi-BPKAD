@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { getDocuments, updateDocument, uploadsBaseUrl } from "../../services/api";
+import { useCallback, useEffect, useState } from "react";
+import {
+  deleteDocument,
+  getDocuments,
+  updateDocument,
+  uploadsBaseUrl,
+} from "../../services/api";
 import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
-import {
-  getHiddenDocumentIds,
-  moveDocumentsToLocalHistory,
-} from "../../utils/uploadHistoryLocal";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -47,31 +48,27 @@ export function useDocumentManagement() {
     handleRefresh: baseHandleRefresh,
   } = useDocumentFilters([], showToast);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await getDocuments();
-        const hiddenDocumentIds = new Set(getHiddenDocumentIds().map(String));
-        const visibleDocuments = data.filter(
-          (document) => !hiddenDocumentIds.has(String(document.id)),
-        );
-
-        setDocuments(visibleDocuments);
-        setFilteredDocuments(visibleDocuments);
-      } catch {
-        showToast("Gagal mengambil data dokumen", "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+  const fetchDocuments = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getDocuments();
+      setDocuments(data);
+      setFilteredDocuments(data);
+    } catch {
+      showToast("Gagal mengambil data dokumen", "error");
+    } finally {
+      setLoading(false);
+    }
   }, [setDocuments, setFilteredDocuments]);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
 
   const handleRefresh = () => {
     baseHandleRefresh();
     setSelectedDocuments(new Set());
+    fetchDocuments();
   };
 
   const handleSelectDocument = (id: number | string) => {
@@ -179,38 +176,14 @@ export function useDocumentManagement() {
   const confirmDelete = async () => {
     try {
       if (confirmDialog.isMultiple) {
-        const documentsToMove = documents.filter((doc) =>
-          selectedDocuments.has(doc.id),
-        );
-        moveDocumentsToLocalHistory(documentsToMove);
-
-        const updatedDocuments = documents.filter(
-          (doc) => !selectedDocuments.has(doc.id),
-        );
-
-        setDocuments(updatedDocuments);
-        setFilteredDocuments(updatedDocuments);
+        const idsToDelete = Array.from(selectedDocuments);
+        await Promise.all(idsToDelete.map((id) => deleteDocument(id)));
+        await fetchDocuments();
         setSelectedDocuments(new Set());
-
-        showToast(
-          `${selectedDocuments.size} dokumen dipindahkan ke riwayat!`,
-          "success",
-        );
+        showToast(`${idsToDelete.length} dokumen dipindahkan ke riwayat!`, "success");
       } else if (confirmDialog.documentId) {
-        const documentToMove = documents.find(
-          (doc) => doc.id === confirmDialog.documentId,
-        );
-
-        if (documentToMove) {
-          moveDocumentsToLocalHistory([documentToMove]);
-        }
-
-        const updatedDocuments = documents.filter(
-          (doc) => doc.id !== confirmDialog.documentId,
-        );
-
-        setDocuments(updatedDocuments);
-        setFilteredDocuments(updatedDocuments);
+        await deleteDocument(confirmDialog.documentId);
+        await fetchDocuments();
 
         const newSelected = new Set(selectedDocuments);
         newSelected.delete(confirmDialog.documentId);

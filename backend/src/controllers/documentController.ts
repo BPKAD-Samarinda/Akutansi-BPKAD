@@ -108,15 +108,15 @@ export const updateDocument = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
     const { id } = req.params;
-    const { nama_sppd, tanggal_sppd, kategori, total_biaya } = req.body;
+    const { nama_sppd, tanggal_sppd, kategori } = req.body;
 
-    if (!nama_sppd || !tanggal_sppd || !kategori || !total_biaya) {
+    if (!nama_sppd || !tanggal_sppd || !kategori) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const [result] = await db.execute(
-      "UPDATE documents SET nama_sppd = ?, tanggal_sppd = ?, kategori = ?, total_biaya = ? WHERE id = ? AND is_deleted = 0",
-      [nama_sppd, tanggal_sppd, kategori, total_biaya, id],
+      "UPDATE documents SET nama_sppd = ?, tanggal_sppd = ?, kategori = ? WHERE id = ? AND is_deleted = 0",
+      [nama_sppd, tanggal_sppd, kategori, id],
     );
 
     res

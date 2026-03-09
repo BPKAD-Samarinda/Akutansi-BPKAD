@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import {
   getUploadHistories,
   permanentlyDeleteUploadHistory,
@@ -150,11 +149,7 @@ export function useUploadHistory({
       const response = await restoreUploadHistory(id);
       await fetchHistory();
       return response.message || "Dokumen berhasil direstorasi.";
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return "Endpoint restore belum tersedia di backend.";
-      }
-
+    } catch {
       return "Gagal merestorasi dokumen.";
     } finally {
       setRestoringId(null);

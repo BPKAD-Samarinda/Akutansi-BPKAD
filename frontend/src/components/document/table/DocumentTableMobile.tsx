@@ -1,6 +1,7 @@
 import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
 import { formatIndonesianDate } from "../../../utils/localDate";
+import { getUser } from "../../../utils/auth";
 
 type DocumentTableMobileProps = {
   documents: Document[];
@@ -19,6 +20,9 @@ export default function DocumentTableMobile({
   onEdit,
   onDelete,
 }: DocumentTableMobileProps) {
+  const user = getUser();
+  const canManageDocument = user?.role === "Admin Akuntansi";
+
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";
   };
@@ -103,18 +107,22 @@ export default function DocumentTableMobile({
                 >
                   Lihat
                 </button>
-                <button
-                  onClick={() => onEdit?.(doc.id)}
-                  className="flex-1 py-2 rounded-lg bg-yellow-50 text-yellow-600 text-xs font-medium"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => onDelete?.(doc.id)}
-                  className="flex-1 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-medium"
-                >
-                  Hapus
-                </button>
+                {canManageDocument && (
+                  <>
+                    <button
+                      onClick={() => onEdit?.(doc.id)}
+                      className="flex-1 py-2 rounded-lg bg-yellow-50 text-yellow-600 text-xs font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => onDelete?.(doc.id)}
+                      className="flex-1 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-medium"
+                    >
+                      Hapus
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           );

@@ -1,5 +1,6 @@
 import { UploadHistory } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
+import { toLocalDateOnly } from "../../../utils/localDate";
 
 type HistoryTableProps = {
   items: UploadHistory[];
@@ -40,9 +41,9 @@ const formatDate = (dateValue: string) => {
     return "-";
   }
 
-  const date = new Date(dateValue);
-
-  if (Number.isNaN(date.getTime())) {
+  const dateOnly = toLocalDateOnly(dateValue);
+  const [year, month, day] = dateOnly.split("-").map(Number);
+  if (!year || !month || !day) {
     return dateValue;
   }
 
@@ -50,7 +51,7 @@ const formatDate = (dateValue: string) => {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(date);
+  }).format(new Date(year, month - 1, day));
 };
 
 export default function HistoryTable({

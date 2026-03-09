@@ -75,11 +75,22 @@ router.post(
   upload.single("file"),
   createDocument,
 ); // taro middleware multer di sini
-router.put("/documents/:id", authenticateToken, updateDocument);
-router.delete("/documents/:id", authenticateToken, deleteDocument);
+router.put(
+  "/documents/:id",
+  authenticateToken,
+  authorizeRoles("Admin Akuntansi"),
+  updateDocument,
+);
+router.delete(
+  "/documents/:id",
+  authenticateToken,
+  authorizeRoles("Admin Akuntansi"),
+  deleteDocument,
+);
 router.post(
   "/documents/history/:id/restore",
   authenticateToken,
+  authorizeRoles("Admin Akuntansi"),
   restoreDocumentFromHistory,
 );
 
