@@ -18,6 +18,7 @@ export default function UploadHistory() {
     error,
     isRestoringSelected,
     isPermanentlyDeletingSelected,
+    permanentlyDeletingId,
     selectedIds,
     selectedRestorableCount,
     allRestorableSelected,
@@ -36,6 +37,7 @@ export default function UploadHistory() {
     handleToggleSelect,
     handleToggleSelectAll,
     handleRestoreSelected,
+    handlePermanentDelete,
     handlePermanentDeleteSelected,
   } = useUploadHistory();
 
@@ -58,6 +60,23 @@ export default function UploadHistory() {
     const message = await handlePermanentDeleteSelected();
     const normalizedMessage = message.toLowerCase();
     const toastType = normalizedMessage.includes("berhasil")
+      ? "success"
+      : "error";
+    showToast(message, toastType);
+  };
+
+  const handlePermanentDeleteRowClick = async (id: number | string) => {
+    const shouldDelete = window.confirm(
+      "Yakin ingin menghapus permanen dokumen ini? Tindakan ini tidak dapat dibatalkan.",
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    const message = await handlePermanentDelete(id);
+    const normalizedMessage = message.toLowerCase();
+    const toastType = normalizedMessage.includes("successfully")
       ? "success"
       : "error";
     showToast(message, toastType);
@@ -97,6 +116,7 @@ export default function UploadHistory() {
               error={error}
               isRestoringSelected={isRestoringSelected}
               isPermanentlyDeletingSelected={isPermanentlyDeletingSelected}
+              permanentlyDeletingId={permanentlyDeletingId}
               selectedIds={selectedIds}
               selectedRestorableCount={selectedRestorableCount}
               allRestorableSelected={allRestorableSelected}
@@ -114,6 +134,7 @@ export default function UploadHistory() {
               onToggleSelect={handleToggleSelect}
               onRestoreSelected={handleRestoreSelectedClick}
               onPermanentDeleteSelected={handlePermanentDeleteSelectedClick}
+              onPermanentDelete={handlePermanentDeleteRowClick}
               onPageChange={setPage}
               onPageSizeChange={(value) => {
                 setPage(1);
