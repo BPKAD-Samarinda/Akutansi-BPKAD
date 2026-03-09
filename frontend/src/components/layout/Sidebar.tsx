@@ -84,7 +84,7 @@ export default function Sidebar() {
         )}
 
         {canViewUploadHistory && (
-          <AppTooltip content="Upload History">
+          <AppTooltip content="File History">
             <button
               onClick={() => navigate("/riwayat")}
               aria-label="Riwayat Unggah"
