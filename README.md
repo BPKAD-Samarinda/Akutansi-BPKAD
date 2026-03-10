@@ -37,6 +37,13 @@ npm run dev
 
 Lihat README di masing-masing folder untuk detail lebih lanjut.
 
+## Dokumentasi Operasional
+
+- `docs/user-guide.md`
+- `docs/backup-restore.md`
+- `docs/troubleshooting.md`
+- `docs/maintenance.md`
+
 ## Deploy VPS
 
 Template konfigurasi deploy tersedia di:
