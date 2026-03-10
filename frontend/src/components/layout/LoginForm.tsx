@@ -1,4 +1,6 @@
 // frontend/src/components/layout/LoginForm.tsx
+import { useState } from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import userIcon from "../../assets/icons/profile.svg";
 import lockIcon from "../../assets/icons/kunci.svg";
 import logoBpkad from "../../assets/images/bpkad-building.png";
@@ -26,6 +28,8 @@ export default function LoginForm({
   onRememberMeChange,
   onSubmit,
 }: LoginFormProps) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
       <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-2xl shadow-orange-500/10 px-6 sm:px-12 py-10 sm:py-14 border border-orange-100/50 backdrop-blur-sm animate-[fadeIn_0.8s_ease-out_0.2s_both]">
@@ -75,14 +79,26 @@ export default function LoginForm({
             <div className="relative flex items-center bg-white border border-gray-300 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20">
               <img src={lockIcon} className="w-5 h-5 mr-3 opacity-40" alt="Lock" />
               <input
-                type="password"
+                type={isPasswordVisible ? "text" : "password"}
                 placeholder="Masukkan kata sandi"
                 value={password}
                 onChange={(e) => onPasswordChange(e.target.value)}
                 maxLength={100}
-                className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 font-medium"
+                className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 font-medium pr-10"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setIsPasswordVisible((prev) => !prev)}
+                aria-label={isPasswordVisible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                className="absolute right-4 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:text-orange-600"
+              >
+                {isPasswordVisible ? (
+                  <IoMdEyeOff className="h-5 w-5" />
+                ) : (
+                  <IoMdEye className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
 
