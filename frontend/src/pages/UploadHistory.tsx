@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import HistoryContentSection from "../components/document/history/HistoryContentSection";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import { Toast } from "../components/snackbar";
+import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { useUploadHistory } from "../hooks/useUploadHistory";
 import { useToastState } from "../hooks/useToastState";
 import { getRestoreToastType } from "../utils/historyToastUtils";
@@ -11,6 +12,7 @@ import { getRestoreToastType } from "../utils/historyToastUtils";
 export default function UploadHistory() {
   const pageRef = useRef<HTMLDivElement | null>(null);
   const { toast, showToast, closeToast } = useToastState("info");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     items,
@@ -47,14 +49,15 @@ export default function UploadHistory() {
   };
 
   const handlePermanentDeleteSelectedClick = async () => {
-    const shouldDelete = window.confirm(
-      "Yakin ingin menghapus permanen dokumen terpilih? Tindakan ini tidak dapat dibatalkan.",
-    );
+    setIsDeleteDialogOpen(true);
+  };
 
-    if (!shouldDelete) {
+  const handleConfirmPermanentDelete = async () => {
+    if (isPermanentlyDeletingSelected) {
       return;
     }
 
+    setIsDeleteDialogOpen(false);
     const message = await handlePermanentDeleteSelected();
     const normalizedMessage = message.toLowerCase();
     const toastType = normalizedMessage.includes("berhasil")
@@ -127,6 +130,17 @@ export default function UploadHistory() {
       {toast.show && (
         <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       )}
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        title="Hapus Permanen File?"
+        message="Dokumen yang dihapus permanen tidak dapat dipulihkan kembali."
+        confirmText={isPermanentlyDeletingSelected ? "Menghapus..." : "Hapus Permanen"}
+        cancelText="Batal"
+        onConfirm={handleConfirmPermanentDelete}
+        onCancel={() => setIsDeleteDialogOpen(false)}
+        type="danger"
+      />
     </div>
   );
 }
