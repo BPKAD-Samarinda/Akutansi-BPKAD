@@ -3,6 +3,7 @@ import { FaRegClock } from "react-icons/fa";
 import { FaRegFolderOpen } from "react-icons/fa";
 import dashboardIcon from "../../assets/icons/Dashboard.svg";
 import documentIcon from "../../assets/icons/upload.svg";
+import addUserIcon from "../../assets/icons/add_user.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 import AppTooltip from "../ui/app-tooltip";
 import { getUser } from "../../utils/auth";
@@ -49,7 +50,7 @@ export default function Sidebar() {
           </button>
         </AppTooltip>
 
-        <AppTooltip content="Document Management">
+        <AppTooltip content="Manajemen Dokumen">
           <button
             onClick={() => navigate("/dokumen-management")}
             aria-label="Dokumen Management"
@@ -68,7 +69,7 @@ export default function Sidebar() {
         </AppTooltip>
 
         {canUploadDocument && (
-          <AppTooltip content="Upload Document">
+          <AppTooltip content="Unggah Dokumen">
             <button
               onClick={() => navigate("/upload")}
               className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
@@ -83,8 +84,25 @@ export default function Sidebar() {
           </AppTooltip>
         )}
 
+        {canUploadDocument && (
+          <AppTooltip content="Tambah Pengguna">
+            <button
+              onClick={() => navigate("/add-user")}
+              aria-label="Tambah Pengguna"
+              className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all
+            ${
+              isActive("/add-user")
+                ? "bg-white/30 shadow-lg scale-105"
+                : "hover:bg-white/20"
+            }`}
+            >
+              <img src={addUserIcon} className="w-6 h-6" alt="Tambah User" />
+            </button>
+          </AppTooltip>
+        )}
+
         {canViewUploadHistory && (
-          <AppTooltip content="File History">
+          <AppTooltip content="Riwayat Unggah">
             <button
               onClick={() => navigate("/riwayat")}
               aria-label="Riwayat Unggah"

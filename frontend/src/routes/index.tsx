@@ -75,6 +75,16 @@ export default function AppRoutes() {
         }
       />
       <Route
+        path="/add-user"
+        element={
+          <ProtectedRoute>
+            <AdminOnlyRoute>
+              <AddUser />
+            </AdminOnlyRoute>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/preview-document"
         element={
           <ProtectedRoute>
@@ -88,3 +98,4 @@ export default function AppRoutes() {
     </Routes>
   );
 }
+import AddUser from "../pages/AddUser";
