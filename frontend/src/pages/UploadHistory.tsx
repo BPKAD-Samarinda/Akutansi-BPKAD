@@ -128,7 +128,12 @@ export default function UploadHistory() {
       </div>
 
       {toast.show && (
-        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={closeToast}
+        />
       )}
 
       <ConfirmDialog

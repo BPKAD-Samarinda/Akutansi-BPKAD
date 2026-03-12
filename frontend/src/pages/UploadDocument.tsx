@@ -37,19 +37,16 @@ export default function UploadDocument() {
   } = useFileUpload(showToast);
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-amber-50 via-white to-orange-100 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
 
       <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Unggah Dokumen" />
 
-        <main className="flex-1 p-4 lg:p-8 relative overflow-hidden">
-          <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-orange-200/40 blur-3xl"></div>
-          <div className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-amber-200/40 blur-3xl"></div>
+        <main className="flex-1 p-4 lg:p-8">
           <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <form onSubmit={handleSubmit}>
-              <div className="rounded-3xl bg-gradient-to-br from-orange-100/70 via-white to-sky-100/60 p-[1px] shadow-sm">
-                <div className="bg-white rounded-3xl p-6 lg:p-10 border border-orange-100/60">
+              <div className="bg-white rounded-3xl p-6 lg:p-10 border border-orange-100/60 shadow-sm">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                   <UploadDocumentInfoSection
                     formData={formData}
@@ -75,7 +72,6 @@ export default function UploadDocument() {
                     onCancel={handleCancel}
                   />
                 </div>
-                </div>
               </div>
             </form>
           </div>
@@ -86,6 +82,7 @@ export default function UploadDocument() {
         <Toast
           message={toast.message}
           type={toast.type}
+          duration={toast.duration}
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}

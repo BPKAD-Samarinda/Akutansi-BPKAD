@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import FilterBar from "../components/document/table/FilterBar";
@@ -9,6 +10,7 @@ import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { useDocumentManagement } from "../hooks/document/useDocumentManagement";
 
 export default function DocumentManagement() {
+  const [filterResetKey, setFilterResetKey] = useState(0);
   const {
     loading,
     documents,
@@ -35,6 +37,11 @@ export default function DocumentManagement() {
     cancelDelete,
   } = useDocumentManagement();
 
+  const handleRefreshClick = () => {
+    handleRefresh();
+    setFilterResetKey((prev) => prev + 1);
+  };
+
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
       <Sidebar />
@@ -46,7 +53,8 @@ export default function DocumentManagement() {
               onSearch={handleSearch}
               onDateRangeChange={handleDateRangeFilter}
               onCategoryChange={handleCategoryFilter}
-              onRefresh={handleRefresh}
+              onRefresh={handleRefreshClick}
+              resetSignal={filterResetKey}
             />
           </div>
 
@@ -69,6 +77,7 @@ export default function DocumentManagement() {
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onRefresh={handleRefreshClick}
                 onSelectDocument={handleSelectDocument}
                 onSelectAll={handleSelectAll}
               />
@@ -89,6 +98,7 @@ export default function DocumentManagement() {
         <Toast
           message={toast.message}
           type={toast.type}
+          duration={toast.duration}
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}

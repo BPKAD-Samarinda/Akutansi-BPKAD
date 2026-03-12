@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ActiveFilterIndicator from "./filter-bar/ActiveFilterIndicator";
 import CategoryFilterSelect from "./filter-bar/CategoryFilterSelect";
 import DateRangePicker from "./filter-bar/DateRangePicker";
@@ -9,11 +9,15 @@ export default function FilterBar({
   onSearch,
   onDateRangeChange,
   onCategoryChange,
+  resetSignal,
 }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const onSearchRef = useRef<typeof onSearch>();
+  const onCategoryRef = useRef<typeof onCategoryChange>();
+  const onDateRangeRef = useRef<typeof onDateRangeChange>();
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -30,6 +34,23 @@ export default function FilterBar({
     setEndDate(end);
     onDateRangeChange?.(start, end);
   };
+
+  useEffect(() => {
+    onSearchRef.current = onSearch;
+    onCategoryRef.current = onCategoryChange;
+    onDateRangeRef.current = onDateRangeChange;
+  }, [onSearch, onCategoryChange, onDateRangeChange]);
+
+  useEffect(() => {
+    if (resetSignal === undefined) return;
+    setSearchQuery("");
+    setCategory("");
+    setStartDate("");
+    setEndDate("");
+    onSearchRef.current?.("");
+    onCategoryRef.current?.("");
+    onDateRangeRef.current?.("", "");
+  }, [resetSignal]);
 
   const activeItems: string[] = [];
   if (searchQuery.trim()) {
@@ -53,7 +74,7 @@ export default function FilterBar({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
 
-        <DateRangePicker onChange={handleDateChange} />
+        <DateRangePicker onChange={handleDateChange} resetSignal={resetSignal} />
 
         <CategoryFilterSelect
           value={category}

@@ -12,9 +12,13 @@ import {
 
 type DateRangePickerProps = {
   onChange?: (start: string, end: string) => void;
+  resetSignal?: number;
 };
 
-export default function DateRangePicker({ onChange }: DateRangePickerProps) {
+export default function DateRangePicker({
+  onChange,
+  resetSignal,
+}: DateRangePickerProps) {
   const today = new Date();
   const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -83,6 +87,14 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
       },
     );
   }, [open]);
+
+  useEffect(() => {
+    if (resetSignal === undefined) return;
+    setStartDate(null);
+    setEndDate(null);
+    setHoverDate(null);
+    setOpen(false);
+  }, [resetSignal]);
 
   const fmt = (d: Date) =>
     `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;

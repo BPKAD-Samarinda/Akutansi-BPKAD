@@ -15,6 +15,7 @@ interface DocumentTableProps {
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
+  onRefresh?: () => void;
   onSelectDocument: (id: number | string) => void;
   onSelectAll: (checked: boolean) => void;
 }
@@ -26,6 +27,7 @@ export default function DocumentTable({
   onView,
   onEdit,
   onDelete,
+  onRefresh,
   onSelectDocument,
   onSelectAll,
 }: DocumentTableProps) {
@@ -93,6 +95,7 @@ export default function DocumentTable({
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
         onUploadClick={handleUploadClick}
+        onRefresh={onRefresh}
       />
 
       <div

@@ -33,8 +33,12 @@ export function useDocumentManagement() {
     isMultiple: false,
   });
 
-  const showToast = (message: string, type: ToastState["type"]) => {
-    setToast({ show: true, message, type });
+  const showToast = (
+    message: string,
+    type: ToastState["type"],
+    duration?: number,
+  ) => {
+    setToast({ show: true, message, type, duration });
   };
 
   const {
