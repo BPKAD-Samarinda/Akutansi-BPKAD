@@ -1,62 +1,107 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import { Toast } from "../components/snackbar";
-import type { ToastState } from "../types";
 import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
-import AddUserForm from "../components/add-user/AddUserForm";
+import AddUserModal from "../components/add-user/AddUserModal";
 import EditUserModal from "../components/add-user/EditUserModal";
 import UserStats from "../components/add-user/UserStats";
 import UserTable from "../components/add-user/UserTable";
+import { createUser, deleteUser, getUsers, updateUser } from "../services/api";
+import type { ToastState } from "../types";
 import type { AddUserFormValues, UserItem, UserRole } from "./AddUser.types";
+import { toUserItem } from "./AddUser.mapper";
 
 export default function AddUser() {
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [users, setUsers] = useState<UserItem[]>([]);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
+  const [editingUser, setEditingUser] = useState<UserItem | null>(null);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [form, setForm] = useState<AddUserFormValues>({
+    username: "",
+    password: "",
+    role: "Staff",
+  });
   const [toast, setToast] = useState<ToastState>({
     show: false,
     message: "",
     type: "info",
   });
-  const [users, setUsers] = useState<UserItem[]>([
-    {
-      id: 1,
-      username: "admin",
-      role: "Admin Akuntansi",
-      createdAt: "2026-02-11",
-    },
-    {
-      id: 2,
-      username: "staff",
-      role: "Staff Akuntansi",
-      createdAt: "2026-02-11",
-    },
-  ]);
-  const [editingUser, setEditingUser] = useState<UserItem | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<UserItem | null>(null);
-  const [form, setForm] = useState<AddUserFormValues>({
-    username: "",
-    password: "",
-    role: "Staff Akuntansi",
-  });
-
-  const showToast = (message: string, type: ToastState["type"]) => {
-    setToast({ show: true, message, type });
-  };
-
   const summary = useMemo(() => {
     const total = users.length;
-    const adminCount = users.filter((user) => user.role === "Admin Akuntansi").length;
-    const staffCount = total - adminCount;
-    return { total, adminCount, staffCount };
+    const adminCount = users.filter((user) =>
+      ["Admin", "Admin Akuntansi"].includes(user.role),
+    ).length;
+    const staffCount = users.filter((user) =>
+      ["Staff", "Staff Akuntansi"].includes(user.role),
+    ).length;
+    const magangCount = users.filter((user) =>
+      user.role.toLowerCase().includes("magang"),
+    ).length;
+    const pklCount = users.filter((user) =>
+      user.role.toLowerCase().includes("pkl"),
+    ).length;
+    return { total, adminCount, staffCount, magangCount, pklCount };
   }, [users]);
+
+  const normalizeRole = (value: string): UserRole => {
+    const raw = (value ?? "").toString().trim().toLowerCase();
+    if (raw.includes("admin")) return "Admin";
+    if (raw.includes("staff")) return "Staff";
+    if (raw.includes("magang")) return "Anak Magang";
+    if (raw.includes("pkl")) return "Anak PKL";
+    return "Staff";
+  };
+
+  const handleOpenEdit = (user: UserItem) => {
+    setEditingUser({ ...user, role: normalizeRole(user.role) });
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUsers = async () => {
+      try {
+        const data = await getUsers();
+        if (!isMounted) return;
+        setUsers(data.map(toUserItem));
+      } catch (error) {
+        console.error("Get users error:", error);
+        if (isMounted) {
+          const status = (error as any)?.response?.status;
+          const message =
+            (error as any)?.response?.data?.message ??
+            (status === 403
+              ? "Akses ditolak. Pastikan login sebagai Admin."
+              : "Gagal mengambil data pengguna.");
+          showToast(message, "error");
+        }
+      } finally {
+        if (isMounted) setIsLoadingUsers(false);
+      }
+    };
+
+    fetchUsers();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRoleChange = (value: AddUserFormValues["role"]) => {
+    setForm((prev) => ({ ...prev, role: value }));
+  };
+
+  const showToast = (message: string, type: ToastState["type"]) => {
+    setToast({ show: true, message, type });
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -66,60 +111,75 @@ export default function AddUser() {
       return;
     }
 
-    const exists = users.some(
-      (user) => user.username.toLowerCase() === form.username.trim().toLowerCase(),
-    );
-    if (exists) {
-      showToast("Nama pengguna sudah digunakan.", "error");
-      return;
-    }
-
-    const nextUser: UserItem = {
-      id: Math.max(0, ...users.map((user) => user.id)) + 1,
-      username: form.username.trim(),
-      role: form.role,
-      createdAt: new Date().toISOString().slice(0, 10),
+    const submit = async () => {
+      try {
+        await createUser({
+          username: form.username.trim(),
+          password: form.password,
+          role: normalizeRole(form.role),
+        });
+        const data = await getUsers();
+        setUsers(data.map(toUserItem));
+        setForm({ username: "", password: "", role: "Staff" });
+        setIsAddOpen(false);
+        showToast("Pengguna berhasil ditambahkan.", "success");
+      } catch (error: any) {
+        const message =
+          error?.response?.data?.message ?? "Gagal menambahkan pengguna.";
+        showToast(message, "error");
+      }
     };
 
-    setUsers((prev) => [nextUser, ...prev]);
-    setForm({ username: "", password: "", role: "Staff Akuntansi" });
-    showToast("Pengguna berhasil ditambahkan.", "success");
-  };
-
-  const handleOpenEdit = (user: UserItem) => {
-    setEditingUser(user);
+    submit();
   };
 
   const handleSaveEdit = () => {
     if (!editingUser) return;
-    if (!editingUser.username.trim()) {
-      showToast("Nama pengguna tidak boleh kosong.", "warning");
-      return;
-    }
+    const submit = async () => {
+      try {
+        const result = await updateUser(editingUser.id, {
+          username: editingUser.username,
+          role: normalizeRole(editingUser.role),
+        });
+        if (result.user) {
+          const updated = toUserItem(result.user);
+          setUsers((prev) =>
+            prev.map((item) => (item.id === updated.id ? updated : item)),
+          );
+        } else {
+          const data = await getUsers();
+          setUsers(data.map(toUserItem));
+        }
+        setEditingUser(null);
+        showToast("Pengguna berhasil diperbarui.", "success");
+      } catch (error: any) {
+        const message =
+          error?.response?.data?.message ?? "Gagal memperbarui pengguna.";
+        showToast(message, "error");
+      }
+    };
 
-    const exists = users.some(
-      (user) =>
-        user.id !== editingUser.id &&
-        user.username.toLowerCase() === editingUser.username.trim().toLowerCase(),
-    );
-    if (exists) {
-      showToast("Nama pengguna sudah digunakan.", "error");
-      return;
-    }
-
-    setUsers((prev) =>
-      prev.map((user) => (user.id === editingUser.id ? editingUser : user)),
-    );
-    setEditingUser(null);
-    showToast("Pengguna berhasil diperbarui.", "success");
+    submit();
   };
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
-    setUsers((prev) => prev.filter((user) => user.id !== deleteTarget.id));
-    setDeleteTarget(null);
-    setIsDeleteOpen(false);
-    showToast("Pengguna berhasil dihapus.", "success");
+    const submit = async () => {
+      try {
+        await deleteUser(deleteTarget.id);
+        const data = await getUsers();
+        setUsers(data.map(toUserItem));
+        setDeleteTarget(null);
+        setIsDeleteOpen(false);
+        showToast("Pengguna berhasil dihapus.", "success");
+      } catch (error: any) {
+        const message =
+          error?.response?.data?.message ?? "Gagal menghapus pengguna.";
+        showToast(message, "error");
+      }
+    };
+
+    submit();
   };
 
   const handleEditUsername = (value: string) => {
@@ -132,49 +192,56 @@ export default function AddUser() {
 
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-        <Header title="Tambah Pengguna" />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+        <Header title="Tambah Pengguna" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-8">
-          <div className="grid grid-cols-1 xl:grid-cols-[1.15fr_1.85fr] gap-6">
-            <div className="space-y-6 animate-[slideUp_0.6s_ease-out_0.1s_both]">
-              <UserStats
-                total={summary.total}
-                adminCount={summary.adminCount}
-                staffCount={summary.staffCount}
-              />
-              <AddUserForm
-                form={form}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                onCancel={() => navigate("/dashboard")}
-              />
+          <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">Pengguna & Staff</h2>
+              <p className="text-sm text-slate-500">
+                Manajemen sumber daya pengguna dan admin.
+              </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setIsAddOpen(true)}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 transition-colors"
+            >
+              <span className="text-lg leading-none">+</span>
+              Tambah Pengguna
+            </button>
+          </div>
+          <div className="space-y-6">
+            <UserStats
+              total={summary.total}
+              adminCount={summary.adminCount}
+              staffCount={summary.staffCount}
+              magangCount={summary.magangCount}
+              pklCount={summary.pklCount}
+            />
 
-            <div className="animate-[slideUp_0.6s_ease-out_0.15s_both]">
-              <UserTable
-                users={users}
-                onEdit={handleOpenEdit}
-                onDelete={(user) => {
-                  setDeleteTarget(user);
-                  setIsDeleteOpen(true);
-                }}
-              />
+            <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
+              {isLoadingUsers ? (
+                <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-slate-500">
+                  Memuat data pengguna...
+                </div>
+              ) : (
+                <UserTable
+                  users={users}
+                  onEdit={handleOpenEdit}
+                  onDelete={(user) => {
+                    setDeleteTarget(user);
+                    setIsDeleteOpen(true);
+                  }}
+                />
+              )}
             </div>
           </div>
         </main>
       </div>
-
-      {toast.show && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          duration={toast.duration}
-          onClose={() => setToast({ ...toast, show: false })}
-        />
-      )}
 
       {editingUser && (
         <EditUserModal
@@ -183,6 +250,24 @@ export default function AddUser() {
           onSave={handleSaveEdit}
           onChangeUsername={handleEditUsername}
           onChangeRole={handleEditRole}
+        />
+      )}
+
+      <AddUserModal
+        isOpen={isAddOpen}
+        form={form}
+        onChange={handleChange}
+        onRoleChange={handleRoleChange}
+        onSubmit={handleSubmit}
+        onClose={() => setIsAddOpen(false)}
+      />
+
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={() => setToast({ ...toast, show: false })}
         />
       )}
 

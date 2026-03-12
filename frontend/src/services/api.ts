@@ -6,6 +6,7 @@ import {
   UploadHistoryResult,
 } from "../types";
 import { clearAuthToken, getAuthToken } from "../utils/auth";
+import type { UserApiItem } from "../types/user";
 
 export interface LoginResponse {
   message: string;
@@ -297,5 +298,39 @@ export const getDashboardAnalytics = async (): Promise<DashboardAnalyticsRespons
     "/dashboard/analytics",
     { params: { _t: Date.now() } },
   );
+  return response.data;
+};
+
+export const getUsers = async (): Promise<UserApiItem[]> => {
+  const response = await apiClient.get<UserApiItem[]>("/users", {
+    params: { _t: Date.now() },
+  });
+  return response.data;
+};
+
+export const createUser = async (payload: {
+  username: string;
+  password: string;
+  role: string;
+}): Promise<{ message: string }> => {
+  const response = await apiClient.post<{ message: string }>("/users", payload);
+  return response.data;
+};
+
+export const updateUser = async (
+  id: number | string,
+  payload: { username: string; role: string; password?: string },
+): Promise<{ message: string; user?: UserApiItem | null }> => {
+  const response = await apiClient.put<{ message: string; user?: UserApiItem | null }>(
+    `/users/${id}`,
+    payload,
+  );
+  return response.data;
+};
+
+export const deleteUser = async (
+  id: number | string,
+): Promise<{ message: string }> => {
+  const response = await apiClient.delete<{ message: string }>(`/users/${id}`);
   return response.data;
 };

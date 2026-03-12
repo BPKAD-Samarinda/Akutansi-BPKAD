@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,10 +14,28 @@
     hue-rotate(354deg) brightness(99%) contrast(100%);
 }
 
+.icon-white {
+  filter: brightness(0) invert(1);
+}
+
+.icon-amber {
+  filter: brightness(0) saturate(100%) invert(58%) sepia(77%) saturate(411%)
+    hue-rotate(4deg) brightness(98%) contrast(94%);
+}
+
+.icon-red {
+  filter: brightness(0) saturate(100%) invert(39%) sepia(87%) saturate(3957%)
+    hue-rotate(341deg) brightness(97%) contrast(97%);
+}
+
 html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 input[type="password"]::-ms-reveal,

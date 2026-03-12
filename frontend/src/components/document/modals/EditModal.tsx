@@ -40,17 +40,51 @@ export default function EditModal({
   if (!shouldRender) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black bg-opacity-40"
-        onClick={handleCloseWithAnimation}
+        className="absolute inset-0 bg-black/55 backdrop-blur-sm pointer-events-none"
       />
       <div
         ref={modalRef}
-        className="relative bg-white rounded-xl shadow-xl w-full max-w-md p-6"
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-orange-100"
       >
-        <h2 className="text-xl font-bold mb-4">Edit Dokumen</h2>
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M4 20h4l10-10-4-4L4 16v4z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14 6l4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Edit Dokumen</h2>
+              <p className="text-sm text-gray-500">
+                Perbarui informasi dokumen sebelum disimpan.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleCloseWithAnimation}
+            className="h-9 w-9 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+            aria-label="Tutup"
+          >
+            &#10005;
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <EditModalFormFields

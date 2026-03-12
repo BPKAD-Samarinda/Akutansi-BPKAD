@@ -1,4 +1,6 @@
 import type { UserItem } from "../../pages/AddUser.types";
+import editIcon from "../../assets/icons/edit.svg";
+import deleteIcon from "../../assets/icons/delete.svg";
 
 type UserTableProps = {
   users: UserItem[];
@@ -7,111 +9,88 @@ type UserTableProps = {
 };
 
 export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
+  const formatRole = (role: UserItem["role"]) => {
+    const normalized = (role ?? "").toString().trim();
+    if (!normalized) return "Belum diisi";
+    if (normalized === "Admin Akuntansi" || normalized === "Admin") return "Admin";
+    if (normalized === "Staff Akuntansi" || normalized === "Staff") return "Staff";
+    if (normalized === "Anak Magang") return "Magang";
+    if (normalized === "Anak PKL") return "PKL";
+    return normalized;
+  };
+
   return (
-    <div className="bg-white rounded-3xl border border-orange-100/60 shadow-sm">
-      <div className="px-6 py-5 border-b border-orange-100/60 flex items-center justify-between">
+    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-gray-800">Daftar Pengguna</h3>
-          <p className="text-sm text-gray-500">Kelola pengguna yang aktif.</p>
+          <h3 className="text-lg font-bold text-gray-800">Pengguna & Staff</h3>
         </div>
-        <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-          {users.length} pengguna
-        </span>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Nama Pengguna
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Peran
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                Dibuat
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider">
-                Aksi
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="px-4 py-10 text-center text-gray-400">
-                  Belum ada pengguna.
-                </td>
-              </tr>
-            ) : (
-              users.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-b border-orange-100/60 hover:bg-orange-50/40 transition-colors"
-                >
-                  <td className="px-4 py-3 font-semibold text-gray-800">{user.username}</td>
-                  <td className="px-4 py-3 text-gray-600">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                        user.role === "Admin Akuntansi"
-                          ? "bg-blue-50 text-blue-700"
-                          : "bg-emerald-50 text-emerald-700"
-                      }`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{user.createdAt}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onEdit(user)}
-                        className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors"
-                        aria-label="Edit pengguna"
-                      >
-                        <svg className="w-4 h-4 mx-auto" viewBox="0 0 24 24" fill="none">
-                          <path
-                            d="M4 20h4l10-10-4-4L4 16v4z"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M14 6l4 4"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onDelete(user)}
-                        className="h-8 w-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                        aria-label="Hapus pengguna"
-                      >
-                        <svg className="w-4 h-4 mx-auto" viewBox="0 0 24 24" fill="none">
-                          <path
-                            d="M6 7h12M10 11v6m4-6v6M9 7V5h6v2"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 bg-slate-50">
+        <span>Profil</span>
+        <span>Identitas</span>
+        <span>Bidang</span>
+        <span className="text-center">Aksi</span>
       </div>
+
+      {users.length === 0 ? (
+        <div className="px-6 py-12 text-center text-gray-400">
+          Belum ada pengguna.
+        </div>
+      ) : (
+        <div className="max-h-[620px] overflow-y-auto divide-y divide-slate-100">
+          {users.map((user) => {
+            const initials = user.username
+              .split(" ")
+              .map((part) => part[0])
+              .slice(0, 2)
+              .join("")
+              .toUpperCase();
+            return (
+              <div key={user.id} className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-5 items-center hover:bg-slate-50/60 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-orange-100 text-orange-600 font-bold flex items-center justify-center">
+                    {initials || "U"}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">{user.username}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1">
+                    {formatRole(user.role)}
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">Akuntansi</p>
+                </div>
+
+                <div className="flex justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onEdit(user)}
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-600 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-700 transition-colors"
+                    aria-label="Edit pengguna"
+                  >
+                    <img src={editIcon} className="w-4 h-4 icon-amber" alt="Edit" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(user)}
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 bg-red-50/70 hover:bg-red-100 hover:text-red-700 transition-colors"
+                    aria-label="Hapus pengguna"
+                  >
+                    <img src={deleteIcon} className="w-4 h-4 icon-red" alt="Delete" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

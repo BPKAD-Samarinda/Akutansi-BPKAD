@@ -21,7 +21,8 @@ export default function DocumentTableMobile({
   onDelete,
 }: DocumentTableMobileProps) {
   const user = getUser();
-  const canManageDocument = user?.role === "Admin Akuntansi";
+  const canManageDocument =
+    user?.role === "Admin" || user?.role === "Admin Akuntansi";
 
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";

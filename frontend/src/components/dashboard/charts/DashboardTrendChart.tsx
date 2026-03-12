@@ -35,6 +35,8 @@ type Props = {
   yearOptions: number[];
 };
 
+const TREND_LINE_COLOR = "#6366F1";
+
 type TrendCanvasProps = {
   chartKey: string;
   chartData: {
@@ -88,9 +90,17 @@ function DashboardTrendChart({
         {
           label: trendMode === "daily" ? "Status Upload Harian (1/0)" : "Upload per Bulan",
           data: data.map((d) => d.value),
-          borderColor: "#3B82F6",
-          backgroundColor: "rgba(59,130,246,0.16)",
-          pointBackgroundColor: "#F97316",
+          borderColor: TREND_LINE_COLOR,
+          backgroundColor: (ctx: ScriptableContext<"line">) => {
+            const chart = ctx.chart;
+            const area = chart.chartArea;
+            if (!area) return "rgba(99,102,241,0.18)";
+            const gradient = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            gradient.addColorStop(0, "rgba(99,102,241,0.28)");
+            gradient.addColorStop(1, "rgba(99,102,241,0.04)");
+            return gradient;
+          },
+          pointBackgroundColor: TREND_LINE_COLOR,
           pointBorderColor: "#ffffff",
           pointBorderWidth: 2,
           pointRadius: 4,
@@ -196,7 +206,7 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
+    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 bg-white px-2.5 text-xs text-slate-700 " +
     "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
 
   const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);

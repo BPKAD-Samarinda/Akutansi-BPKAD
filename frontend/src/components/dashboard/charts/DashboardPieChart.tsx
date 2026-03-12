@@ -8,11 +8,11 @@ type Props = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Lampiran: "#F97316",
-  Keuangan: "#3B82F6",
+  Lampiran: "#6366F1",
+  Keuangan: "#06B6D4",
   BKU: "#14B8A6",
-  STS: "#6366F1",
-  "Rekening Koran": "#EC4899",
+  STS: "#8B5CF6",
+  "Rekening Koran": "#F43F5E",
 };
 
 const numberFormatter = new Intl.NumberFormat("id-ID");

@@ -41,6 +41,7 @@ function AnimatedStatNumber({ value, duration = 900 }: AnimatedStatNumberProps) 
 }
 
 export default function Dashboard() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const user = getUser();
   // Pisah state per-card agar filter tidak saling mempengaruhi.
   const summary = useDashboardAnalytics();
@@ -85,17 +86,14 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
-      <div className="ml-64 flex-1 flex flex-col">
-        <Header title="Dashboard" />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col">
+        <Header title="Dashboard" onMenuClick={() => setSidebarOpen(true)} />
 
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
           <div data-animate-item className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 text-white p-5 shadow-lg shadow-orange-500/20">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                  Total Dokumen
-                </p>
+            <div className="rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 text-white p-4 shadow-md shadow-orange-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-orange-500/30">
+              <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                     <path
@@ -108,16 +106,17 @@ export default function Dashboard() {
                   </svg>
                 </span>
               </div>
-              <p className="text-4xl font-bold mt-4">
-                <AnimatedStatNumber value={summary.totalDocuments} />
-              </p>
-              <p className="text-sm text-white/80 mt-1">Dokumen aktif tersimpan</p>
-            </div>
-            <div className="rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white p-5 shadow-lg shadow-blue-500/20">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                  Total Pengguna
+              <div className="mt-2 text-center">
+                <p className="text-4xl font-bold">
+                  <AnimatedStatNumber value={summary.totalDocuments} />
                 </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
+                  Total Dokumen
+                </p>
+              </div>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white p-4 shadow-md shadow-blue-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-blue-500/30">
+              <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                     <path
@@ -130,16 +129,17 @@ export default function Dashboard() {
                   </svg>
                 </span>
               </div>
-              <p className="text-4xl font-bold mt-4">
-                <AnimatedStatNumber value={summary.totalUsers} />
-              </p>
-              <p className="text-sm text-white/80 mt-1">User terdaftar sistem</p>
-            </div>
-            <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-5 shadow-lg shadow-emerald-500/20">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                  Unggah Hari Ini
+              <div className="mt-2 text-center">
+                <p className="text-4xl font-bold">
+                  <AnimatedStatNumber value={summary.totalUsers} />
                 </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
+                  Total Pengguna
+                </p>
+              </div>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-4 shadow-md shadow-emerald-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-emerald-500/30">
+              <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                     <path
@@ -152,10 +152,14 @@ export default function Dashboard() {
                   </svg>
                 </span>
               </div>
-              <p className="text-4xl font-bold mt-4">
-                <AnimatedStatNumber value={summary.todayUploadCount} />
-              </p>
-              <p className="text-sm text-white/80 mt-1">Aktivitas unggah baru</p>
+              <div className="mt-2 text-center">
+                <p className="text-4xl font-bold">
+                  <AnimatedStatNumber value={summary.todayUploadCount} />
+                </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
+                  Unggah Hari Ini
+                </p>
+              </div>
             </div>
           </div>
 
@@ -200,7 +204,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          {user?.role === "Admin Akuntansi" && (
+          {(user?.role === "Admin" || user?.role === "Admin Akuntansi") && (
             <div
               data-animate-item
               className="grid grid-cols-1 xl:grid-cols-2 gap-4"

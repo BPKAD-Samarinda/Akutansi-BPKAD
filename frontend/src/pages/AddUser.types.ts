@@ -1,4 +1,8 @@
-export type UserRole = "Admin Akuntansi" | "Staff Akuntansi";
+export type UserRole =
+  | "Admin"
+  | "Staff"
+  | "Anak Magang"
+  | "Anak PKL";
 
 export type AddUserFormValues = {
   username: string;

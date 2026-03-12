@@ -109,7 +109,7 @@ export default function DocumentRow({
               <IoMdEye className="w-5 h-5" />
             </button>
           </AppTooltip>
-          {user && user.role === "Admin Akuntansi" && (
+          {user && (user.role === "Admin" || user.role === "Admin Akuntansi") && (
             <>
               <AppTooltip content="Edit dokumen">
                 <button

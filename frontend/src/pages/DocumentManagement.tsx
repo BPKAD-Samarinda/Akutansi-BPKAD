@@ -10,6 +10,7 @@ import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { useDocumentManagement } from "../hooks/document/useDocumentManagement";
 
 export default function DocumentManagement() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterResetKey, setFilterResetKey] = useState(0);
   const {
     loading,
@@ -44,9 +45,12 @@ export default function DocumentManagement() {
 
   return (
     <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
-      <div className="ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-        <Header title="Manajemen Dokumen" />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+        <Header
+          title="Manajemen Dokumen"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <FilterBar

@@ -1,4 +1,11 @@
 import type { UserItem, UserRole } from "../../pages/AddUser.types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type EditUserModalProps = {
   user: UserItem;
@@ -46,14 +53,20 @@ export default function EditUserModal({
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Peran</label>
-            <select
+            <Select
               value={user.role}
-              onChange={(event) => onChangeRole(event.target.value as UserRole)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+              onValueChange={(value) => onChangeRole(value as UserRole)}
             >
-              <option value="Staff Akuntansi">Staff Akuntansi</option>
-              <option value="Admin Akuntansi">Admin Akuntansi</option>
-            </select>
+              <SelectTrigger className="h-11 w-full rounded-xl border border-gray-300 bg-white px-4 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                <SelectValue placeholder="Pilih peran" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                <SelectItem value="Staff">Staff</SelectItem>
+                <SelectItem value="Admin">Admin</SelectItem>
+                <SelectItem value="Anak Magang">Anak Magang</SelectItem>
+                <SelectItem value="Anak PKL">Anak PKL</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

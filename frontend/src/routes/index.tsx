@@ -19,7 +19,7 @@ function ProtectedRoute({ children }: { children: ReactElement }) {
 function AdminOnlyRoute({ children }: { children: ReactElement }) {
   const user = getUser();
 
-  if (!user || user.role !== "Admin Akuntansi") {
+  if (!user || (user.role !== "Admin" && user.role !== "Admin Akuntansi")) {
     return <Navigate to="/dashboard" replace />;
   }
 

@@ -19,7 +19,8 @@ export default function DocumentTableToolbar({
   onRefresh,
 }: DocumentTableToolbarProps) {
   const user = getUser();
-  const canUploadDocument = user?.role === "Admin Akuntansi";
+  const canUploadDocument =
+    user?.role === "Admin" || user?.role === "Admin Akuntansi";
   const [showToast, setShowToast] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -91,7 +92,7 @@ export default function DocumentTableToolbar({
             >
               <img
                 src={uploadIcon}
-                className="w-4 h-4 lg:w-5 lg:h-5"
+                className="w-4 h-4 lg:w-5 lg:h-5 icon-white"
                 alt="Upload"
               />
               Unggah Baru

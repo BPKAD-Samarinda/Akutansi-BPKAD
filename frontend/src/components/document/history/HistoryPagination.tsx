@@ -50,7 +50,7 @@ export default function HistoryPagination({
         Menampilkan {start}-{end} dari {totalItems} data
       </p>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <AppTooltip content="Pilih jumlah data per halaman">
           <div ref={pageSizeSelectRef}>
             <Select
@@ -59,7 +59,7 @@ export default function HistoryPagination({
             >
               <SelectTrigger
                 aria-label="Pilih jumlah data per halaman"
-                className="h-7 w-[72px] min-w-[72px] rounded-md border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 shadow-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                className="h-8 w-[76px] min-w-[76px] rounded-lg border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 shadow-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
               >
                 <SelectValue placeholder="Pilih halaman" />
               </SelectTrigger>
