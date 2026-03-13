@@ -1,3 +1,5 @@
+import { createPortal } from "react-dom";
+
 interface ConfirmDialogProps {
   isOpen: boolean;
   title: string;
@@ -44,11 +46,15 @@ export default function ConfirmDialog({
 
   const theme = colors[type];
 
-  return (
+  const dialog = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fadeInFast">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60"
+        style={{
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+        }}
         onClick={onCancel}
       ></div>
 
@@ -119,4 +125,6 @@ export default function ConfirmDialog({
       </div>
     </div>
   );
+
+  return createPortal(dialog, document.body);
 }

@@ -23,7 +23,7 @@ export default function EditUserModal({
   onChangeRole,
 }: EditUserModalProps) {
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-orange-100 p-6">
         <div className="flex items-start justify-between mb-4">
           <div>

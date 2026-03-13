@@ -198,7 +198,7 @@ export default function AddUser() {
         <Header title="Tambah Pengguna" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-8">
-          <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between animate-[slideUp_0.6s_ease-out_0.05s_both]">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">Pengguna & Staff</h2>
               <p className="text-sm text-slate-500">
