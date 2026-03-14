@@ -1,4 +1,6 @@
 import type { UserItem, UserRole } from "../../hooks/add-user/types";
+import React from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import {
   Select,
   SelectContent,
@@ -9,19 +11,25 @@ import {
 
 type EditUserModalProps = {
   user: UserItem;
+  password: string;
   onClose: () => void;
   onSave: () => void;
   onChangeUsername: (value: string) => void;
+  onChangePassword: (value: string) => void;
   onChangeRole: (value: UserRole) => void;
 };
 
 export default function EditUserModal({
   user,
+  password,
   onClose,
   onSave,
   onChangeUsername,
+  onChangePassword,
   onChangeRole,
 }: EditUserModalProps) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   return (
     <div className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-orange-100 p-6">
@@ -49,6 +57,33 @@ export default function EditUserModal({
               onChange={(event) => onChangeUsername(event.target.value)}
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">
+              Kata Sandi Baru (Opsional)
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(event) => onChangePassword(event.target.value)}
+                placeholder="Kosongkan jika tidak diganti"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-11 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:text-orange-600"
+                aria-label={showPassword ? "Sembunyikan kata sandi" : "Lihat kata sandi"}
+              >
+                {showPassword ? (
+                  <IoMdEyeOff className="h-5 w-5" />
+                ) : (
+                  <IoMdEye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           <div>

@@ -1,4 +1,6 @@
 import type { AddUserFormValues } from "../../hooks/add-user/types";
+import React from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import {
   Select,
   SelectContent,
@@ -22,6 +24,8 @@ export default function AddUserForm({
   onSubmit,
   onCancel,
 }: AddUserFormProps) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   return (
     <form onSubmit={onSubmit}>
       <div className="bg-white rounded-3xl p-6 lg:p-8 border border-orange-100/60 shadow-sm">
@@ -59,15 +63,29 @@ export default function AddUserForm({
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Kata Sandi</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={onChange}
-              placeholder="Masukkan kata sandi"
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={onChange}
+                placeholder="Masukkan kata sandi"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 pr-11 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:text-orange-600"
+                aria-label={showPassword ? "Sembunyikan kata sandi" : "Lihat kata sandi"}
+              >
+                {showPassword ? (
+                  <IoMdEyeOff className="h-5 w-5" />
+                ) : (
+                  <IoMdEye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
 
           <div>
