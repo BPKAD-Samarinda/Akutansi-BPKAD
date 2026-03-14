@@ -21,23 +21,35 @@ export default function DashboardUploadActivityCard({
   const latestShouldScroll = latestRows.length > 10;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-      <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-4">
-        Aktivitas
-      </h3>
+    <div className="bg-white rounded-2xl border border-slate-200/70 p-5 shadow-sm">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900">
+            Aktivitas Dokumen
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">
+            Pantau unggahan terbaru dan hari ini.
+          </p>
+        </div>
+        <span className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+          {todayRows.length + latestRows.length} aktivitas
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div className="rounded-xl border border-orange-100 overflow-hidden">
-          <div className="bg-orange-50 px-4 py-3 border-b border-orange-100">
-            <h4 className="text-sm font-semibold text-orange-700">Aktivitas Hari Ini</h4>
+        <div className="rounded-2xl border border-orange-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 px-4 py-3 border-b border-orange-100">
+            <h4 className="text-sm font-semibold text-orange-700">
+              Aktivitas Hari Ini
+            </h4>
           </div>
 
           <div
             className={`overflow-x-auto ${todayShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
-                <tr className="text-gray-500">
+              <thead className="bg-slate-50">
+                <tr className="text-slate-500">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
@@ -45,10 +57,10 @@ export default function DashboardUploadActivityCard({
               </thead>
               <tbody>
                 {todayRows.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-100">
-                    <td className="px-3 py-2 text-slate-800">{row.name}</td>
+                  <tr key={row.id} className="border-b border-gray-100 hover:bg-orange-50/40 transition-colors">
+                    <td className="px-3 py-2 text-slate-900 font-medium">{row.name}</td>
                     <td className="px-3 py-2 text-slate-700">{row.kategori}</td>
-                    <td className="px-3 py-2 text-slate-700">{row.tanggal}</td>
+                    <td className="px-3 py-2 text-slate-600">{row.tanggal}</td>
                   </tr>
                 ))}
                 {todayRows.length === 0 && (
@@ -63,17 +75,19 @@ export default function DashboardUploadActivityCard({
           </div>
         </div>
 
-        <div className="rounded-xl border border-blue-100 overflow-hidden">
-          <div className="bg-blue-50 px-4 py-3 border-b border-blue-100">
-            <h4 className="text-sm font-semibold text-blue-700">Dokumen Terakhir Diunggah</h4>
+        <div className="rounded-2xl border border-indigo-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-indigo-50 via-sky-50 to-indigo-50 px-4 py-3 border-b border-indigo-100">
+            <h4 className="text-sm font-semibold text-indigo-700">
+              Dokumen Terakhir Diunggah
+            </h4>
           </div>
 
           <div
             className={`overflow-x-auto ${latestShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
-                <tr className="text-gray-500">
+              <thead className="bg-slate-50">
+                <tr className="text-slate-500">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Nama</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Kategori</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
@@ -81,10 +95,10 @@ export default function DashboardUploadActivityCard({
               </thead>
               <tbody>
                 {latestRows.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-100">
-                    <td className="px-3 py-2 text-slate-800">{row.name}</td>
+                  <tr key={row.id} className="border-b border-gray-100 hover:bg-indigo-50/40 transition-colors">
+                    <td className="px-3 py-2 text-slate-900 font-medium">{row.name}</td>
                     <td className="px-3 py-2 text-slate-700">{row.kategori}</td>
-                    <td className="px-3 py-2 text-slate-700">{row.tanggal}</td>
+                    <td className="px-3 py-2 text-slate-600">{row.tanggal}</td>
                   </tr>
                 ))}
                 {latestRows.length === 0 && (

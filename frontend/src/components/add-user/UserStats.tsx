@@ -52,7 +52,7 @@ export default function UserStats({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
       <div
-        className={`${cardBase} bg-gradient-to-br from-orange-400 to-orange-600`}
+        className={`${cardBase} bg-gradient-to-br from-orange-500 to-orange-700`}
         style={{ "--stat-delay": "0ms" } as React.CSSProperties}
       >
         <p className="text-2xl font-bold">
@@ -63,7 +63,7 @@ export default function UserStats({
         </p>
       </div>
       <div
-        className={`${cardBase} bg-gradient-to-br from-blue-400 to-blue-600`}
+        className={`${cardBase} bg-gradient-to-br from-sky-500 to-blue-700`}
         style={{ "--stat-delay": "70ms" } as React.CSSProperties}
       >
         <p className="text-2xl font-bold">
@@ -74,7 +74,7 @@ export default function UserStats({
         </p>
       </div>
       <div
-        className={`${cardBase} bg-gradient-to-br from-emerald-400 to-emerald-600`}
+        className={`${cardBase} bg-gradient-to-br from-emerald-500 to-emerald-700`}
         style={{ "--stat-delay": "140ms" } as React.CSSProperties}
       >
         <p className="text-2xl font-bold">
@@ -85,7 +85,7 @@ export default function UserStats({
         </p>
       </div>
       <div
-        className={`${cardBase} bg-gradient-to-br from-amber-400 to-amber-600`}
+        className={`${cardBase} bg-gradient-to-br from-amber-500 to-orange-600`}
         style={{ "--stat-delay": "210ms" } as React.CSSProperties}
       >
         <p className="text-2xl font-bold">
@@ -96,7 +96,7 @@ export default function UserStats({
         </p>
       </div>
       <div
-        className={`${cardBase} bg-gradient-to-br from-violet-400 to-violet-600`}
+        className={`${cardBase} bg-gradient-to-br from-violet-500 to-purple-700`}
         style={{ "--stat-delay": "280ms" } as React.CSSProperties}
       >
         <p className="text-2xl font-bold">

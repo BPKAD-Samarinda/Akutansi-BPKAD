@@ -1,4 +1,4 @@
-import type { UserItem } from "./AddUser.types";
+import type { UserItem } from "./types";
 
 const normalizeRole = (role: string | null | undefined): UserItem["role"] => {
   const raw = (role ?? "").toString().trim().toLowerCase();

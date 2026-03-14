@@ -1,4 +1,4 @@
-import type { AddUserFormValues } from "../../pages/AddUser.types";
+import type { AddUserFormValues } from "../../hooks/add-user/types";
 import {
   Select,
   SelectContent,

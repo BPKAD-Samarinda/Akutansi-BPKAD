@@ -58,10 +58,10 @@ export default function DocumentTableMobile({
             <div
               key={doc.id}
               data-paginated-item
-              className={`rounded-2xl p-4 space-y-3 border shadow-sm ${
+              className={`rounded-2xl p-4 space-y-3 border shadow-sm transition-shadow ${
                 selectedDocuments.has(doc.id)
-                  ? "border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50"
-                  : "border-slate-100 bg-white"
+                  ? "border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50 shadow-orange-100/40"
+                  : "border-slate-100 bg-white hover:shadow-md"
               }`}
             >
               <div className="flex items-start justify-between">

@@ -1,4 +1,4 @@
-import type { UserItem, UserRole } from "../../pages/AddUser.types";
+import type { UserItem, UserRole } from "../../hooks/add-user/types";
 import {
   Select,
   SelectContent,

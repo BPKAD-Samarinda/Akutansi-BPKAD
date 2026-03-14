@@ -1,5 +1,5 @@
 import AddUserForm from "./AddUserForm";
-import type { AddUserFormValues } from "../../pages/AddUser.types";
+import type { AddUserFormValues } from "../../hooks/add-user/types";
 
 type AddUserModalProps = {
   isOpen: boolean;

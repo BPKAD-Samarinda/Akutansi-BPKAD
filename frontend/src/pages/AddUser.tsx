@@ -9,8 +9,8 @@ import UserStats from "../components/add-user/UserStats";
 import UserTable from "../components/add-user/UserTable";
 import { createUser, deleteUser, getUsers, updateUser } from "../services/api";
 import type { ToastState } from "../types";
-import type { AddUserFormValues, UserItem, UserRole } from "./AddUser.types";
-import { toUserItem } from "./AddUser.mapper";
+import type { AddUserFormValues, UserItem, UserRole } from "../hooks/add-user/types";
+import { toUserItem } from "../hooks/add-user/mapper";
 
 export default function AddUser() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -11,16 +11,24 @@ type Props = {
 
 export default function DashboardLoginActivity({ data }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-      <div className="mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900">
-          Aktivitas Login
-        </h3>
+    <div className="bg-white rounded-2xl border border-slate-200/70 p-5 shadow-sm">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900">
+            Aktivitas Login
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">
+            Riwayat akses pengguna ke sistem.
+          </p>
+        </div>
+        <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+          {data.length} aktivitas
+        </span>
       </div>
 
-      <div className="max-h-[420px] overflow-y-auto overflow-x-auto rounded-xl border border-slate-100">
+      <div className="max-h-[420px] overflow-y-auto overflow-x-auto rounded-2xl border border-slate-100">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50">
+          <thead className="bg-gradient-to-r from-slate-50 to-indigo-50/60">
             <tr className="text-slate-500 border-y border-slate-100">
               <th className="text-left px-4 py-3 text-xs font-semibold">No</th>
               <th className="text-left px-4 py-3 text-xs font-semibold">User</th>
@@ -32,16 +40,18 @@ export default function DashboardLoginActivity({ data }: Props) {
             {data.map((row, index) => (
               <tr
                 key={row.id}
-                className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors"
+                className="border-b border-slate-100 hover:bg-indigo-50/50 transition-colors"
               >
                 <td className="px-4 py-3 text-slate-600">{index + 1}</td>
-                <td className="px-4 py-3 text-slate-800 font-medium">{row.username}</td>
+                <td className="px-4 py-3 text-slate-900 font-semibold">
+                  {row.username}
+                </td>
                 <td className="px-4 py-3">
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
                       row.role === "Admin"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-orange-100 text-orange-700"
+                        ? "bg-indigo-100 text-indigo-700"
+                        : "bg-emerald-100 text-emerald-700"
                     }`}
                   >
                     {row.role}
