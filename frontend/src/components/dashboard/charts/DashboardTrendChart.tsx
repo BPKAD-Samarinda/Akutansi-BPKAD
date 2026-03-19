@@ -197,7 +197,7 @@ function DashboardTrendChart({
   const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <h3 className="text-base sm:text-lg font-semibold text-slate-900 whitespace-nowrap">
           Perkembangan Upload

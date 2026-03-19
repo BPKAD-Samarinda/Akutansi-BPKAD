@@ -21,7 +21,7 @@ export default function DashboardUploadActivityCard({
   const latestShouldScroll = latestRows.length > 10;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/70 p-5 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 className="text-base sm:text-lg font-semibold text-slate-900">

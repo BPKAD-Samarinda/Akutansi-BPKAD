@@ -40,7 +40,7 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
   useState<UserInfo>(() => getUserInfoFromToken());
 
   return (
-    <header className="relative h-16 lg:h-20 bg-white/95 backdrop-blur flex items-center justify-between px-4 lg:px-8 shadow-sm">
+    <header className="relative h-16 lg:h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shadow-sm">
       <div className="pointer-events-none absolute inset-x-0 -bottom-[1px] h-[2px] bg-gradient-to-r from-transparent via-slate-200/80 to-transparent blur-[1px]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-200/80" />
       <div className="flex items-center gap-3">
@@ -48,14 +48,14 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="h-10 w-10 rounded-xl border border-orange-200 bg-white text-orange-600 flex items-center justify-center lg:hidden"
+            className="h-10 w-10 rounded-xl border border-slate-200 bg-white text-slate-600 flex items-center justify-center lg:hidden"
             aria-label="Buka menu"
           >
             <span className="sr-only">Menu</span>
             <div className="space-y-1">
-              <span className="block h-0.5 w-5 rounded bg-orange-500"></span>
-              <span className="block h-0.5 w-5 rounded bg-orange-500"></span>
-              <span className="block h-0.5 w-5 rounded bg-orange-500"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
+              <span className="block h-0.5 w-5 rounded bg-slate-600"></span>
             </div>
           </button>
         )}

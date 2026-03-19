@@ -20,7 +20,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-gray-800">Pengguna & Staff</h3>

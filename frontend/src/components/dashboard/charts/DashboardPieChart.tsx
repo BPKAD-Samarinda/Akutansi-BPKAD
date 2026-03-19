@@ -119,7 +119,7 @@ export default function DashboardPieChart({ data }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
       <style>{`
         @keyframes slideInRightSoft {
           from {

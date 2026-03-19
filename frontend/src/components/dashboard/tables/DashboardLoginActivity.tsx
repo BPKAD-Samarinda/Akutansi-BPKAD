@@ -11,7 +11,7 @@ type Props = {
 
 export default function DashboardLoginActivity({ data }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/70 p-5 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 rounded-2xl border border-slate-200 p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-base sm:text-lg font-semibold text-slate-900">

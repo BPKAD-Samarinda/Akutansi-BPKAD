@@ -50,7 +50,7 @@ export default function UploadDocument() {
         <main className="flex-1 p-4 lg:p-8">
           <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <form onSubmit={handleSubmit}>
-              <div className="bg-white rounded-3xl p-6 lg:p-10 border border-orange-100/60 shadow-sm">
+              <div className="bg-white rounded-3xl p-6 lg:p-10 border border-gray-200 shadow-sm">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                   <UploadDocumentInfoSection
                     formData={formData}
