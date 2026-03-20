@@ -27,18 +27,55 @@ function AdminOnlyRoute({ children }: { children: ReactElement }) {
   return children;
 }
 
-function UploaderRoute({ children }: { children: ReactElement }) {
+function StaffOrAdminRoute({ children }: { children: ReactElement }) {
+  const user = getUser();
+  const allowedRoles = ["Admin", "Admin Akuntansi", "Staff", "Staff Akuntansi"];
+
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
+function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
   const user = getUser();
   const allowedRoles = [
     "Admin",
-    "Staff",
+    "Admin Akuntansi",
     "Anak Magang",
     "Anak PKL",
-    "Admin Akuntansi",
-    "Staff Akuntansi",
   ];
 
   if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
+function DashboardAccessRoute({ children }: { children: ReactElement }) {
+  const user = getUser();
+  const allowedRoles = [
+    "Admin",
+    "Admin Akuntansi",
+    "Staff",
+    "Staff Akuntansi",
+    "Anak Magang",
+    "Anak PKL",
+  ];
+
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
+function AdminRoute({ children }: { children: ReactElement }) {
+  const user = getUser();
+
+  if (!user || (user.role !== "Admin" && user.role !== "Admin Akuntansi")) {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -57,7 +94,9 @@ export default function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <DashboardAccessRoute>
+              <Dashboard />
+            </DashboardAccessRoute>
           </ProtectedRoute>
         }
       />
@@ -65,7 +104,9 @@ export default function AppRoutes() {
         path="/dokumen-management"
         element={
           <ProtectedRoute>
-            <DocumentManagement />
+            <DashboardAccessRoute>
+              <DocumentManagement />
+            </DashboardAccessRoute>
           </ProtectedRoute>
         }
       />
@@ -77,9 +118,9 @@ export default function AppRoutes() {
         path="/upload"
         element={
           <ProtectedRoute>
-            <UploaderRoute>
+            <MagangOrPklOrAdminRoute>
               <UploadDocument />
-            </UploaderRoute>
+            </MagangOrPklOrAdminRoute>
           </ProtectedRoute>
         }
       />
@@ -97,9 +138,9 @@ export default function AppRoutes() {
         path="/add-user"
         element={
           <ProtectedRoute>
-            <AdminOnlyRoute>
+            <AdminRoute>
               <AddUser />
-            </AdminOnlyRoute>
+            </AdminRoute>
           </ProtectedRoute>
         }
       />
@@ -107,7 +148,9 @@ export default function AppRoutes() {
         path="/preview-document"
         element={
           <ProtectedRoute>
-            <DocumentPreview />
+            <DashboardAccessRoute>
+              <DocumentPreview />
+            </DashboardAccessRoute>
           </ProtectedRoute>
         }
       />

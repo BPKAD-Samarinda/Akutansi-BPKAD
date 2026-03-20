@@ -23,16 +23,11 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     const saved = window.localStorage.getItem("theme");
     return saved ? saved === "dark" : false;
   });
-  const canUploadDocument = [
-    "Admin",
-    "Staff",
-    "Anak Magang",
-    "Anak PKL",
-    "Admin Akuntansi",
-    "Staff Akuntansi",
-  ].includes(user?.role ?? "");
-  const canViewUploadHistory =
-    user?.role === "Admin" || user?.role === "Admin Akuntansi";
+  const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+  const isStaff = user?.role === "Staff" || user?.role === "Staff Akuntansi";
+  const isMagang = user?.role === "Anak Magang";
+  const isPkl = user?.role === "Anak PKL";
+  const canViewUploadHistory = isAdmin;
 
   const isActive = (path: string) => location.pathname === path;
   const handleLogout = () => navigate("/login");
@@ -130,7 +125,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               />
               Manajemen Dokumen
             </button>
-            {canUploadDocument && (
+            {(isAdmin || isMagang || isPkl) && (
               <button
                 onClick={() => {
                   navigate("/upload");
@@ -151,7 +146,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 Unggah Dokumen
               </button>
             )}
-            {canUploadDocument && (
+            {isAdmin && (
               <button
                 onClick={() => {
                   navigate("/add-user");
