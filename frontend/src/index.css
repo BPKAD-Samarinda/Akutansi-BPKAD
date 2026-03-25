@@ -135,7 +135,11 @@ input[type="password"]::-ms-clear {
   }
 
   .animate-shrink {
-    animation: shrink 3s linear;
+    animation: shrink var(--toast-duration, 3000ms) linear;
+  }
+
+  .animate-toastPop {
+    animation: toastPop 0.45s ease-out both;
   }
 }
 
@@ -218,6 +222,21 @@ input[type="password"]::-ms-clear {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes toastPop {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
