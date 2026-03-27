@@ -3,4 +3,5 @@ export interface FilterBarProps {
   onDateRangeChange?: (startDate: string, endDate: string) => void;
   onCategoryChange?: (category: string) => void;
   onRefresh?: () => void;
+  resetSignal?: number;
 }

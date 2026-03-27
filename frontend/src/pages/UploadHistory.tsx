@@ -11,6 +11,7 @@ import { getRestoreToastType } from "../utils/historyToastUtils";
 
 export default function UploadHistory() {
   const pageRef = useRef<HTMLDivElement | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast, showToast, closeToast } = useToastState("info");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -85,12 +86,12 @@ export default function UploadHistory() {
   return (
     <div
       ref={pageRef}
-      className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]"
+      className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]"
     >
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col">
-        <Header title="File History" />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col">
+        <Header title="Riwayat Unggah" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-1 md:p-8" data-history-animate>
           <div className="mx-auto w-full max-w-none space-y-6" data-history-animate>
@@ -128,7 +129,12 @@ export default function UploadHistory() {
       </div>
 
       {toast.show && (
-        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          onClose={closeToast}
+        />
       )}
 
       <ConfirmDialog

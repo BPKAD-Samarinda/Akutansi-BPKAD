@@ -8,11 +8,11 @@ type Props = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Lampiran: "#F97316",
-  Keuangan: "#3B82F6",
+  Lampiran: "#6366F1",
+  Keuangan: "#06B6D4",
   BKU: "#14B8A6",
-  STS: "#6366F1",
-  "Rekening Koran": "#EC4899",
+  STS: "#8B5CF6",
+  "Rekening Koran": "#F43F5E",
 };
 
 const numberFormatter = new Intl.NumberFormat("id-ID");
@@ -119,7 +119,7 @@ export default function DashboardPieChart({ data }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
       <style>{`
         @keyframes slideInRightSoft {
           from {
@@ -143,11 +143,11 @@ export default function DashboardPieChart({ data }: Props) {
       `}</style>
 
       <div className="mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-800">Persentase Dokumen per Kategori</h3>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-slate-100">Persentase Dokumen per Kategori</h3>
       </div>
 
       {!hasData ? (
-        <div className="h-[300px] flex items-center justify-center text-gray-500">
+        <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
           Belum ada data pada filter ini.
         </div>
       ) : (
@@ -155,11 +155,11 @@ export default function DashboardPieChart({ data }: Props) {
           <div className="relative h-[300px] lg:col-span-2">
             <Doughnut data={chartData} options={chartOptions} />
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Total</p>
-              <p className="text-3xl font-bold text-slate-800">
+              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Total</p>
+              <p className="text-3xl font-bold text-slate-800 dark:text-slate-100">
                 <AnimatedNumber value={total} formatThousands />
               </p>
-              <p className="text-xs text-slate-500">Dokumen</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Dokumen</p>
             </div>
           </div>
 
@@ -171,21 +171,21 @@ export default function DashboardPieChart({ data }: Props) {
                 animationDelay: "80ms",
               }}
             >
-              <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                <p className="text-xs text-slate-500">Total Kategori</p>
-                <p className="text-lg font-semibold text-slate-800">
+              <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-3">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Total Kategori</p>
+                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                   <AnimatedNumber value={detailWithPercentage.length} />
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                <p className="text-xs text-slate-500">Kategori Dominan</p>
-                <p className="text-lg font-semibold text-slate-800">
+              <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-3">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Kategori Dominan</p>
+                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                   {topCategory?.label ?? "-"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                <p className="text-xs text-slate-500">Persentase Tertinggi</p>
-                <p className="text-lg font-semibold text-slate-800">
+              <div className="rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-3">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Persentase Tertinggi</p>
+                <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                   {topCategory ? (
                     <AnimatedNumber value={topCategory.percentage} decimals={1} suffix="%" />
                   ) : (
@@ -199,7 +199,7 @@ export default function DashboardPieChart({ data }: Props) {
               {detailWithPercentage.map((item, idx) => (
                 <div
                   key={item.label}
-                  className="rounded-xl border border-slate-100 p-3"
+                  className="rounded-xl border border-slate-100 dark:border-slate-800 p-3"
                   style={{
                     animation: "slideInRightSoft 500ms ease-out both",
                     animationDelay: `${180 + idx * 100}ms`,
@@ -211,17 +211,17 @@ export default function DashboardPieChart({ data }: Props) {
                         className="h-2.5 w-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: CATEGORY_COLORS[item.label] ?? "#94A3B8" }}
                       />
-                      <p className="text-sm font-medium text-slate-700 truncate">
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
                         {item.label}
                       </p>
                     </div>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                       <AnimatedNumber value={item.value} /> (
                       <AnimatedNumber value={item.percentage} decimals={1} suffix="%" />)
                     </p>
                   </div>
 
-                  <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{

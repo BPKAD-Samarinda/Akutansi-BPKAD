@@ -11,6 +11,7 @@ export interface ToastState {
   show: boolean;
   message: string;
   type: "success" | "error" | "info" | "warning";
+  duration?: number;
 }
 
 export interface UploadHistory {

@@ -9,6 +9,7 @@ import { ToastState } from "../types";
 import { useFileUpload } from "../hooks/document/useFileUpload";
 
 export default function UploadDocument() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [toast, setToast] = useState<ToastState>({
     show: false,
     message: "",
@@ -37,16 +38,19 @@ export default function UploadDocument() {
   } = useFileUpload(showToast);
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-gray-50 via-orange-50/20 to-gray-50 font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
+    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-        <Header title="Upload Document" />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+        <Header
+          title="Unggah Dokumen"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
 
         <main className="flex-1 p-4 lg:p-8">
           <div className="animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <form onSubmit={handleSubmit}>
-              <div className="bg-white rounded-3xl shadow-xl shadow-orange-500/10 p-6 lg:p-10 border border-orange-100/50">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 lg:p-10 border border-gray-200 dark:border-slate-800 shadow-sm">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                   <UploadDocumentInfoSection
                     formData={formData}
@@ -82,6 +86,7 @@ export default function UploadDocument() {
         <Toast
           message={toast.message}
           type={toast.type}
+          duration={toast.duration}
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}

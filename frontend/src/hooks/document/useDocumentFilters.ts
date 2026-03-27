@@ -4,7 +4,11 @@ import { toLocalDateOnly } from "../../utils/localDate";
 
 export function useDocumentFilters(
   initialData: Document[],
-  showToast: (message: string, type: ToastState["type"]) => void,
+  showToast: (
+    message: string,
+    type: ToastState["type"],
+    duration?: number,
+  ) => void,
 ) {
   const [documents, setDocuments] = useState<Document[]>(initialData);
   const [filteredDocuments, setFilteredDocuments] =
@@ -111,7 +115,7 @@ export function useDocumentFilters(
     setEndDate("");
     setCategory("");
     setFilteredDocuments(documents);
-    showToast("Filter telah direset", "info");
+    showToast("Filter telah direset", "info", 1200);
   };
 
   return {

@@ -91,6 +91,17 @@ export const createDocument = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "All text fields are required" });
     }
 
+    const [duplicateRows]: any = await db.execute(
+      "SELECT id FROM documents WHERE nama_sppd = ? AND tanggal_sppd = ? AND is_deleted = 0 LIMIT 1",
+      [nama_sppd, tanggal_sppd],
+    );
+
+    if (duplicateRows.length > 0) {
+      return res.status(409).json({
+        message: "Dokumen dengan nama dan tanggal yang sama sudah ada.",
+      });
+    }
+
     const [result] = await db.execute(
       "INSERT INTO documents (nama_sppd, tanggal_sppd, kategori, file_path) VALUES (?, ?, ?, ?)",
       [nama_sppd, tanggal_sppd, kategori, file_path],

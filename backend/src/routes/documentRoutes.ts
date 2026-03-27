@@ -45,7 +45,12 @@ const allowedMimeTypes = [
   "application/vnd.ms-powerpoint",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   "image/jpeg",
+  "image/jpg",
+  "image/pjpeg",
+  "image/jfif",
   "image/png",
+  "image/heic",
+  "image/heif",
 ];
 
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -69,39 +74,53 @@ router.get("/documents", authenticateToken, getAllDocuments);
 router.get(
   "/dashboard/analytics",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi", "Staff Akuntansi"),
+  authorizeRoles(
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ),
   getDashboardAnalytics,
 );
 router.get("/documents/history", authenticateToken, getUploadHistory);
 router.post(
   "/documents",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi"),
+  authorizeRoles(
+    "Admin",
+    "Staff",
+    "Anak Magang",
+    "Anak PKL",
+    "Admin Akuntansi",
+    "Staff Akuntansi",
+  ),
   upload.single("file"),
   createDocument,
 ); // taro middleware multer di sini
 router.put(
   "/documents/:id",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi"),
+  authorizeRoles("Admin", "Admin Akuntansi"),
   updateDocument,
 );
 router.delete(
   "/documents/:id",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi"),
+  authorizeRoles("Admin", "Admin Akuntansi"),
   deleteDocument,
 );
 router.post(
   "/documents/history/:id/restore",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi"),
+  authorizeRoles("Admin", "Admin Akuntansi"),
   restoreDocumentFromHistory,
 );
 router.delete(
   "/documents/history/:id",
   authenticateToken,
-  authorizeRoles("Admin Akuntansi"),
+  authorizeRoles("Admin", "Admin Akuntansi"),
   permanentlyDeleteDocumentFromHistory,
 );
 

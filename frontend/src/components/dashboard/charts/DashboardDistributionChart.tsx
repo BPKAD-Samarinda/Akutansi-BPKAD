@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import type { ChartOptions, ScriptableContext } from "chart.js";
+import type { ChartData, ChartOptions, ScriptableContext } from "chart.js";
 import {
   Select,
   SelectContent,
@@ -34,17 +34,7 @@ type Props = {
 
 type DistributionCanvasProps = {
   chartKey: string;
-  chartData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string[];
-      borderRadius: number;
-      borderSkipped: boolean;
-      maxBarThickness: number;
-    }[];
-  };
+  chartData: ChartData<"bar">;
   options: ChartOptions<"bar">;
 };
 
@@ -56,11 +46,19 @@ const DistributionCanvas = memo(
 );
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Lampiran: "#F97316",
-  Keuangan: "#3B82F6",
+  Lampiran: "#E0E7FF",
+  Keuangan: "#CFFAFE",
+  BKU: "#CCFBF1",
+  STS: "#EDE9FE",
+  "Rekening Koran": "#FFE4E6",
+};
+
+const CATEGORY_DARK: Record<string, string> = {
+  Lampiran: "#6366F1",
+  Keuangan: "#06B6D4",
   BKU: "#14B8A6",
-  STS: "#6366F1",
-  "Rekening Koran": "#EC4899",
+  STS: "#8B5CF6",
+  "Rekening Koran": "#F43F5E",
 };
 
 function DashboardDistributionChart(props: Props) {
@@ -87,8 +85,22 @@ function DashboardDistributionChart(props: Props) {
         {
           label: "Jumlah Upload",
           data: data.map((d) => d.value),
-          backgroundColor: data.map((d) => CATEGORY_COLORS[d.label] ?? "#94A3B8"),
-          borderRadius: 10,
+          backgroundColor: (ctx: ScriptableContext<"bar">) => {
+            const index = ctx.dataIndex;
+            const label = data[index]?.label;
+            const chart = ctx.chart;
+            const area = chart.chartArea;
+            if (!area) return CATEGORY_COLORS[label] ?? "#94A3B8";
+            const start = CATEGORY_COLORS[label] ?? "#94A3B8";
+            const end = CATEGORY_DARK[label] ?? "#64748B";
+            const gradient = chart.ctx.createLinearGradient(0, area.bottom, 0, area.top);
+            gradient.addColorStop(0, start);
+            gradient.addColorStop(1, end);
+            return gradient;
+          },
+          borderColor: data.map((d) => CATEGORY_DARK[d.label] ?? "#64748B"),
+          borderWidth: 1,
+          borderRadius: 12,
           borderSkipped: false,
           maxBarThickness: 56,
         },
@@ -140,13 +152,13 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-10 w-full xl:w-[124px] rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 focus-visible:ring-0";
+    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
+    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 whitespace-nowrap">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
           Jumlah Dokumen
         </h3>
 

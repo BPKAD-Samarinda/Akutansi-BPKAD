@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { ToastState } from "../../types";
 import { apiClient } from "../../services/api";
 
@@ -48,6 +49,9 @@ export function useFileUpload(
       "jpg",
       "jpeg",
       "png",
+      "jfif",
+      "heic",
+      "heif",
     ];
 
     const allowedTypes = [
@@ -59,7 +63,12 @@ export function useFileUpload(
       "application/vnd.ms-powerpoint",
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       "image/jpeg",
+      "image/jpg",
+      "image/pjpeg",
+      "image/jfif",
       "image/png",
+      "image/heic",
+      "image/heif",
     ];
 
     const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
@@ -134,6 +143,23 @@ export function useFileUpload(
       return;
     }
 
+    const selectedDate = new Date(`${formData.date}T00:00:00`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (Number.isNaN(selectedDate.getTime())) {
+      showToast("Tanggal dokumen tidak valid.", "error");
+      return;
+    }
+
+    if (selectedDate > today) {
+      showToast(
+        "Tanggal dokumen tidak boleh melebihi tanggal hari ini.",
+        "warning",
+      );
+      return;
+    }
+
     setIsUploading(true);
 
     try {
@@ -154,7 +180,15 @@ export function useFileUpload(
           fileInputRef.current.value = "";
         }
       }, 500);
-    } catch {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          error.message;
+        showToast(message || "Gagal mengunggah dokumen", "error");
+        return;
+      }
       showToast("Gagal mengunggah dokumen", "error");
     } finally {
       setIsUploading(false);

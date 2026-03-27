@@ -65,7 +65,13 @@ export function normalizeDateOnly(dateValue?: unknown): string | null {
 
   const raw = String(dateValue).trim();
   if (!raw) return null;
-  if (/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
+  const startsWithDate = /^\d{4}-\d{2}-\d{2}/.test(raw);
+  const hasIsoTime = raw.includes("T") || raw.endsWith("Z");
+  if (startsWithDate && !hasIsoTime) {
+    return raw.slice(0, 10);
+  }
 
   const parsed = new Date(raw);
   if (Number.isNaN(parsed.getTime())) return null;

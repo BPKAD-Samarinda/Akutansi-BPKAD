@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
   deleteDocument,
   getDocuments,
@@ -7,6 +7,8 @@ import {
 } from "../../services/api";
 import { Document, ToastState } from "../../types";
 import { useDocumentFilters } from "./useDocumentFilters";
+import { indonesianDateToISO } from "../../utils/documentdateutils";
+import { toLocalDateOnly } from "../../utils/localDate";
 
 type ConfirmDialogState = {
   isOpen: boolean;
@@ -16,6 +18,7 @@ type ConfirmDialogState = {
 };
 
 export function useDocumentManagement() {
+  const hasFetchedRef = useRef(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDocuments, setSelectedDocuments] = useState<
     Set<number | string>
@@ -33,8 +36,12 @@ export function useDocumentManagement() {
     isMultiple: false,
   });
 
-  const showToast = (message: string, type: ToastState["type"]) => {
-    setToast({ show: true, message, type });
+  const showToast = (
+    message: string,
+    type: ToastState["type"],
+    duration?: number,
+  ) => {
+    setToast({ show: true, message, type, duration });
   };
 
   const {
@@ -48,8 +55,10 @@ export function useDocumentManagement() {
     handleRefresh: baseHandleRefresh,
   } = useDocumentFilters([], showToast);
 
-  const fetchDocuments = useCallback(async () => {
-    setLoading(true);
+  const fetchDocuments = useCallback(async (options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setLoading(true);
+    }
     try {
       const data = await getDocuments();
       setDocuments(data);
@@ -57,18 +66,22 @@ export function useDocumentManagement() {
     } catch {
       showToast("Gagal mengambil data dokumen", "error");
     } finally {
-      setLoading(false);
+      if (!options?.silent) {
+        setLoading(false);
+      }
     }
   }, [setDocuments, setFilteredDocuments]);
 
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     fetchDocuments();
   }, [fetchDocuments]);
 
   const handleRefresh = () => {
     baseHandleRefresh();
     setSelectedDocuments(new Set());
-    fetchDocuments();
+    fetchDocuments({ silent: true });
   };
 
   const handleSelectDocument = (id: number | string) => {
@@ -200,6 +213,55 @@ export function useDocumentManagement() {
     const sanitizeFileName = (name: string) =>
       name.replace(/[\\/:*?"<>|]+/g, "-").trim() || "dokumen";
 
+    const normalizeDateForFilename = (value?: string) => {
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+
+      const localDateOnly = toLocalDateOnly(raw);
+      if (localDateOnly) return localDateOnly;
+
+      const formatLocalDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const isoDateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoDateOnly) return isoDateOnly[0];
+
+      const isoDateTime = raw.match(/^(\d{4}-\d{2}-\d{2})[ T]/);
+      if (isoDateTime) return isoDateTime[1];
+
+      const isoDateSlash = raw.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+      if (isoDateSlash) {
+        const [, year, month, day] = isoDateSlash;
+        return `${year}-${month}-${day}`;
+      }
+
+      const dmyDash = raw.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+      if (dmyDash) {
+        const [, day, month, year] = dmyDash;
+        return `${year}-${month}-${day}`;
+      }
+
+      const dmySlash = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (dmySlash) {
+        const [, day, month, year] = dmySlash;
+        return `${year}-${month}-${day}`;
+      }
+
+      const indoToIso = indonesianDateToISO(raw);
+      if (indoToIso) return indoToIso;
+
+      const parsed = new Date(raw.replace(" ", "T"));
+      if (!Number.isNaN(parsed.getTime()) && /[T:]/.test(raw)) {
+        return formatLocalDate(parsed);
+      }
+
+      return "";
+    };
+
     const runDownload = async () => {
       let successCount = 0;
       let failedCount = 0;
@@ -225,9 +287,14 @@ export function useDocumentManagement() {
           const objectUrl = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = objectUrl;
+          const datePart = normalizeDateForFilename(
+            doc.tanggal_sppd || doc.created_at,
+          );
+          const baseName = sanitizeFileName(doc.nama_sppd);
+          const fileNameBase = datePart ? `${baseName}_${datePart}` : baseName;
           link.download = extension
-            ? `${sanitizeFileName(doc.nama_sppd)}.${extension}`
-            : sanitizeFileName(doc.nama_sppd);
+            ? `${fileNameBase}.${extension}`
+            : fileNameBase;
           document.body.appendChild(link);
           link.click();
           link.remove();
@@ -263,12 +330,12 @@ export function useDocumentManagement() {
       if (confirmDialog.isMultiple) {
         const idsToDelete = Array.from(selectedDocuments);
         await Promise.all(idsToDelete.map((id) => deleteDocument(id)));
-        await fetchDocuments();
+        await fetchDocuments({ silent: true });
         setSelectedDocuments(new Set());
         showToast(`${idsToDelete.length} dokumen dipindahkan ke riwayat!`, "success");
       } else if (confirmDialog.documentId) {
         await deleteDocument(confirmDialog.documentId);
-        await fetchDocuments();
+        await fetchDocuments({ silent: true });
 
         const newSelected = new Set(selectedDocuments);
         newSelected.delete(confirmDialog.documentId);

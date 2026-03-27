@@ -6,6 +6,7 @@ import {
   UploadHistoryResult,
 } from "../types";
 import { clearAuthToken, getAuthToken } from "../utils/auth";
+import type { UserApiItem } from "../types/user";
 
 export interface LoginResponse {
   message: string;
@@ -42,10 +43,31 @@ type DocumentApiItem = {
   created_at?: string;
 };
 
+const resolveBaseUrl = (): string => {
+  const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (!envBase || envBase.trim().length === 0) {
+    return "http://localhost:3001/api";
+  }
+
+  if (envBase.startsWith("http://") || envBase.startsWith("https://")) {
+    return envBase;
+  }
+
+  if (typeof window !== "undefined") {
+    const { protocol, host, hostname } = window.location;
+    if (envBase.startsWith("/")) {
+      return `${protocol}//${host}${envBase}`;
+    }
+    if (hostname) {
+      return `${protocol}//${hostname}:3001${envBase}`;
+    }
+  }
+
+  return envBase;
+};
+
 const apiClient = axios.create({
-  baseURL:
-    (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-    "http://localhost:3001/api",
+  baseURL: resolveBaseUrl(),
   timeout: 15000,
 });
 
@@ -297,5 +319,40 @@ export const getDashboardAnalytics = async (): Promise<DashboardAnalyticsRespons
     "/dashboard/analytics",
     { params: { _t: Date.now() } },
   );
+  return response.data;
+};
+
+export const getUsers = async (signal?: AbortSignal): Promise<UserApiItem[]> => {
+  const response = await apiClient.get<UserApiItem[]>("/users", {
+    params: { _t: Date.now() },
+    signal,
+  });
+  return response.data;
+};
+
+export const createUser = async (payload: {
+  username: string;
+  password: string;
+  role: string;
+}): Promise<{ message: string }> => {
+  const response = await apiClient.post<{ message: string }>("/users", payload);
+  return response.data;
+};
+
+export const updateUser = async (
+  id: number | string,
+  payload: { username: string; role: string; password?: string },
+): Promise<{ message: string; user?: UserApiItem | null }> => {
+  const response = await apiClient.put<{ message: string; user?: UserApiItem | null }>(
+    `/users/${id}`,
+    payload,
+  );
+  return response.data;
+};
+
+export const deleteUser = async (
+  id: number | string,
+): Promise<{ message: string }> => {
+  const response = await apiClient.delete<{ message: string }>(`/users/${id}`);
   return response.data;
 };

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import FilterBar from "../components/document/table/FilterBar";
@@ -9,6 +10,8 @@ import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import { useDocumentManagement } from "../hooks/document/useDocumentManagement";
 
 export default function DocumentManagement() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filterResetKey, setFilterResetKey] = useState(0);
   const {
     loading,
     documents,
@@ -35,18 +38,27 @@ export default function DocumentManagement() {
     cancelDelete,
   } = useDocumentManagement();
 
+  const handleRefreshClick = () => {
+    handleRefresh();
+    setFilterResetKey((prev) => prev + 1);
+  };
+
   return (
-    <div className="min-h-screen flex bg-[#F6F6F6] font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
-      <div className="ml-20 lg:ml-[88px] flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
-        <Header title="Document Management" />
+    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
+        <Header
+          title="Manajemen Dokumen"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-6 lg:mb-8 animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <FilterBar
               onSearch={handleSearch}
               onDateRangeChange={handleDateRangeFilter}
               onCategoryChange={handleCategoryFilter}
-              onRefresh={handleRefresh}
+              onRefresh={handleRefreshClick}
+              resetSignal={filterResetKey}
             />
           </div>
 
@@ -69,6 +81,7 @@ export default function DocumentManagement() {
                 onView={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onRefresh={handleRefreshClick}
                 onSelectDocument={handleSelectDocument}
                 onSelectAll={handleSelectAll}
               />
@@ -89,6 +102,7 @@ export default function DocumentManagement() {
         <Toast
           message={toast.message}
           type={toast.type}
+          duration={toast.duration}
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}

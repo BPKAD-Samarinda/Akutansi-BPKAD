@@ -8,11 +8,16 @@ export function useToastState(initialType: ToastState["type"] = "info") {
     type: initialType,
   });
 
-  const showToast = (message: string, type: ToastState["type"]) => {
+  const showToast = (
+    message: string,
+    type: ToastState["type"],
+    duration?: number,
+  ) => {
     setToast({
       show: true,
       message,
       type,
+      duration,
     });
   };
 

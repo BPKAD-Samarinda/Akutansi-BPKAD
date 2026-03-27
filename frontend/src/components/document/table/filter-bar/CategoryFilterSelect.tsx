@@ -124,7 +124,7 @@ export default function CategoryFilterSelect({
           width: dropdownPos.width,
           zIndex: 99999,
         }}
-        className="border border-gray-200 rounded-xl bg-white shadow-lg p-1 font-['Plus_Jakarta_Sans',sans-serif]"
+        className="border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-lg p-1 font-['Plus_Jakarta_Sans',sans-serif]"
       >
         {categoryOptions.map((option) => (
           <button
@@ -134,10 +134,10 @@ export default function CategoryFilterSelect({
               onChange(option.value);
               closeDropdownWithAnimation();
             }}
-            className={`w-full text-left px-3 py-2 rounded-md text-xs lg:text-sm hover:bg-gray-100 ${
+            className={`w-full text-left px-3 py-2 rounded-md text-xs lg:text-sm hover:bg-gray-100 dark:hover:bg-slate-800 ${
               value === option.value
-                ? "bg-orange-50 text-orange-600 font-semibold"
-                : "text-gray-700"
+                ? "bg-orange-50 text-orange-600 font-semibold dark:bg-slate-800 dark:text-slate-100"
+                : "text-gray-700 dark:text-slate-200"
             }`}
           >
             {option.label}
@@ -149,7 +149,7 @@ export default function CategoryFilterSelect({
 
   return (
     <div className="font-['Plus_Jakarta_Sans',sans-serif]">
-      <label className="text-xs lg:text-sm font-semibold text-gray-600 mb-2 block">
+      <label className="text-xs lg:text-sm font-semibold text-gray-600 dark:text-slate-300 mb-2 block">
         Kategori
       </label>
       <div ref={wrapperRef} className="relative">
@@ -157,10 +157,10 @@ export default function CategoryFilterSelect({
           <button
             type="button"
             onClick={toggleDropdown}
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 hover:border-orange-400 text-left transition flex items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]"
+            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 dark:text-slate-100 hover:border-orange-400 text-left transition flex items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]"
           >
             <span>{selectedLabel}</span>
-            <span ref={chevronRef} className="inline-block text-gray-400">
+            <span ref={chevronRef} className="inline-block text-gray-400 dark:text-slate-400">
               <FaChevronDown className="text-xs" />
             </span>
           </button>

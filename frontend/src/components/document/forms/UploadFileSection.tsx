@@ -44,7 +44,7 @@ export default function UploadFileSection({
             />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-gray-800">Berkas</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Berkas</h2>
       </div>
 
       <div
@@ -60,10 +60,10 @@ export default function UploadFileSection({
           relative overflow-hidden
           ${
             isDragging
-              ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
-              : "border-gray-300 hover:border-orange-400 bg-gray-50 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
+              ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-500/10 dark:to-orange-500/20 scale-105"
+              : "border-gray-300 dark:border-slate-700 hover:border-orange-400 bg-gray-50 dark:bg-slate-900 hover:bg-gradient-to-br hover:from-orange-50 hover:to-transparent"
           }
-          ${selectedFile ? "border-green-400 bg-gradient-to-br from-green-50 to-transparent" : ""}
+          ${selectedFile ? "border-green-400 bg-gradient-to-br from-green-50 to-transparent dark:from-green-500/10" : ""}
         `}
       >
         <input
@@ -73,7 +73,7 @@ export default function UploadFileSection({
           aria-label="File Input"
           onChange={onFileInputChange}
           className="hidden"
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.jfif,.heic,.heif"
         />
 
         {selectedFile ? (
@@ -93,10 +93,10 @@ export default function UploadFileSection({
                 />
               </svg>
             </div>
-            <p className="text-base font-bold text-gray-800 mb-2">
+            <p className="text-base font-bold text-gray-800 dark:text-slate-100 mb-2">
               {selectedFile.name}
             </p>
-            <p className="text-sm text-gray-600 mb-5">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mb-5">
               {formatFileSize(selectedFile.size)}
             </p>
             <button
@@ -119,12 +119,10 @@ export default function UploadFileSection({
                 alt="Upload"
               />
             </div>
-            <p className="text-base font-bold text-gray-800 mb-2">
+            <p className="text-base font-bold text-gray-800 dark:text-slate-100 mb-2">
               Klik untuk mengunggah
             </p>
-            <p className="text-sm text-gray-600">
-              PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG (Maks. 10MB)
-            </p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Maks. 10MB</p>
           </div>
         )}
 

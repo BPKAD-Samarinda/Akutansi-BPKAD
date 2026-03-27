@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   getUploadHistories,
   permanentlyDeleteUploadHistories,
@@ -17,6 +17,7 @@ export function useUploadHistory({
   initialPage = 1,
   initialLimit = 10,
 }: UseUploadHistoryParams = {}) {
+  const hasFetchedRef = useRef(false);
   const [items, setItems] = useState<UploadHistory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [restoringId, setRestoringId] = useState<number | string | null>(null);
@@ -81,6 +82,8 @@ export function useUploadHistory({
   }, [limit, page, searchQuery, statusFilter]);
 
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     fetchHistory();
   }, [fetchHistory]);
 

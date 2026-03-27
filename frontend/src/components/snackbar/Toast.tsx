@@ -12,7 +12,7 @@ export default function Toast({
   message,
   type,
   onClose,
-  duration = 3000,
+  duration = 1800,
 }: ToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -86,45 +86,81 @@ export default function Toast({
   };
 
   const styles = {
-    success: "bg-gradient-to-r from-green-500 to-green-600 text-white",
-    error: "bg-gradient-to-r from-red-500 to-red-600 text-white",
-    warning: "bg-gradient-to-r from-yellow-500 to-orange-500 text-white",
-    info: "bg-gradient-to-r from-blue-500 to-blue-600 text-white",
+    success:
+      "bg-emerald-600/90 text-white border-emerald-200/30 shadow-emerald-900/40",
+    error:
+      "bg-rose-600/90 text-white border-rose-200/30 shadow-rose-900/40",
+    warning:
+      "bg-amber-500/90 text-white border-amber-200/30 shadow-amber-900/40",
+    info: "bg-sky-600/90 text-white border-sky-200/30 shadow-sky-900/40",
+  };
+
+  const iconWrap = {
+    success: "bg-emerald-200/20 ring-emerald-200/30",
+    error: "bg-rose-200/20 ring-rose-200/30",
+    warning: "bg-amber-200/20 ring-amber-200/30",
+    info: "bg-sky-200/20 ring-sky-200/30",
+  };
+
+  const titles = {
+    success: "Berhasil",
+    error: "Gagal",
+    warning: "Peringatan",
+    info: "Info",
   };
 
   return (
-    <div className="fixed top-6 right-6 z-[9999] animate-slideInRightFast">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
       <div
-        className={`${styles[type]} rounded-2xl shadow-2xl px-6 py-4 flex items-center gap-4 min-w-[320px] max-w-md backdrop-blur-sm border border-white/20 hover:scale-105 transition-transform duration-300`}
+        className="relative w-full max-w-md pointer-events-auto animate-toastPop"
+        style={{ "--toast-duration": `${duration}ms` } as React.CSSProperties}
       >
-        <div className="flex-shrink-0 animate-bounceOnce">{icons[type]}</div>
-        <p className="flex-1 font-semibold text-sm leading-relaxed">
-          {message}
-        </p>
-        <AppTooltip content="Close">
-          <button
-            onClick={onClose}
-            title=""
-            aria-label="Close"
-            className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        <div
+          className={`${styles[type]} relative overflow-hidden rounded-2xl border px-6 py-5 shadow-2xl backdrop-blur-md`}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_60%)] opacity-80"></div>
+          <div className="relative flex items-start gap-4">
+            <div
+              className={`flex h-11 w-11 items-center justify-center rounded-xl ring-1 ${iconWrap[type]} animate-bounceOnce`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </AppTooltip>
+              {icons[type]}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold uppercase tracking-wide text-white/90">
+                {titles[type]}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-white/95">
+                {message}
+              </p>
+            </div>
+            <AppTooltip content="Close">
+              <button
+                onClick={onClose}
+                title=""
+                aria-label="Close"
+                className="flex-shrink-0 rounded-lg p-1 text-white/80 hover:bg-white/15 hover:text-white transition-colors"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </AppTooltip>
+          </div>
 
-        <div className="absolute bottom-0 left-0 h-1 w-full bg-white/30 rounded-b-2xl animate-shrink"></div>
+          <div className="absolute bottom-0 left-0 h-1 w-full bg-white/30">
+            <div className="h-full w-full bg-white/70 animate-shrink"></div>
+          </div>
+        </div>
       </div>
     </div>
   );

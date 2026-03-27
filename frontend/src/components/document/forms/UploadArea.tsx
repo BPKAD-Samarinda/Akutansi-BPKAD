@@ -3,7 +3,7 @@ import AppTooltip from "../../ui/app-tooltip";
 
 export default function UploadArea() {
   return (
-    <div className="bg-white rounded-2xl shadow p-10 grid grid-cols-2 gap-10">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow p-10 grid grid-cols-2 gap-10">
       <div>
         <label className="block mb-2">Nama Dokumen</label>
         <AppTooltip content="Nama Dokumen">

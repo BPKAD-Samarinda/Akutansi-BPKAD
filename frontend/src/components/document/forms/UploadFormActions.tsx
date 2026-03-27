@@ -13,20 +13,20 @@ export default function UploadFormActions({
         type="button"
         onClick={onCancel}
         disabled={isUploading}
-        className="px-8 py-3.5 border-2 border-gray-300 rounded-xl text-gray-700 font-bold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
+        className="px-8 py-3.5 border-2 border-gray-300 dark:border-slate-700 rounded-xl text-gray-700 dark:text-slate-200 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
       >
         Batal
       </button>
       <button
         type="submit"
         disabled={isUploading}
-        className="relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group"
+        className="relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group min-w-[190px] flex items-center justify-center"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-        <span className="relative flex items-center justify-center gap-2">
+        <span className="relative flex items-center gap-2 leading-none">
           {isUploading ? (
             <>
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+              <svg className="animate-spin h-5 w-5 shrink-0 align-middle" viewBox="0 0 24 24" style={{ verticalAlign: "middle" }}>
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -42,13 +42,13 @@ export default function UploadFormActions({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              <span>Mengunggah...</span>
+              <span className="block leading-none">Mengunggah...</span>
             </>
           ) : (
             <>
-              <span>Simpan Dokumen</span>
+              <span className="block">Simpan Dokumen</span>
               <svg
-                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                className="w-5 h-5 shrink-0 group-hover:translate-x-1 transition-transform"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

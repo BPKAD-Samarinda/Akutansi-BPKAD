@@ -141,13 +141,13 @@ export default function UploadDocumentInfoSection({
             />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-gray-800">Informasi Dokumen</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Informasi Dokumen</h2>
       </div>
 
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-bold text-gray-700 mb-3"
+          className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3"
         >
           Nama Dokumen
         </label>
@@ -158,13 +158,13 @@ export default function UploadDocumentInfoSection({
           value={formData.name}
           onChange={onInputChange}
           placeholder="Nama akan otomatis terisi dari file..."
-          className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white"
+          className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-3">
+        <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3">
           Tanggal
         </label>
         <div ref={calendarWrapperRef} className="relative">
@@ -183,20 +183,26 @@ export default function UploadDocumentInfoSection({
               });
               setIsCategoryOpen(false);
             }}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white flex items-center justify-between"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between"
           >
-            <span className={selectedDate ? "text-gray-900" : "text-gray-500"}>
+            <span
+              className={
+                selectedDate
+                  ? "text-gray-900 dark:text-slate-100"
+                  : "text-gray-500 dark:text-slate-500"
+              }
+            >
               {displayDate}
             </span>
             <FaChevronDown
-              className={`text-xs text-gray-500 transition-transform duration-200 ${
+              className={`text-xs text-gray-500 dark:text-slate-400 transition-transform duration-200 ${
                 isCalendarOpen ? "rotate-180" : ""
               }`}
             />
           </button>
 
           {isCalendarOpen && (
-            <div className="absolute top-full left-0 mt-2 z-30 border border-gray-200 rounded-xl bg-white shadow-xl p-2">
+            <div className="absolute top-full left-0 mt-2 z-30 border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-xl p-2">
               <div className="mb-2 grid grid-cols-[1fr_110px] gap-2 px-1">
                 <Select
                   value={String(viewMonth.getMonth())}
@@ -246,9 +252,11 @@ export default function UploadDocumentInfoSection({
                 month={viewMonth}
                 onMonthChange={(month) => setViewMonth(month)}
                 captionLayout="label"
+                disabled={{ after: today }}
                 selected={selectedDate}
                 onSelect={(selected) => {
                   if (!selected) return;
+                  if (selected > today) return;
                   emitFieldChange("date", format(selected, "yyyy-MM-dd"));
                   setIsCalendarOpen(false);
                 }}
@@ -259,7 +267,7 @@ export default function UploadDocumentInfoSection({
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-3">
+        <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3">
           Kategori
         </label>
         <div ref={categoryWrapperRef} className="relative">
@@ -269,22 +277,26 @@ export default function UploadDocumentInfoSection({
               setIsCategoryOpen((prev) => !prev);
               setIsCalendarOpen(false);
             }}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white flex items-center justify-between"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between"
           >
             <span
-              className={formData.category ? "text-gray-900" : "text-gray-500"}
+              className={
+                formData.category
+                  ? "text-gray-900 dark:text-slate-100"
+                  : "text-gray-500 dark:text-slate-500"
+              }
             >
               {formData.category || "Pilih Kategori"}
             </span>
             <FaChevronDown
-              className={`text-xs text-gray-500 transition-transform duration-200 ${
+              className={`text-xs text-gray-500 dark:text-slate-400 transition-transform duration-200 ${
                 isCategoryOpen ? "rotate-180" : ""
               }`}
             />
           </button>
 
           {isCategoryOpen && (
-            <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 rounded-xl bg-white shadow-xl p-2">
+            <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-xl p-2">
               {(["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"] as const).map((option) => (
                 <button
                   key={option}
@@ -295,8 +307,8 @@ export default function UploadDocumentInfoSection({
                   }}
                   className={`w-full text-left px-3 py-2.5 rounded-lg text-base transition-colors ${
                     formData.category === option
-                      ? "bg-orange-50 text-orange-600"
-                      : "hover:bg-gray-100 text-gray-800"
+                      ? "bg-orange-50 text-orange-600 dark:bg-slate-800 dark:text-slate-100"
+                      : "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-200"
                   }`}
                 >
                   {option}

@@ -42,7 +42,8 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
     );
 
     const currentUser = (req as AuthenticatedRequest).user;
-    const isAdminRole = currentUser?.role === "Admin Akuntansi";
+    const isAdminRole =
+      currentUser?.role === "Admin" || currentUser?.role === "Admin Akuntansi";
 
     let loginRows: unknown[] = [];
     if (isAdminRole) {

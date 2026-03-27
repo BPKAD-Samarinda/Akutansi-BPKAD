@@ -15,6 +15,7 @@ interface DocumentTableProps {
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
+  onRefresh?: () => void;
   onSelectDocument: (id: number | string) => void;
   onSelectAll: (checked: boolean) => void;
 }
@@ -26,6 +27,7 @@ export default function DocumentTable({
   onView,
   onEdit,
   onDelete,
+  onRefresh,
   onSelectDocument,
   onSelectAll,
 }: DocumentTableProps) {
@@ -87,14 +89,18 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 lg:p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-4 lg:p-6">
       <DocumentTableToolbar
         sortOrder={sortOrder}
         onSortClick={handleSortClick}
         onUploadClick={handleUploadClick}
+        onRefresh={onRefresh}
       />
 
-      <div ref={documentsContentRef} className="overflow-hidden rounded-xl border border-slate-100">
+      <div
+        ref={documentsContentRef}
+        className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900"
+      >
         <DocumentTableDesktop
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}
@@ -105,6 +111,7 @@ export default function DocumentTable({
           onView={onView}
           onEdit={onEdit}
           onDelete={onDelete}
+          pageStartIndex={(currentPage - 1) * rowsPerPage + 1}
         />
 
         <DocumentTableMobile

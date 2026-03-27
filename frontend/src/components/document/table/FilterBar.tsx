@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ActiveFilterIndicator from "./filter-bar/ActiveFilterIndicator";
 import CategoryFilterSelect from "./filter-bar/CategoryFilterSelect";
 import DateRangePicker from "./filter-bar/DateRangePicker";
@@ -9,11 +9,15 @@ export default function FilterBar({
   onSearch,
   onDateRangeChange,
   onCategoryChange,
+  resetSignal,
 }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const onSearchRef = useRef<typeof onSearch | undefined>(undefined);
+  const onCategoryRef = useRef<typeof onCategoryChange | undefined>(undefined);
+  const onDateRangeRef = useRef<typeof onDateRangeChange | undefined>(undefined);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -31,6 +35,23 @@ export default function FilterBar({
     onDateRangeChange?.(start, end);
   };
 
+  useEffect(() => {
+    onSearchRef.current = onSearch;
+    onCategoryRef.current = onCategoryChange;
+    onDateRangeRef.current = onDateRangeChange;
+  }, [onSearch, onCategoryChange, onDateRangeChange]);
+
+  useEffect(() => {
+    if (resetSignal === undefined) return;
+    setSearchQuery("");
+    setCategory("");
+    setStartDate("");
+    setEndDate("");
+    onSearchRef.current?.("");
+    onCategoryRef.current?.("");
+    onDateRangeRef.current?.("", "");
+  }, [resetSignal]);
+
   const activeItems: string[] = [];
   if (searchQuery.trim()) {
     activeItems.push(`Pencarian: ${searchQuery.trim()}`);
@@ -38,27 +59,39 @@ export default function FilterBar({
   if (category) {
     activeItems.push(`Kategori: ${category}`);
   }
+  const formatDateRangeLabel = (value: string) => {
+    if (!value) return "";
+    const [year, month, day] = value.split("-");
+    if (!year || !month || !day) return value;
+    return `${day}/${month}/${year}`;
+  };
+
   if (startDate || endDate) {
     if (startDate && endDate) {
-      activeItems.push(`Tanggal: ${startDate} - ${endDate}`);
+      if (startDate === endDate) {
+        activeItems.push(`Tanggal: ${formatDateRangeLabel(startDate)}`);
+      } else {
+        activeItems.push(
+          `Tanggal: ${formatDateRangeLabel(startDate)} - ${formatDateRangeLabel(endDate)}`,
+        );
+      }
     } else {
-      activeItems.push(`Tanggal: ${startDate || endDate}`);
+      activeItems.push(
+        `Tanggal: ${formatDateRangeLabel(startDate || endDate)}`,
+      );
     }
   }
 
   const isActive = activeItems.length > 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-4 lg:p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+    <div className="p-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-3 lg:gap-4 items-center">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
 
-        <DateRangePicker onChange={handleDateChange} />
+        <DateRangePicker onChange={handleDateChange} resetSignal={resetSignal} />
 
-        <CategoryFilterSelect
-          value={category}
-          onChange={handleCategoryChange}
-        />
+        <CategoryFilterSelect value={category} onChange={handleCategoryChange} />
       </div>
 
       {isActive && <ActiveFilterIndicator items={activeItems} />}

@@ -1,3 +1,5 @@
+import { createPortal } from "react-dom";
+
 interface ConfirmDialogProps {
   isOpen: boolean;
   title: string;
@@ -44,19 +46,23 @@ export default function ConfirmDialog({
 
   const theme = colors[type];
 
-  return (
+  const dialog = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fadeInFast">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60"
+        style={{
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+        }}
         onClick={onCancel}
       ></div>
 
       {/* Dialog */}
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scaleInFast">
+      <div className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-slate-700 animate-scaleInFast">
         {/* Icon */}
         <div
-          className={`w-16 h-16 ${theme.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6 animate-bounceOnce`}
+          className={`w-16 h-16 ${theme.iconBg} dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-bounceOnce`}
         >
           <svg
             className={`w-8 h-8 ${theme.icon}`}
@@ -92,12 +98,12 @@ export default function ConfirmDialog({
         </div>
 
         {/* Title */}
-        <h3 className="text-2xl font-bold text-gray-900 text-center mb-3">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 text-center mb-3">
           {title}
         </h3>
 
         {/* Message */}
-        <p className="text-gray-600 text-center mb-8 leading-relaxed">
+        <p className="text-gray-600 dark:text-slate-300 text-center mb-8 leading-relaxed">
           {message}
         </p>
 
@@ -105,7 +111,7 @@ export default function ConfirmDialog({
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 px-6 py-3.5 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95"
+            className="flex-1 px-6 py-3.5 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500 transition-all duration-300 hover:scale-105 active:scale-95"
           >
             {cancelText}
           </button>
@@ -119,4 +125,6 @@ export default function ConfirmDialog({
       </div>
     </div>
   );
+
+  return createPortal(dialog, document.body);
 }
