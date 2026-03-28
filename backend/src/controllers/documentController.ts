@@ -81,7 +81,7 @@ export const createDocument = async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json({
         message:
-          "File upload failed. Please check if the file is a valid type (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, PNG, JPG) and under 10MB.",
+          "File upload failed. Please check if the file is a valid type (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, PNG, JPG) and under 20MB.",
       });
     }
 

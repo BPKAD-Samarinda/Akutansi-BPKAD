@@ -122,7 +122,7 @@ export default function UploadFileSection({
             <p className="text-base font-bold text-gray-800 dark:text-slate-100 mb-2">
               Klik untuk mengunggah
             </p>
-            <p className="text-sm text-gray-600 dark:text-slate-400">Maks. 10MB</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Maks. 20MB</p>
           </div>
         )}
 
