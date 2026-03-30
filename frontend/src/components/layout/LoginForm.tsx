@@ -32,7 +32,7 @@ export default function LoginForm({
 
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
-      <div className="w-full max-w-[460px] bg-white dark:bg-slate-900/95 rounded-3xl shadow-2xl shadow-black/5 px-6 sm:px-12 py-10 sm:py-14 border border-gray-200/80 dark:border-slate-700/70 backdrop-blur-sm animate-[fadeIn_0.8s_ease-out_0.2s_both]">
+      <div className="w-full max-w-[440px] bg-white/95 dark:bg-slate-900/95 rounded-3xl shadow-2xl shadow-black/10 px-6 sm:px-11 py-10 sm:py-12 border border-gray-200/80 dark:border-slate-700/70 backdrop-blur-md animate-[fadeIn_0.8s_ease-out_0.2s_both]">
         <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
           <div className="relative mb-4">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-2xl opacity-20 animate-pulse"></div>

@@ -3,15 +3,18 @@ import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
-    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-[#F6F6F6] dark:bg-slate-950">
+    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-transparent">
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-slate-200/60 to-transparent dark:via-slate-800/60" />
+      <div className="pointer-events-none absolute -left-8 top-0 h-full w-16 bg-gradient-to-r from-white/75 via-white/35 to-transparent dark:from-slate-950/35 dark:via-slate-950/15" />
       {/* area gambar di sisi kanan */}
-      <div className="absolute inset-y-0 right-0 w-[84%] overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
         <img
           src={buildingImage}
           alt="Gedung BPKAD"
           className="absolute inset-0 w-full h-full object-cover object-[78%_85%] animate-zoomIn"
         />
 
+        <div className="absolute inset-0 bg-gradient-to-r from-white/55 via-white/20 to-transparent dark:from-slate-950/25 dark:via-slate-950/12 dark:to-transparent" />
         {/* overlay oranye hanya di area gambar */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#FF5700]/60 via-[#FF5700]/10 to-transparent" />
 
