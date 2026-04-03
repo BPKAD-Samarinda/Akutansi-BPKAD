@@ -8,12 +8,17 @@ type EditModalFormFieldsProps = {
   isSaving: boolean;
   isCategoryOpen: boolean;
   isCalendarOpen: boolean;
+  fileName?: string;
+  fileError?: string;
+  currentFileName?: string;
   categoryWrapperRef: React.RefObject<HTMLDivElement | null>;
   categoryDropdownRef: React.RefObject<HTMLDivElement | null>;
   categoryChevronRef: React.RefObject<HTMLSpanElement | null>;
   calendarWrapperRef: React.RefObject<HTMLDivElement | null>;
   calendarPopoverRef: React.RefObject<HTMLDivElement | null>;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveFile: () => void;
   onToggleCategory: () => void;
   onSelectCategory: (
     kategori:
@@ -35,12 +40,17 @@ export default function EditModalFormFields({
   isSaving,
   isCategoryOpen,
   isCalendarOpen,
+  fileName,
+  fileError,
+  currentFileName,
   categoryWrapperRef,
   categoryDropdownRef,
   categoryChevronRef,
   calendarWrapperRef,
   calendarPopoverRef,
   onInputChange,
+  onFileChange,
+  onRemoveFile,
   onToggleCategory,
   onSelectCategory,
   onToggleCalendar,
@@ -154,6 +164,49 @@ export default function EditModalFormFields({
           )}
         </div>
       </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 dark:text-slate-200 mb-2">
+          Ganti Dokumen (opsional)
+        </label>
+        <div className="rounded-2xl border border-dashed border-gray-200 dark:border-slate-600 bg-white/70 dark:bg-slate-900/60 px-4 py-4 space-y-2">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <AppTooltip content="Pilih file baru">
+                <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-700 dark:text-slate-200 cursor-pointer hover:border-orange-400 hover:text-orange-600 transition-colors">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.jfif,.heic,.heif"
+                    className="hidden"
+                    onChange={onFileChange}
+                    disabled={isSaving}
+                  />
+                  Pilih File
+                </label>
+              </AppTooltip>
+              <span className="text-sm text-gray-400 dark:text-slate-500 truncate">
+                {fileName || "Belum ada file baru"}
+              </span>
+            </div>
+
+            {fileName && (
+              <button
+                type="button"
+                onClick={onRemoveFile}
+                className="text-xs font-semibold text-red-500 hover:text-red-600"
+                disabled={isSaving}
+              >
+                Hapus
+              </button>
+            )}
+          </div>
+
+        </div>
+        {fileError && (
+          <p className="mt-2 text-xs text-red-500">{fileError}</p>
+        )}
+      </div>
+
 
       <div className="flex justify-end gap-3 pt-5">
         <button

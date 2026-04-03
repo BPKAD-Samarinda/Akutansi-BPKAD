@@ -159,21 +159,30 @@ export function useDocumentManagement() {
 
   const handleSaveEdit = async (
     id: number | string,
-    updatedData: Partial<Document>,
+    updatedData: Partial<Document> & { file?: File | null },
   ): Promise<boolean> => {
     try {
       await updateDocument(id, updatedData);
-
-      const updatedDocuments = documents.map((doc) =>
-        doc.id === id ? { ...doc, ...updatedData } : doc,
-      );
-
-      setDocuments(updatedDocuments);
-      setFilteredDocuments(updatedDocuments);
+      if (updatedData.file) {
+        await fetchDocuments({ silent: true });
+      } else {
+        const updatedDocuments = documents.map((doc) =>
+          doc.id === id ? { ...doc, ...updatedData } : doc,
+        );
+        setDocuments(updatedDocuments);
+        setFilteredDocuments(updatedDocuments);
+      }
       showToast("Dokumen berhasil diperbarui!", "success");
       return true;
-    } catch {
-      showToast("Gagal memperbarui dokumen", "error");
+    } catch (error) {
+      const message =
+        typeof error === "object" &&
+        error &&
+        "response" in error &&
+        (error as any).response?.data?.message
+          ? (error as any).response.data.message
+          : "Gagal memperbarui dokumen";
+      showToast(message, "error");
       return false;
     }
   };

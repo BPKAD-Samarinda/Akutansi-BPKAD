@@ -15,7 +15,7 @@ type UseEditModalParams = {
   onClose: () => void;
   onSave: (
     id: number | string,
-    updatedData: Partial<Document>,
+    updatedData: Partial<Document> & { file?: File | null },
   ) => Promise<boolean>;
 };
 
@@ -34,6 +34,8 @@ export function useEditModal({
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [shouldRender, setShouldRender] = useState(isOpen && !!editingDocument);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string>("");
 
   const calendarPopoverRef = useRef<HTMLDivElement | null>(null);
   const calendarWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -118,6 +120,12 @@ export function useEditModal({
 
       return () => cancelAnimationFrame(frameId);
     }
+  }, [isOpen, editingDocument]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setSelectedFile(null);
+    setFileError("");
   }, [isOpen, editingDocument]);
 
   useEffect(() => {
@@ -212,6 +220,74 @@ export function useEditModal({
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setSelectedFile(null);
+      setFileError("");
+      return;
+    }
+
+    const allowedExtensions = [
+      "pdf",
+      "doc",
+      "docx",
+      "xls",
+      "xlsx",
+      "ppt",
+      "pptx",
+      "jpg",
+      "jpeg",
+      "png",
+      "jfif",
+      "heic",
+      "heif",
+    ];
+
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "image/jpeg",
+      "image/jpg",
+      "image/pjpeg",
+      "image/jfif",
+      "image/png",
+      "image/heic",
+      "image/heif",
+    ];
+
+    const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
+    const hasAllowedMimeType = allowedTypes.includes(file.type);
+    const hasAllowedExtension = allowedExtensions.includes(fileExtension);
+    if (!hasAllowedMimeType && !hasAllowedExtension) {
+      setFileError(
+        "Tipe file tidak didukung. Hanya PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, dan PNG yang diperbolehkan.",
+      );
+      setSelectedFile(null);
+      return;
+    }
+
+    const maxSize = 20 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setFileError("Ukuran file terlalu besar. Maksimal ukuran file adalah 20MB.");
+      setSelectedFile(null);
+      return;
+    }
+
+    setFileError("");
+    setSelectedFile(file);
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setFileError("");
+  };
+
   const closeCategoryWithAnimation = () => {
     if (!categoryDropdownRef.current) {
       setIsCategoryOpen(false);
@@ -278,6 +354,7 @@ export function useEditModal({
         nama_sppd: formData.nama_sppd,
         kategori: formData.kategori,
         tanggal_sppd: formData.tanggal_sppd || today,
+        file: selectedFile,
       });
 
       if (isSaved) {
@@ -295,6 +372,8 @@ export function useEditModal({
     shouldRender,
     isCalendarOpen,
     isCategoryOpen,
+    fileError,
+    selectedFileName: selectedFile?.name || "",
     overlayRef,
     modalRef,
     calendarPopoverRef,
@@ -304,6 +383,8 @@ export function useEditModal({
     categoryChevronRef,
     handleCloseWithAnimation,
     handleInputChange,
+    handleFileChange,
+    handleRemoveFile,
     toggleCategory,
     selectCategory,
     toggleCalendar,

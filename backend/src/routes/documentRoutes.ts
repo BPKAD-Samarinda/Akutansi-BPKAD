@@ -57,6 +57,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
+    req.fileValidationError = "Tipe file tidak didukung.";
     cb(null, false);
   }
 };
@@ -68,6 +69,25 @@ const upload = multer({
     fileSize: 20 * 1024 * 1024, // 20MB
   },
 });
+
+const uploadSingle = (req: any, res: any, next: any) => {
+  upload.single("file")(req, res, (err: any) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({
+          message: "Ukuran file terlalu besar. Maksimal ukuran file adalah 20MB.",
+        });
+      }
+      return res.status(400).json({
+        message: "Upload gagal. Pastikan format file didukung.",
+      });
+    }
+    if (req.fileValidationError) {
+      return res.status(400).json({ message: req.fileValidationError });
+    }
+    next();
+  });
+};
 
 // route untuk dokumen
 router.get("/documents", authenticateToken, getAllDocuments);
@@ -96,13 +116,14 @@ router.post(
     "Admin Akuntansi",
     "Staff Akuntansi",
   ),
-  upload.single("file"),
+  uploadSingle,
   createDocument,
 ); // taro middleware multer di sini
 router.put(
   "/documents/:id",
   authenticateToken,
   authorizeRoles("Admin", "Admin Akuntansi"),
+  uploadSingle,
   updateDocument,
 );
 router.delete(

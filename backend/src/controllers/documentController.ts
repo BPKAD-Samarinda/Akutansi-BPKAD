@@ -78,6 +78,10 @@ export const createDocument = async (req: Request, res: Response) => {
 
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
 
+    if ((req as any).fileValidationError) {
+      return res.status(400).json({ message: (req as any).fileValidationError });
+    }
+
     if (!req.file) {
       return res.status(400).json({
         message:
@@ -122,13 +126,38 @@ export const updateDocument = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
 
+    if ((req as any).fileValidationError) {
+      return res.status(400).json({ message: (req as any).fileValidationError });
+    }
+
     if (!nama_sppd || !tanggal_sppd || !kategori) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    let newFilePath: string | null = null;
+    if (req.file) {
+      newFilePath = `uploads/${req.file.filename}`;
+      const [rows]: any = await db.execute(
+        "SELECT file_path FROM documents WHERE id = ? AND is_deleted = 0",
+        [id],
+      );
+      const existingPath = rows?.[0]?.file_path ? String(rows[0].file_path) : "";
+      if (existingPath) {
+        const normalized = existingPath.replace(/\\/g, "/").replace(/^\/+/, "");
+        const relative = normalized.replace(/^uploads\//i, "");
+        const backendPath = path.resolve(BACKEND_UPLOADS_DIR, relative);
+        const rootPath = path.resolve(ROOT_UPLOADS_DIR, relative);
+        if (fs.existsSync(backendPath)) {
+          fs.unlinkSync(backendPath);
+        } else if (fs.existsSync(rootPath)) {
+          fs.unlinkSync(rootPath);
+        }
+      }
+    }
+
     const [result] = await db.execute(
-      "UPDATE documents SET nama_sppd = ?, tanggal_sppd = ?, kategori = ? WHERE id = ? AND is_deleted = 0",
-      [nama_sppd, tanggal_sppd, kategori, id],
+      "UPDATE documents SET nama_sppd = ?, tanggal_sppd = ?, kategori = ?, file_path = COALESCE(?, file_path) WHERE id = ? AND is_deleted = 0",
+      [nama_sppd, tanggal_sppd, kategori, newFilePath, id],
     );
 
     res

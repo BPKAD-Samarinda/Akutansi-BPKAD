@@ -23,6 +23,8 @@ export default function EditModal({
     categoryChevronRef,
     handleCloseWithAnimation,
     handleInputChange,
+    handleFileChange,
+    handleRemoveFile,
     toggleCategory,
     selectCategory,
     toggleCalendar,
@@ -30,12 +32,18 @@ export default function EditModal({
     handleSubmit,
     formatDisplayDate,
     toDateObject,
+    selectedFileName,
+    fileError,
   } = useEditModal({
     isOpen,
     editingDocument,
     onClose,
     onSave,
   });
+
+  const currentFileName = editingDocument?.file_path
+    ? String(editingDocument.file_path).split(/[\\/]/).pop()
+    : "";
 
   if (!shouldRender) return null;
 
@@ -92,12 +100,17 @@ export default function EditModal({
             isSaving={isSaving}
             isCategoryOpen={isCategoryOpen}
             isCalendarOpen={isCalendarOpen}
+            fileName={selectedFileName}
+            fileError={fileError}
+            currentFileName={currentFileName}
             categoryWrapperRef={categoryWrapperRef}
             categoryDropdownRef={categoryDropdownRef}
             categoryChevronRef={categoryChevronRef}
             calendarWrapperRef={calendarWrapperRef}
             calendarPopoverRef={calendarPopoverRef}
             onInputChange={handleInputChange}
+            onFileChange={handleFileChange}
+            onRemoveFile={handleRemoveFile}
             onToggleCategory={toggleCategory}
             onSelectCategory={selectCategory}
             onToggleCalendar={toggleCalendar}

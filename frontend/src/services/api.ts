@@ -285,8 +285,18 @@ export const permanentlyDeleteUploadHistories = async (
 
 export const updateDocument = async (
   id: number | string,
-  updatedData: Partial<Document>,
+  updatedData: Partial<Document> & { file?: File | null },
 ): Promise<void> => {
+  if (updatedData.file) {
+    const formData = new FormData();
+    if (updatedData.nama_sppd) formData.append("nama_sppd", updatedData.nama_sppd);
+    if (updatedData.tanggal_sppd) formData.append("tanggal_sppd", updatedData.tanggal_sppd);
+    if (updatedData.kategori) formData.append("kategori", updatedData.kategori);
+    formData.append("file", updatedData.file);
+    await apiClient.put(`/documents/${id}`, formData);
+    return;
+  }
+
   await apiClient.put(`/documents/${id}`, updatedData);
 };
 
