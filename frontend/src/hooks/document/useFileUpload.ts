@@ -99,8 +99,6 @@ export function useFileUpload(
       ...prev,
       name: fileName,
     }));
-
-    showToast("File berhasil dipilih!", "success");
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

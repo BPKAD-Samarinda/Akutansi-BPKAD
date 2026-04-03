@@ -60,16 +60,25 @@ export function useUploadHistory({
     restorableItems.length > 0 &&
     restorableItems.every((item) => selectedIds.has(String(item.id)));
 
-  const fetchHistory = useCallback(async () => {
+  const fetchHistory = useCallback(async (override?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: "all" | "diunggah" | "dihapus" | "diedit";
+  }) => {
     setLoading(true);
     setError("");
 
     try {
+      const finalPage = override?.page ?? page;
+      const finalLimit = override?.limit ?? limit;
+      const finalSearch = override?.search ?? searchQuery;
+      const finalStatus = override?.status ?? statusFilter;
       const result = await getUploadHistories({
-        page,
-        limit,
-        search: searchQuery || undefined,
-        status: statusFilter,
+        page: finalPage,
+        limit: finalLimit,
+        search: finalSearch || undefined,
+        status: finalStatus,
       });
 
       setItems(result.items);
@@ -86,6 +95,11 @@ export function useUploadHistory({
     hasFetchedRef.current = true;
     fetchHistory();
   }, [fetchHistory]);
+
+  useEffect(() => {
+    if (!hasFetchedRef.current) return;
+    fetchHistory();
+  }, [fetchHistory, page, limit, searchQuery, statusFilter]);
 
   useEffect(() => {
     if (items.length === 0) {
@@ -116,7 +130,11 @@ export function useUploadHistory({
   };
 
   const handleRefresh = () => {
-    fetchHistory();
+    setSearchInput("");
+    setSearchQuery("");
+    setStatusFilter("all");
+    setPage(1);
+    fetchHistory({ page: 1, limit, search: "", status: "all" });
   };
 
   const handleStatusFilterChange = (

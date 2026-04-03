@@ -1,4 +1,5 @@
 import { Search, RefreshCcw } from "lucide-react";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -26,8 +27,28 @@ export default function HistoryToolbar({
   onSearchSubmit,
   onRefresh,
 }: HistoryToolbarProps) {
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleRefresh = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    setTimeout(() => setIsSpinning(false), 600);
+    onRefresh();
+  };
+
   return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <>
+      <style>{`
+        @keyframes spin-once {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .spin-once {
+          animation: spin-once 0.6s ease-in-out;
+          transform-origin: 50% 50%;
+        }
+      `}</style>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div className="flex w-full flex-col gap-3 md:max-w-3xl md:flex-row">
         <div className="relative w-full md:max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-slate-400" />
@@ -89,12 +110,16 @@ export default function HistoryToolbar({
 
       <button
         type="button"
-        onClick={onRefresh}
-        className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:text-slate-200 transition hover:border-gray-300 hover:text-gray-800 md:w-auto"
+        onClick={handleRefresh}
+        disabled={isSpinning}
+        className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:text-slate-200 transition hover:border-gray-300 hover:text-gray-800 disabled:opacity-70 md:w-auto"
       >
-        <RefreshCcw className="h-4 w-4" />
+        <span className={isSpinning ? "spin-once" : ""}>
+          <RefreshCcw className="h-4 w-4" />
+        </span>
         Refresh
       </button>
     </div>
+    </>
   );
 }
