@@ -281,6 +281,13 @@ export function useEditModal({
 
     setFileError("");
     setSelectedFile(file);
+    const baseName = file.name.replace(/\.[^/.]+$/, "").trim();
+    if (baseName) {
+      setFormData((prev) => ({
+        ...prev,
+        nama_sppd: baseName,
+      }));
+    }
   };
 
   const handleRemoveFile = () => {
