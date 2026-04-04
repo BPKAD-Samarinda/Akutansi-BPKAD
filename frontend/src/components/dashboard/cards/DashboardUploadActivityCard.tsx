@@ -4,12 +4,14 @@ type Props = {
     name: string;
     kategori: string;
     tanggal: string;
+    fileName?: string;
   }>;
   latestRows: Array<{
     id: number;
     name: string;
     kategori: string;
     tanggal: string;
+    fileName?: string;
   }>;
 };
 
@@ -45,12 +47,13 @@ export default function DashboardUploadActivityCard({
           </div>
 
           <div
-            className={`overflow-x-auto ${todayShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
+            className={`overflow-x-auto ${todayShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama Dokumen</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
                 </tr>
@@ -59,13 +62,16 @@ export default function DashboardUploadActivityCard({
                 {todayRows.map((row) => (
                   <tr key={row.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-orange-50/40 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-3 py-2 text-slate-900 dark:text-slate-100 font-medium">{row.name}</td>
+                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
+                      {row.fileName || "-"}
+                    </td>
                     <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{row.kategori}</td>
                     <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{row.tanggal}</td>
                   </tr>
                 ))}
                 {todayRows.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={4} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
                       Belum ada upload hari ini.
                     </td>
                   </tr>
@@ -83,12 +89,13 @@ export default function DashboardUploadActivityCard({
           </div>
 
           <div
-            className={`overflow-x-auto ${latestShouldScroll ? "max-h-[420px] overflow-y-auto" : ""}`}
+            className={`overflow-x-auto ${latestShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
               <thead className="bg-slate-50 dark:bg-slate-900">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama Dokumen</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
                   <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
                 </tr>
@@ -97,13 +104,16 @@ export default function DashboardUploadActivityCard({
                 {latestRows.map((row) => (
                   <tr key={row.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60 transition-colors">
                     <td className="px-3 py-2 text-slate-900 dark:text-slate-100 font-medium">{row.name}</td>
+                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
+                      {row.fileName || "-"}
+                    </td>
                     <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{row.kategori}</td>
                     <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{row.tanggal}</td>
                   </tr>
                 ))}
                 {latestRows.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={4} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
                       Belum ada dokumen terbaru.
                     </td>
                   </tr>

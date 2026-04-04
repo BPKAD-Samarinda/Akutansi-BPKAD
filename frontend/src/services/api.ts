@@ -128,15 +128,6 @@ export const getUploadHistories = async (
   const search = (query.search || "").trim();
   const status = query.status || "all";
 
-  if (status === "diunggah" || status === "diedit") {
-    return {
-      items: [],
-      total: 0,
-      page,
-      limit,
-    };
-  }
-
   const response = await apiClient.get<{
     items: Array<{
       id: number | string;
@@ -145,6 +136,7 @@ export const getUploadHistories = async (
       uploaded_by: string;
       file_size: string;
       file_path: string;
+      status?: string;
     }>;
     total: number;
     page: number;
@@ -154,6 +146,7 @@ export const getUploadHistories = async (
       page,
       limit,
       search: search || undefined,
+      status: status === "all" ? undefined : status,
     },
   });
 
@@ -164,8 +157,8 @@ export const getUploadHistories = async (
     uploadedBy: item.uploaded_by || "-",
     fileSize: item.file_size || "-",
     filePath: item.file_path || "",
-    status: "dihapus",
-    isDeleted: true,
+    status: (item.status as UploadHistory["status"]) || "diunggah",
+    isDeleted: String(item.status || "").toLowerCase() === "dihapus",
   }));
 
   return {

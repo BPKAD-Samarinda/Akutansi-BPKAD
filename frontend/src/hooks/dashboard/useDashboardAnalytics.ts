@@ -249,89 +249,39 @@ export function useDashboardAnalytics() {
 
   const todayUploadRows = useMemo(() => {
     const todayIso = toIsoDate(new Date());
-    const grouped = new Map<
-      string,
-      { count: number; date: string; names: string[] }
-    >();
-    uploads
+    return uploads
       .filter((record) => record.createdAt === todayIso)
-      .forEach((record) => {
-        const key = record.uploadedBy || "-";
-        const existing = grouped.get(key);
-        if (existing) {
-          existing.count += 1;
-          if (existing.names.length < 3) {
-            existing.names.push(record.name);
-          }
-        } else {
-          grouped.set(key, {
-            count: 1,
-            date: record.createdAt,
-            names: [record.name],
-          });
-        }
-      });
-
-    return Array.from(grouped.entries()).map(([uploader, info], idx) => ({
-      id: idx + 1,
-      name: uploader,
-      kategori:
-        info.count === 1
-          ? info.names[0]
-          : `${info.count} dokumen`,
-      tanggal: formatDateLabel(info.date),
-    }));
+      .sort((a, b) => (a.id < b.id ? 1 : -1))
+      .map((record) => ({
+        id: record.id,
+        name: record.uploadedBy || "-",
+        kategori: record.kategori,
+        tanggal: formatDateLabel(record.createdAt),
+        fileName: record.name,
+      }));
   }, [uploads]);
 
   const latestUploadRows = useMemo(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const cutoff = new Date(now);
-    cutoff.setDate(now.getDate() - 1); // tampilkan hanya 2 hari terakhir (hari ini + kemarin)
+    const todayLocal = toIsoDate(new Date());
+    const toLocalMidnight = (isoDate: string) =>
+      new Date(`${isoDate}T00:00:00`);
+    const cutoff = new Date(`${todayLocal}T00:00:00`);
+    cutoff.setDate(cutoff.getDate() - 1); // hari ini + kemarin (2 hari)
 
-    const isWithinLastTwoDays = (value: string) => {
-      const parsed = new Date(value.replace(" ", "T"));
-      if (Number.isNaN(parsed.getTime())) return false;
-      return parsed >= cutoff;
-    };
-
-    const grouped = new Map<
-      string,
-      { uploader: string; date: string; count: number; names: string[] }
-    >();
-    uploads
-      .filter((record) => isWithinLastTwoDays(record.createdAt))
-      .forEach((record) => {
-        const dateKey = record.createdAt;
-        const uploader = record.uploadedBy || "-";
-        const key = `${dateKey}::${uploader}`;
-        const existing = grouped.get(key);
-        if (existing) {
-          existing.count += 1;
-          if (existing.names.length < 3) {
-            existing.names.push(record.name);
-          }
-        } else {
-          grouped.set(key, {
-            uploader,
-            date: dateKey,
-            count: 1,
-            names: [record.name],
-          });
-        }
-      });
-
-    return Array.from(grouped.values())
-      .sort((a, b) => (a.date < b.date ? 1 : -1))
-      .slice(0, 7)
-      .map((row, idx) => ({
-        id: idx + 1,
-        name: row.uploader,
-        kategori:
-          row.count === 1
-            ? row.names[0]
-            : `${row.count} dokumen`,
-        tanggal: formatDateLabel(row.date),
+    return [...uploads]
+      .filter((record) => {
+        const dateOnly = record.createdAt || record.uploadedAt;
+        if (!dateOnly) return false;
+        const recordDate = toLocalMidnight(dateOnly);
+        return recordDate >= cutoff;
+      })
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+      .map((record) => ({
+        id: record.id,
+        name: record.uploadedBy || "-",
+        kategori: record.kategori,
+        tanggal: formatDateLabel(record.uploadedAt),
+        fileName: record.name,
       }));
   }, [uploads]);
 

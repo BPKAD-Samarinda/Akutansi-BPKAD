@@ -42,6 +42,31 @@ const ensureSoftDeleteColumns = async () => {
   await ensureColumnExists("uploaded_by");
 };
 
+const ensureDocumentHistoryTable = async () => {
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS document_history (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      document_id BIGINT NULL,
+      document_name VARCHAR(255) NOT NULL,
+      uploaded_by VARCHAR(255) NULL,
+      status VARCHAR(20) NOT NULL,
+      file_path VARCHAR(255) NULL,
+      file_size VARCHAR(50) NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_document_history_created_at (created_at),
+      INDEX idx_document_history_status (status)
+    )
+  `);
+};
+
+const formatFileSize = (bytes?: number): string => {
+  if (!bytes || Number.isNaN(bytes)) return "-";
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(1)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(2)} MB`;
+};
+
 const getDocumentName = (row: Record<string, any>): string => {
   return (
     row.nama_sppd ||
@@ -77,6 +102,7 @@ export const getAllDocuments = async (req: Request, res: Response) => {
 export const createDocument = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
 
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
     const uploaderName =
@@ -115,6 +141,19 @@ export const createDocument = async (req: Request, res: Response) => {
       [nama_sppd, tanggal_sppd, kategori, file_path, uploaderName],
     );
 
+    await db.execute(
+      `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        (result as any).insertId ?? null,
+        nama_sppd,
+        uploaderName,
+        "diunggah",
+        file_path,
+        formatFileSize(req.file?.size),
+      ],
+    );
+
     res
       .status(201)
       .json({ message: "Document created successfully", data: result });
@@ -127,8 +166,11 @@ export const createDocument = async (req: Request, res: Response) => {
 export const updateDocument = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
     const { id } = req.params;
     const { nama_sppd, tanggal_sppd, kategori } = req.body;
+    const uploaderName =
+      (req as any)?.user?.username || (req as any)?.user?.role || null;
 
     if ((req as any).fileValidationError) {
       return res.status(400).json({ message: (req as any).fileValidationError });
@@ -139,15 +181,16 @@ export const updateDocument = async (req: Request, res: Response) => {
     }
 
     let newFilePath: string | null = null;
+    let existingFilePath = "";
     if (req.file) {
       newFilePath = `uploads/${req.file.filename}`;
       const [rows]: any = await db.execute(
         "SELECT file_path FROM documents WHERE id = ? AND is_deleted = 0",
         [id],
       );
-      const existingPath = rows?.[0]?.file_path ? String(rows[0].file_path) : "";
-      if (existingPath) {
-        const normalized = existingPath.replace(/\\/g, "/").replace(/^\/+/, "");
+      existingFilePath = rows?.[0]?.file_path ? String(rows[0].file_path) : "";
+      if (existingFilePath) {
+        const normalized = existingFilePath.replace(/\\/g, "/").replace(/^\/+/, "");
         const relative = normalized.replace(/^uploads\//i, "");
         const backendPath = path.resolve(BACKEND_UPLOADS_DIR, relative);
         const rootPath = path.resolve(ROOT_UPLOADS_DIR, relative);
@@ -164,6 +207,20 @@ export const updateDocument = async (req: Request, res: Response) => {
       [nama_sppd, tanggal_sppd, kategori, newFilePath, id],
     );
 
+    const finalFilePath = newFilePath || existingFilePath;
+    await db.execute(
+      `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        nama_sppd,
+        uploaderName,
+        "diedit",
+        finalFilePath || null,
+        formatFileSize(req.file?.size),
+      ],
+    );
+
     res
       .status(200)
       .json({ message: "Document updated successfully", data: result });
@@ -176,10 +233,11 @@ export const updateDocument = async (req: Request, res: Response) => {
 export const deleteDocument = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
     const { id } = req.params;
 
     const [existingRows]: any = await db.execute(
-      "SELECT id, is_deleted FROM documents WHERE id = ?",
+      "SELECT id, is_deleted, nama_sppd, uploaded_by, file_path FROM documents WHERE id = ?",
       [id],
     );
 
@@ -190,6 +248,19 @@ export const deleteDocument = async (req: Request, res: Response) => {
     if (existingRows[0].is_deleted === 1) {
       return res.status(200).json({ message: "Document already deleted" });
     }
+
+    await db.execute(
+      `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        existingRows[0].nama_sppd || `Dokumen #${id}`,
+        existingRows[0].uploaded_by || null,
+        "dihapus",
+        existingRows[0].file_path || null,
+        "-",
+      ],
+    );
 
     await db.execute(
       "UPDATE documents SET is_deleted = 1, deleted_at = NOW() WHERE id = ?",
@@ -206,24 +277,44 @@ export const deleteDocument = async (req: Request, res: Response) => {
 export const getUploadHistory = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
 
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = Math.max(Number(req.query.limit) || 10, 1);
     const search = String(req.query.search || "")
       .trim()
       .toLowerCase();
+    const status = String(req.query.status || "all").toLowerCase();
 
     const [rows] = await db.query(
-      "SELECT * FROM documents WHERE is_deleted = 1 ORDER BY deleted_at DESC, created_at DESC",
+      `SELECT id, document_id, document_name, uploaded_by, status, file_path, file_size, created_at
+       FROM document_history
+       ORDER BY created_at DESC, id DESC`,
     );
 
-    const mappedItems = (rows as Record<string, any>[]).map(toHistoryItem);
+    const mappedItems = (rows as Record<string, any>[]).map((row) => ({
+      id: row.id,
+      document_name: row.document_name,
+      uploaded_at: row.created_at,
+      uploaded_by: row.uploaded_by || "-",
+      file_size: row.file_size || "-",
+      file_path: row.file_path || "",
+      status: row.status || "diunggah",
+      isDeleted: String(row.status || "").toLowerCase() === "dihapus",
+    }));
+
+    const statusFiltered =
+      status === "all"
+        ? mappedItems
+        : mappedItems.filter(
+            (item) => String(item.status || "").toLowerCase() === status,
+          );
 
     const filteredItems =
       search.length === 0
-        ? mappedItems
-        : mappedItems.filter((item) =>
-            item.document_name.toLowerCase().includes(search),
+        ? statusFiltered
+        : statusFiltered.filter((item) =>
+            String(item.document_name || "").toLowerCase().includes(search),
           );
 
     const total = filteredItems.length;

@@ -4,6 +4,18 @@ import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 import { getJwtSecret } from "../config/jwt";
 
+const ensureUsersTable = async () => {
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS users (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      role VARCHAR(50) NOT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+};
+
 const ensureLoginActivitiesTable = async () => {
   await pool.execute(`
     CREATE TABLE IF NOT EXISTS login_activities (
@@ -26,6 +38,7 @@ export const loginController = async (req: Request, res: Response) => {
   }
 
   try {
+    await ensureUsersTable();
     const [rows]: any[] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
 
     if (rows.length === 0) {
