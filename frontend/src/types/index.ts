@@ -24,6 +24,8 @@ export interface UploadHistory {
   filePath: string;
   status?: "diunggah" | "dihapus" | "diedit";
   isDeleted?: boolean;
+  editBefore?: Record<string, string | null> | null;
+  editAfter?: Record<string, string | null> | null;
 }
 
 export interface UploadHistoryQuery {

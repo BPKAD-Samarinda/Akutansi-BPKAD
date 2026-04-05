@@ -137,6 +137,8 @@ export const getUploadHistories = async (
       file_size: string;
       file_path: string;
       status?: string;
+      edit_before?: string | null;
+      edit_after?: string | null;
     }>;
     total: number;
     page: number;
@@ -150,6 +152,17 @@ export const getUploadHistories = async (
     },
   });
 
+  const parseEditPayload = (
+    value?: string | null,
+  ): Record<string, string | null> | null => {
+    if (!value || typeof value !== "string") return null;
+    try {
+      return JSON.parse(value) as Record<string, string | null>;
+    } catch {
+      return null;
+    }
+  };
+
   const items: UploadHistory[] = response.data.items.map((item) => ({
     id: item.id,
     documentName: item.document_name,
@@ -159,6 +172,8 @@ export const getUploadHistories = async (
     filePath: item.file_path || "",
     status: (item.status as UploadHistory["status"]) || "diunggah",
     isDeleted: String(item.status || "").toLowerCase() === "dihapus",
+    editBefore: parseEditPayload(item.edit_before),
+    editAfter: parseEditPayload(item.edit_after),
   }));
 
   return {

@@ -54,6 +54,64 @@ const formatDate = (dateValue: string) => {
   }).format(new Date(year, month - 1, day));
 };
 
+const getFileName = (value?: string | null) => {
+  if (!value) return "-";
+  const normalized = value.replace(/\\/g, "/");
+  return normalized.split("/").pop() || value;
+};
+
+const getEditChanges = (item: UploadHistory) => {
+  const before = item.editBefore || null;
+  const after = item.editAfter || null;
+  if (!before || !after) return [];
+
+  const fields: Array<{
+    key: string;
+    label: string;
+    type?: "date" | "file";
+  }> = [
+    { key: "nama_sppd", label: "Nama" },
+    { key: "kategori", label: "Kategori" },
+    { key: "tanggal_sppd", label: "Tanggal", type: "date" },
+    { key: "file_path", label: "File", type: "file" },
+  ];
+
+  const formatValue = (
+    value: string | null | undefined,
+    type?: "date" | "file",
+  ) => {
+    if (!value) return "-";
+    if (type === "file") return getFileName(value);
+    if (type === "date") return formatDate(value);
+    return String(value);
+  };
+
+  return fields
+    .map((field) => {
+      const beforeValue = before[field.key] ?? "";
+      const afterValue = after[field.key] ?? "";
+      if (String(beforeValue) === String(afterValue)) {
+        return null;
+      }
+
+      return {
+        label: field.label,
+        before: formatValue(beforeValue, field.type),
+        after: formatValue(afterValue, field.type),
+      };
+    })
+    .filter(Boolean) as Array<{ label: string; before: string; after: string }>;
+};
+
+const formatEditSummary = (
+  changes: Array<{ label: string; before: string; after: string }>,
+) => {
+  return {
+    before: changes.map((change) => `${change.label}: ${change.before}`),
+    after: changes.map((change) => `${change.label}: ${change.after}`),
+  };
+};
+
 export default function HistoryTable({
   items,
   selectedIds,
@@ -66,6 +124,9 @@ export default function HistoryTable({
       <div className="md:hidden divide-y divide-gray-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
         {items.map((item) => {
           const status = getHistoryStatus(item);
+          const editChanges = status === "Diedit" ? getEditChanges(item) : [];
+          const isDeleted = status === "Dihapus Sementara";
+          const editSummary = formatEditSummary(editChanges);
           return (
             <div key={item.id} className="p-4">
               <div className="flex items-start gap-3">
@@ -99,6 +160,30 @@ export default function HistoryTable({
                       {item.fileSize}
                     </p>
                   )}
+                  {editChanges.length > 0 && (
+                    <div className="mt-2 grid gap-2 text-[11px] text-gray-500 dark:text-slate-400">
+                      <div>
+                        <p className="font-semibold text-gray-600 dark:text-slate-300">
+                          Sebelum:
+                        </p>
+                        {editSummary.before.map((line) => (
+                          <p key={line} className="truncate">
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-600 dark:text-slate-300">
+                          Sesudah:
+                        </p>
+                        {editSummary.after.map((line) => (
+                          <p key={line} className="truncate">
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-slate-300">
                     <div>
                       <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">
@@ -110,11 +195,21 @@ export default function HistoryTable({
                     </div>
                     <div>
                       <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">
-                        Diunggah oleh
+                        {editChanges.length > 0
+                          ? "Perubahan"
+                          : isDeleted
+                            ? "Dihapus oleh"
+                            : "Diunggah oleh"}
                       </p>
-                      <p className="font-medium text-gray-700 dark:text-slate-200 truncate">
-                        {item.uploadedBy}
-                      </p>
+                      {editChanges.length > 0 ? (
+                        <p className="font-medium text-gray-700 dark:text-slate-200 truncate">
+                          {editChanges.map((change) => change.label).join(", ")}
+                        </p>
+                      ) : (
+                        <p className="font-medium text-gray-700 dark:text-slate-200 truncate">
+                          {item.uploadedBy}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -148,7 +243,7 @@ export default function HistoryTable({
                 Nama Dokumen
               </th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
-                Tanggal Upload
+                Tanggal
               </th>
               <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 Informasi
@@ -161,6 +256,9 @@ export default function HistoryTable({
           <tbody className="divide-y divide-gray-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
             {items.map((item) => {
               const status = getHistoryStatus(item);
+              const editChanges = status === "Diedit" ? getEditChanges(item) : [];
+              const isDeleted = status === "Dihapus Sementara";
+              const editSummary = formatEditSummary(editChanges);
 
               return (
                 <tr
@@ -195,11 +293,43 @@ export default function HistoryTable({
                     {formatDate(item.uploadedAt)}
                   </td>
                   <td className="px-4 py-4 align-top text-sm text-gray-600 dark:text-slate-300">
-                    <AppTooltip content={`Diunggah oleh ${item.uploadedBy}`}>
-                      <span className="block truncate">
-                        Diunggah oleh {item.uploadedBy}
-                      </span>
-                    </AppTooltip>
+                    {editChanges.length > 0 ? (
+                      <div className="grid gap-2 text-xs text-gray-500 dark:text-slate-400">
+                        <div>
+                          <span className="block font-medium text-gray-600 dark:text-slate-300">
+                            Sebelum:
+                          </span>
+                          {editSummary.before.map((line) => (
+                            <div key={line} className="truncate">
+                              {line}
+                            </div>
+                          ))}
+                        </div>
+                        <div>
+                          <span className="block font-medium text-gray-600 dark:text-slate-300">
+                            Sesudah:
+                          </span>
+                          {editSummary.after.map((line) => (
+                            <div key={line} className="truncate">
+                              {line}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <AppTooltip
+                        content={
+                          isDeleted
+                            ? `Dihapus oleh ${item.uploadedBy}`
+                            : `Diunggah oleh ${item.uploadedBy}`
+                        }
+                      >
+                        <span className="block truncate">
+                          {isDeleted ? "Dihapus oleh" : "Diunggah oleh"}{" "}
+                          {item.uploadedBy}
+                        </span>
+                      </AppTooltip>
+                    )}
                   </td>
                   <td className="px-4 py-4 align-top">
                     <span

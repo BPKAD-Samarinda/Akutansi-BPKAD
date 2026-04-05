@@ -52,11 +52,33 @@ const ensureDocumentHistoryTable = async () => {
       status VARCHAR(20) NOT NULL,
       file_path VARCHAR(255) NULL,
       file_size VARCHAR(50) NULL,
+      edit_before TEXT NULL,
+      edit_after TEXT NULL,
       created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       INDEX idx_document_history_created_at (created_at),
       INDEX idx_document_history_status (status)
     )
   `);
+  const ensureHistoryColumn = async (columnName: string, definition: string) => {
+    const [rows] = await db.query(
+      `SELECT 1
+       FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE()
+         AND TABLE_NAME = 'document_history'
+         AND COLUMN_NAME = ?
+       LIMIT 1`,
+      [columnName],
+    );
+
+    if ((rows as Record<string, unknown>[]).length === 0) {
+      await db.execute(
+        `ALTER TABLE document_history ADD COLUMN ${definition}`,
+      );
+    }
+  };
+
+  await ensureHistoryColumn("edit_before", "edit_before TEXT NULL");
+  await ensureHistoryColumn("edit_after", "edit_after TEXT NULL");
 };
 
 const formatFileSize = (bytes?: number): string => {
@@ -180,15 +202,22 @@ export const updateDocument = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    const [existingRows]: any = await db.execute(
+      "SELECT id, nama_sppd, kategori, tanggal_sppd, file_path FROM documents WHERE id = ? AND is_deleted = 0",
+      [id],
+    );
+
+    if (existingRows.length === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    const existingRow = existingRows[0];
     let newFilePath: string | null = null;
-    let existingFilePath = "";
+    let existingFilePath = existingRow?.file_path
+      ? String(existingRow.file_path)
+      : "";
     if (req.file) {
       newFilePath = `uploads/${req.file.filename}`;
-      const [rows]: any = await db.execute(
-        "SELECT file_path FROM documents WHERE id = ? AND is_deleted = 0",
-        [id],
-      );
-      existingFilePath = rows?.[0]?.file_path ? String(rows[0].file_path) : "";
       if (existingFilePath) {
         const normalized = existingFilePath.replace(/\\/g, "/").replace(/^\/+/, "");
         const relative = normalized.replace(/^uploads\//i, "");
@@ -208,9 +237,21 @@ export const updateDocument = async (req: Request, res: Response) => {
     );
 
     const finalFilePath = newFilePath || existingFilePath;
+    const editBefore = {
+      nama_sppd: existingRow?.nama_sppd ?? "",
+      kategori: existingRow?.kategori ?? "",
+      tanggal_sppd: existingRow?.tanggal_sppd ?? "",
+      file_path: existingRow?.file_path ?? "",
+    };
+    const editAfter = {
+      nama_sppd: nama_sppd ?? "",
+      kategori: kategori ?? "",
+      tanggal_sppd: tanggal_sppd ?? "",
+      file_path: finalFilePath ?? "",
+    };
     await db.execute(
-      `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size, edit_before, edit_after)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         nama_sppd,
@@ -218,6 +259,8 @@ export const updateDocument = async (req: Request, res: Response) => {
         "diedit",
         finalFilePath || null,
         formatFileSize(req.file?.size),
+        JSON.stringify(editBefore),
+        JSON.stringify(editAfter),
       ],
     );
 
@@ -287,7 +330,7 @@ export const getUploadHistory = async (req: Request, res: Response) => {
     const status = String(req.query.status || "all").toLowerCase();
 
     const [rows] = await db.query(
-      `SELECT id, document_id, document_name, uploaded_by, status, file_path, file_size, created_at
+      `SELECT id, document_id, document_name, uploaded_by, status, file_path, file_size, created_at, edit_before, edit_after
        FROM document_history
        ORDER BY created_at DESC, id DESC`,
     );
@@ -300,6 +343,8 @@ export const getUploadHistory = async (req: Request, res: Response) => {
       file_size: row.file_size || "-",
       file_path: row.file_path || "",
       status: row.status || "diunggah",
+      edit_before: row.edit_before || null,
+      edit_after: row.edit_after || null,
       isDeleted: String(row.status || "").toLowerCase() === "dihapus",
     }));
 
@@ -339,24 +384,30 @@ export const restoreDocumentFromHistory = async (
 ) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
 
     const { id } = req.params;
-    const [rows]: any = await db.execute(
-      "SELECT id, is_deleted FROM documents WHERE id = ?",
+    const [historyRows]: any = await db.execute(
+      "SELECT id, document_id, status FROM document_history WHERE id = ?",
       [id],
     );
 
-    if (rows.length === 0) {
-      return res.status(404).json({ message: "Document not found" });
+    if (historyRows.length === 0) {
+      return res.status(404).json({ message: "History item not found" });
     }
 
-    if (rows[0].is_deleted !== 1) {
+    if (String(historyRows[0].status || "").toLowerCase() !== "dihapus") {
       return res.status(400).json({ message: "Document is not in history" });
+    }
+
+    const documentId = historyRows[0].document_id;
+    if (!documentId) {
+      return res.status(404).json({ message: "Document not found" });
     }
 
     await db.execute(
       "UPDATE documents SET is_deleted = 0, deleted_at = NULL WHERE id = ?",
-      [id],
+      [documentId],
     );
 
     return res.status(200).json({ message: "Document restored successfully" });
@@ -372,24 +423,26 @@ export const permanentlyDeleteDocumentFromHistory = async (
 ) => {
   try {
     await ensureSoftDeleteColumns();
+    await ensureDocumentHistoryTable();
 
     const { id } = req.params;
-    const [rows]: any = await db.execute(
-      "SELECT id, is_deleted, file_path FROM documents WHERE id = ?",
+    const [historyRows]: any = await db.execute(
+      "SELECT id, document_id, file_path, status FROM document_history WHERE id = ?",
       [id],
     );
 
-    if (rows.length === 0) {
-      return res.status(404).json({ message: "Document not found" });
+    if (historyRows.length === 0) {
+      return res.status(404).json({ message: "History item not found" });
     }
 
-    if (rows[0].is_deleted !== 1) {
+    if (String(historyRows[0].status || "").toLowerCase() !== "dihapus") {
       return res
         .status(400)
         .json({ message: "Document must be in history before permanent delete" });
     }
 
-    const filePath = String(rows[0].file_path || "");
+    const documentId = historyRows[0].document_id;
+    const filePath = String(historyRows[0].file_path || "");
     const fileName = path.basename(filePath.replace(/\\/g, "/"));
 
     if (fileName) {
@@ -411,9 +464,18 @@ export const permanentlyDeleteDocumentFromHistory = async (
       );
     }
 
-    await db.execute("DELETE FROM documents WHERE id = ? AND is_deleted = 1", [
-      id,
-    ]);
+    if (documentId) {
+      await db.execute(
+        "DELETE FROM documents WHERE id = ? AND is_deleted = 1",
+        [documentId],
+      );
+      await db.execute(
+        "DELETE FROM document_history WHERE document_id = ?",
+        [documentId],
+      );
+    } else {
+      await db.execute("DELETE FROM document_history WHERE id = ?", [id]);
+    }
 
     return res
       .status(200)
