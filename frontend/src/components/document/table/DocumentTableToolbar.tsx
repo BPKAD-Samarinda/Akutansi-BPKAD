@@ -21,11 +21,9 @@ export default function DocumentTableToolbar({
   const user = getUser();
   const canUploadDocument = [
     "Admin",
-    "Staff",
     "Anak Magang",
     "Anak PKL",
     "Admin Akuntansi",
-    "Staff Akuntansi",
   ].includes(user?.role ?? "");
   const [showToast, setShowToast] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
