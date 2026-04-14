@@ -83,10 +83,10 @@ export function useFileUpload(
       return;
     }
 
-    const maxSize = 20 * 1024 * 1024; // 20MB
+    const maxSize = 30 * 1024 * 1024; // 30MB
     if (file.size > maxSize) {
       showToast(
-        "Ukuran file terlalu besar. Maksimal ukuran file adalah 20MB.",
+        "Ukuran file terlalu besar. Maksimal ukuran file adalah 30MB.",
         "error",
       );
       return;

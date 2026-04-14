@@ -66,7 +66,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 20 * 1024 * 1024, // 20MB
+    fileSize: 30 * 1024 * 1024, // 30MB
   },
 });
 
@@ -75,7 +75,7 @@ const uploadSingle = (req: any, res: any, next: any) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
         return res.status(400).json({
-          message: "Ukuran file terlalu besar. Maksimal ukuran file adalah 20MB.",
+          message: "Ukuran file terlalu besar. Maksimal ukuran file adalah 30MB.",
         });
       }
       return res.status(400).json({

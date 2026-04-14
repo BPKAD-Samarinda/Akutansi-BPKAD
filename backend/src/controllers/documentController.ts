@@ -108,6 +108,23 @@ const toHistoryItem = (row: Record<string, any>) => ({
   file_path: row.file_path || "",
 });
 
+const cleanupUploadedFile = (filePath?: string | null) => {
+  if (!filePath) return;
+  const normalized = filePath.replace(/\\/g, "/").replace(/^\/+/, "");
+  const relative = normalized.replace(/^uploads\//i, "");
+  const backendPath = path.resolve(BACKEND_UPLOADS_DIR, relative);
+  const rootPath = path.resolve(ROOT_UPLOADS_DIR, relative);
+  try {
+    if (fs.existsSync(backendPath)) {
+      fs.unlinkSync(backendPath);
+    } else if (fs.existsSync(rootPath)) {
+      fs.unlinkSync(rootPath);
+    }
+  } catch (error) {
+    console.error("Cleanup upload file failed:", error);
+  }
+};
+
 export const getAllDocuments = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
@@ -137,13 +154,14 @@ export const createDocument = async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json({
         message:
-          "File upload failed. Please check if the file is a valid type (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, PNG, JPG) and under 20MB.",
+          "File upload failed. Please check if the file is a valid type (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, PNG, JPG) and under 30MB.",
       });
     }
 
     const file_path = `uploads/${req.file.filename}`;
 
     if (!nama_sppd || !tanggal_sppd || !kategori) {
+      cleanupUploadedFile(file_path);
       return res.status(400).json({ message: "All text fields are required" });
     }
 
@@ -153,6 +171,7 @@ export const createDocument = async (req: Request, res: Response) => {
     );
 
     if (duplicateRows.length > 0) {
+      cleanupUploadedFile(file_path);
       return res.status(409).json({
         message: "Dokumen dengan nama dan tanggal yang sama sudah ada.",
       });
@@ -180,6 +199,9 @@ export const createDocument = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: "Document created successfully", data: result });
   } catch (error) {
+    if (req.file?.filename) {
+      cleanupUploadedFile(`uploads/${req.file.filename}`);
+    }
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }

@@ -274,7 +274,7 @@ export function useEditModal({
 
     const maxSize = 20 * 1024 * 1024;
     if (file.size > maxSize) {
-      setFileError("Ukuran file terlalu besar. Maksimal ukuran file adalah 20MB.");
+      setFileError("Ukuran file terlalu besar. Maksimal ukuran file adalah 30MB.");
       setSelectedFile(null);
       return;
     }
