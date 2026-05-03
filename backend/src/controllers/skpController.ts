@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import db from "../config/db";
 import fs from "fs";
 import path from "path";
+import type { PoolConnection } from "mysql2/promise";
 import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
 
 type AuthenticatedRequest = Request & {
@@ -62,7 +63,9 @@ const ensureSkpHistoryTable = async () => {
   `);
 };
 
-const writeSkpHistory = async (payload: {
+const writeSkpHistory = async (
+  executor: PoolConnection | typeof db,
+  payload: {
   skpDocumentId?: number | string | null;
   actionType: "upload" | "edit" | "delete";
   actorUsername?: string | null;
@@ -72,7 +75,7 @@ const writeSkpHistory = async (payload: {
   afterData?: Record<string, unknown> | null;
 }) => {
   await ensureSkpHistoryTable();
-  await db.execute(
+  await executor.execute(
     `INSERT INTO skp_history
       (skp_document_id, action_type, actor_username, actor_role, target_uploaded_by, before_data, after_data)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -132,6 +135,7 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
 };
 
 export const createSkpDocument = async (req: Request, res: Response) => {
+  let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
 
@@ -185,13 +189,16 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       });
     }
 
-    const [result] = await db.execute(
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    const [result] = await connection.execute(
       `INSERT INTO skp_documents (nama_skp, triwulan, tahun, file_path, uploaded_by)
        VALUES (?, ?, ?, ?, ?)`,
       [trimmedNamaSkp, parsedTriwulan, parsedTahun, filePath, uploaderName],
     );
 
-    await writeSkpHistory({
+    await writeSkpHistory(connection, {
       skpDocumentId: (result as any)?.insertId ?? null,
       actionType: "upload",
       actorUsername: (req as AuthenticatedRequest).user?.username || null,
@@ -205,6 +212,9 @@ export const createSkpDocument = async (req: Request, res: Response) => {
         file_path: filePath,
       },
     });
+    await connection.commit();
+    connection.release();
+    connection = null;
 
     return res.status(201).json({
       message: "Dokumen SKP berhasil diunggah.",
@@ -213,6 +223,16 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+        connection.release();
+      } catch {}
+      connection = null;
+    }
+    if (req.file?.filename) {
+      cleanupUploadedFile(`uploads/${req.file.filename}`);
+    }
     console.error("Create SKP document error:", error);
     return res.status(500).json({ message: "Gagal mengunggah dokumen SKP" });
   }
@@ -233,6 +253,7 @@ const cleanupUploadedFile = (filePath?: string | null) => {
 };
 
 export const updateSkpDocument = async (req: Request, res: Response) => {
+  let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
     const { id } = req.params;
@@ -262,9 +283,9 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     }
 
     let nextFilePath: string = rows[0].file_path;
-    if (req.file?.filename) {
-      nextFilePath = `uploads/${req.file.filename}`;
-      cleanupUploadedFile(rows[0].file_path);
+    const hadNewUpload = Boolean(req.file?.filename);
+    if (hadNewUpload) {
+      nextFilePath = `uploads/${req.file!.filename}`;
     }
 
     const [duplicateRows]: any = await db.execute(
@@ -280,14 +301,17 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       });
     }
 
-    await db.execute(
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    await connection.execute(
       `UPDATE skp_documents
        SET nama_skp = ?, triwulan = ?, tahun = ?, file_path = ?
        WHERE id = ?`,
       [trimmedNamaSkp, parsedTriwulan, parsedTahun, nextFilePath, id],
     );
 
-    await writeSkpHistory({
+    await writeSkpHistory(connection, {
       skpDocumentId: Number(id),
       actionType: "edit",
       actorUsername: (req as AuthenticatedRequest).user?.username || null,
@@ -306,15 +330,33 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
         file_path: nextFilePath,
       },
     });
+    await connection.commit();
+    connection.release();
+    connection = null;
+
+    if (hadNewUpload && rows[0].file_path) {
+      cleanupUploadedFile(rows[0].file_path);
+    }
 
     return res.status(200).json({ message: "Dokumen SKP berhasil diperbarui." });
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+        connection.release();
+      } catch {}
+      connection = null;
+    }
+    if (req.file?.filename) {
+      cleanupUploadedFile(`uploads/${req.file.filename}`);
+    }
     console.error("Update SKP document error:", error);
     return res.status(500).json({ message: "Gagal memperbarui dokumen SKP" });
   }
 };
 
 export const deleteSkpDocument = async (req: Request, res: Response) => {
+  let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
     const { id } = req.params;
@@ -325,10 +367,11 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
     if (rows.length === 0) {
       return res.status(404).json({ message: "Dokumen SKP tidak ditemukan." });
     }
-    cleanupUploadedFile(rows[0].file_path);
-    await db.execute("DELETE FROM skp_documents WHERE id = ?", [id]);
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+    await connection.execute("DELETE FROM skp_documents WHERE id = ?", [id]);
 
-    await writeSkpHistory({
+    await writeSkpHistory(connection, {
       skpDocumentId: Number(id),
       actionType: "delete",
       actorUsername: (req as AuthenticatedRequest).user?.username || null,
@@ -342,9 +385,20 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
       },
       afterData: null,
     });
+    await connection.commit();
+    connection.release();
+    connection = null;
+    cleanupUploadedFile(rows[0].file_path);
 
     return res.status(200).json({ message: "Dokumen SKP berhasil dihapus." });
   } catch (error) {
+    if (connection) {
+      try {
+        await connection.rollback();
+        connection.release();
+      } catch {}
+      connection = null;
+    }
     console.error("Delete SKP document error:", error);
     return res.status(500).json({ message: "Gagal menghapus dokumen SKP" });
   }
