@@ -18,6 +18,9 @@ export const normalizeUserRoles = async () => {
     await db.execute(
       "UPDATE users SET role = 'Staff' WHERE role = 'Staff Akuntansi'",
     );
+    await db.execute(
+      "UPDATE users SET role = 'Staff' WHERE role IS NULL OR TRIM(role) = ''",
+    );
   } catch (error) {
     console.error("Normalize roles error:", error);
   }

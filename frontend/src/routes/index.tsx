@@ -10,6 +10,23 @@ import UploadHistory from "../pages/UploadHistory";
 import AddUser from "../pages/AddUser";
 import { getUser, isAuthenticated } from "../utils/auth";
 
+const normalizeRole = (role?: string): string => {
+  const raw = String(role ?? "").trim().toLowerCase();
+  if (!raw) return "";
+  if (raw.includes("admin akuntansi")) return "admin akuntansi";
+  if (raw.includes("staff akuntansi")) return "staff akuntansi";
+  if (raw.includes("admin")) return "admin";
+  if (raw.includes("staff")) return "staff";
+  if (raw.includes("magang")) return "anak magang";
+  if (raw.includes("pkl")) return "anak pkl";
+  return raw;
+};
+
+const hasAnyRole = (role: string | undefined, allowedRoles: string[]) => {
+  const normalized = normalizeRole(role);
+  return allowedRoles.includes(normalized);
+};
+
 function ProtectedRoute({ children }: { children: ReactElement }) {
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
@@ -20,8 +37,8 @@ function ProtectedRoute({ children }: { children: ReactElement }) {
 function AdminOnlyRoute({ children }: { children: ReactElement }) {
   const user = getUser();
 
-  if (!user || (user.role !== "Admin" && user.role !== "Admin Akuntansi")) {
-    return <Navigate to="/dashboard" replace />;
+  if (!user || !hasAnyRole(user.role, ["admin", "admin akuntansi"])) {
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -30,14 +47,14 @@ function AdminOnlyRoute({ children }: { children: ReactElement }) {
 function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
   const user = getUser();
   const allowedRoles = [
-    "Admin",
-    "Admin Akuntansi",
-    "Anak Magang",
-    "Anak PKL",
+    "admin",
+    "admin akuntansi",
+    "anak magang",
+    "anak pkl",
   ];
 
-  if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+  if (!user || !hasAnyRole(user.role, allowedRoles)) {
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -46,16 +63,16 @@ function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
 function DashboardAccessRoute({ children }: { children: ReactElement }) {
   const user = getUser();
   const allowedRoles = [
-    "Admin",
-    "Admin Akuntansi",
-    "Staff",
-    "Staff Akuntansi",
-    "Anak Magang",
-    "Anak PKL",
+    "admin",
+    "admin akuntansi",
+    "staff",
+    "staff akuntansi",
+    "anak magang",
+    "anak pkl",
   ];
 
-  if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+  if (!user || !hasAnyRole(user.role, allowedRoles)) {
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -64,8 +81,8 @@ function DashboardAccessRoute({ children }: { children: ReactElement }) {
 function AdminRoute({ children }: { children: ReactElement }) {
   const user = getUser();
 
-  if (!user || (user.role !== "Admin" && user.role !== "Admin Akuntansi")) {
-    return <Navigate to="/dashboard" replace />;
+  if (!user || !hasAnyRole(user.role, ["admin", "admin akuntansi"])) {
+    return <Navigate to="/login" replace />;
   }
 
   return children;

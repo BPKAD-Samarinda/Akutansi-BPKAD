@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { initAuthSync } from "./utils/auth";
+import ErrorBoundary from "./components/layout/ErrorBoundary";
 
 initAuthSync();
 const savedTheme = window.localStorage.getItem("theme");
@@ -12,8 +13,10 @@ document.documentElement.classList.toggle("dark", useDark);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

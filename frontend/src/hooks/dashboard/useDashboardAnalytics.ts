@@ -72,7 +72,14 @@ export function useDashboardAnalytics() {
       .then((payload) => {
         if (!mounted) return;
 
-        const normalizedUploads = payload.documents
+        const safeDocuments = Array.isArray(payload?.documents)
+          ? payload.documents
+          : [];
+        const safeLoginActivities = Array.isArray(payload?.loginActivities)
+          ? payload.loginActivities
+          : [];
+
+        const normalizedUploads = safeDocuments
           .map((doc: DashboardApiDocument) => {
             const dateOnly = normalizeDateOnly(doc.tanggal_sppd) || null;
             const createdAtOnly = normalizeDateOnly(doc.created_at) || null;
@@ -89,7 +96,7 @@ export function useDashboardAnalytics() {
           })
           .filter((item): item is NormalizedUpload => item !== null);
 
-        const normalizedLogins = payload.loginActivities.map(
+        const normalizedLogins = safeLoginActivities.map(
           (row: DashboardApiLoginActivity) => ({
             id: row.id,
             username: row.username,
@@ -184,7 +191,7 @@ export function useDashboardAnalytics() {
     }
 
     const base = Array.from({ length: 12 }, (_, i) => ({
-      label: monthOptions[i + 1].label.slice(0, 3),
+      label: monthOptions[i + 1]?.label?.slice(0, 3) ?? String(i + 1),
       value: 0,
     }));
 

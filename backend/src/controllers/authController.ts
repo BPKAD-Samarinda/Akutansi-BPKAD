@@ -4,6 +4,18 @@ import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 import { getJwtSecret } from "../config/jwt";
 
+const normalizeRole = (value?: string) => {
+  const role = String(value ?? "").trim().toLowerCase();
+  if (!role) return "Staff";
+  if (role.includes("admin akuntansi")) return "Admin";
+  if (role.includes("staff akuntansi")) return "Staff";
+  if (role.includes("admin")) return "Admin";
+  if (role.includes("staff")) return "Staff";
+  if (role.includes("magang")) return "Anak Magang";
+  if (role.includes("pkl")) return "Anak PKL";
+  return "Staff";
+};
+
 const ensureUsersTable = async () => {
   await pool.execute(`
     CREATE TABLE IF NOT EXISTS users (
@@ -69,10 +81,18 @@ export const loginController = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Kombinasi nama pengguna dan kata sandi salah' });
     }
 
+    const normalizedRole = normalizeRole(user.role);
+    if (normalizedRole !== user.role) {
+      await pool.execute("UPDATE users SET role = ? WHERE id = ?", [
+        normalizedRole,
+        user.id,
+      ]);
+    }
+
     const payload = {
       id: user.id,
       username: user.username,
-      role: user.role,
+      role: normalizedRole,
     };
 
     const secretKey = getJwtSecret();
@@ -81,7 +101,7 @@ export const loginController = async (req: Request, res: Response) => {
     await ensureLoginActivitiesTable();
     await pool.execute(
       "INSERT INTO login_activities (user_id, username, role, login_at) VALUES (?, ?, ?, NOW())",
-      [user.id ?? null, user.username, user.role],
+      [user.id ?? null, user.username, normalizedRole],
     );
 
     res.status(200).json({
