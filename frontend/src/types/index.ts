@@ -41,3 +41,13 @@ export interface UploadHistoryResult {
   page: number;
   limit: number;
 }
+
+export interface SkpDocument {
+  id: number;
+  nama_skp: string;
+  triwulan: number;
+  tahun: number;
+  file_path: string;
+  uploaded_by?: string;
+  created_at?: string;
+}

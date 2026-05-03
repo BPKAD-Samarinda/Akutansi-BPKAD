@@ -8,6 +8,7 @@ import UploadDocument from "../pages/UploadDocument";
 import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
 import AddUser from "../pages/AddUser";
+import SkpPage from "../pages/SKP";
 import { getUser, isAuthenticated } from "../utils/auth";
 
 const normalizeRole = (role?: string): string => {
@@ -119,6 +120,16 @@ export default function AppRoutes() {
       <Route
         path="/dashboarddokumen"
         element={<Navigate to="/dokumen-management" replace />}
+      />
+      <Route
+        path="/skp"
+        element={
+          <ProtectedRoute>
+            <DashboardAccessRoute>
+              <SkpPage />
+            </DashboardAccessRoute>
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/upload"

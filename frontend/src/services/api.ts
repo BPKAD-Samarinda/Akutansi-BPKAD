@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   Document,
+  SkpDocument,
   UploadHistory,
   UploadHistoryQuery,
   UploadHistoryResult,
@@ -43,6 +44,16 @@ type DocumentApiItem = {
   file_path: string;
   created_at?: string;
   uploaded_by?: string;
+};
+
+type SkpDocumentApiItem = {
+  id: number;
+  nama_skp: string;
+  triwulan: number;
+  tahun: number;
+  file_path: string;
+  uploaded_by?: string;
+  created_at?: string;
 };
 
 const resolveBaseUrl = (): string => {
@@ -118,6 +129,46 @@ export const getDocuments = async (): Promise<Document[]> => {
     created_at: item.created_at,
     uploaded_by: item.uploaded_by,
   }));
+};
+
+export const getSkpDocuments = async (query?: {
+  triwulan?: number;
+  tahun?: number;
+  search?: string;
+}): Promise<SkpDocument[]> => {
+  const response = await apiClient.get<SkpDocumentApiItem[]>("/skp", {
+    params: {
+      triwulan: query?.triwulan || undefined,
+      tahun: query?.tahun || undefined,
+      search: (query?.search || "").trim() || undefined,
+    },
+  });
+
+  return response.data.map((item) => ({
+    id: item.id,
+    nama_skp: item.nama_skp,
+    triwulan: item.triwulan,
+    tahun: item.tahun,
+    file_path: item.file_path,
+    uploaded_by: item.uploaded_by,
+    created_at: item.created_at,
+  }));
+};
+
+export const createSkpDocument = async (payload: {
+  nama_skp: string;
+  triwulan: number;
+  tahun: number;
+  file: File;
+}): Promise<{ message: string }> => {
+  const formData = new FormData();
+  formData.append("nama_skp", payload.nama_skp);
+  formData.append("triwulan", String(payload.triwulan));
+  formData.append("tahun", String(payload.tahun));
+  formData.append("file", payload.file);
+
+  const response = await apiClient.post<{ message: string }>("/skp", formData);
+  return response.data;
 };
 
 export const getUploadHistories = async (
