@@ -27,6 +27,19 @@ const ensureSkpTable = async () => {
       INDEX idx_skp_created_at (created_at)
     )
   `);
+  const [indexRows] = await db.query(
+    `SELECT 1
+     FROM INFORMATION_SCHEMA.STATISTICS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'skp_documents'
+       AND INDEX_NAME = 'uniq_skp_uploader_period_name'
+     LIMIT 1`,
+  );
+  if ((indexRows as Record<string, unknown>[]).length === 0) {
+    await db.execute(
+      "CREATE UNIQUE INDEX uniq_skp_uploader_period_name ON skp_documents (uploaded_by, tahun, triwulan, nama_skp)",
+    );
+  }
 };
 
 export const getSkpDocuments = async (req: Request, res: Response) => {
@@ -94,15 +107,16 @@ export const createSkpDocument = async (req: Request, res: Response) => {
     const parsedTahun = Number(tahun);
     const trimmedNamaSkp = String(nama_skp || "").trim();
 
-    if (!trimmedNamaSkp) {
-      return res.status(400).json({ message: "Nama SKP wajib diisi." });
+    if (trimmedNamaSkp.length < 3 || trimmedNamaSkp.length > 255) {
+      return res.status(400).json({ message: "Nama SKP harus 3-255 karakter." });
     }
 
     if (![1, 2, 3, 4].includes(parsedTriwulan)) {
       return res.status(400).json({ message: "Triwulan harus antara 1 sampai 4." });
     }
 
-    if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > 3000) {
+    const maxAllowedYear = new Date().getFullYear() + 1;
+    if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > maxAllowedYear) {
       return res.status(400).json({ message: "Tahun tidak valid." });
     }
 
@@ -112,6 +126,18 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       "-";
 
     const filePath = `uploads/${req.file.filename}`;
+    const [duplicateRows]: any = await db.execute(
+      `SELECT id FROM skp_documents
+       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ?
+       LIMIT 1`,
+      [uploaderName, parsedTahun, parsedTriwulan, trimmedNamaSkp],
+    );
+    if (duplicateRows.length > 0) {
+      cleanupUploadedFile(filePath);
+      return res.status(409).json({
+        message: "Dokumen SKP dengan nama, triwulan, dan tahun yang sama sudah ada untuk staff ini.",
+      });
+    }
 
     const [result] = await db.execute(
       `INSERT INTO skp_documents (nama_skp, triwulan, tahun, file_path, uploaded_by)
@@ -158,15 +184,16 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     const parsedTriwulan = Number(triwulan);
     const parsedTahun = Number(tahun);
     const trimmedNamaSkp = String(nama_skp || "").trim();
-    if (!trimmedNamaSkp || ![1, 2, 3, 4].includes(parsedTriwulan)) {
+    if (trimmedNamaSkp.length < 3 || trimmedNamaSkp.length > 255 || ![1, 2, 3, 4].includes(parsedTriwulan)) {
       return res.status(400).json({ message: "Data SKP tidak valid." });
     }
-    if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > 3000) {
+    const maxAllowedYear = new Date().getFullYear() + 1;
+    if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > maxAllowedYear) {
       return res.status(400).json({ message: "Tahun tidak valid." });
     }
 
     const [rows]: any = await db.execute(
-      "SELECT id, file_path FROM skp_documents WHERE id = ? LIMIT 1",
+      "SELECT id, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
       [id],
     );
     if (rows.length === 0) {
@@ -177,6 +204,19 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     if (req.file?.filename) {
       nextFilePath = `uploads/${req.file.filename}`;
       cleanupUploadedFile(rows[0].file_path);
+    }
+
+    const [duplicateRows]: any = await db.execute(
+      `SELECT id FROM skp_documents
+       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND id <> ?
+       LIMIT 1`,
+      [rows[0].uploaded_by || "-", parsedTahun, parsedTriwulan, trimmedNamaSkp, id],
+    );
+    if (duplicateRows.length > 0) {
+      if (req.file?.filename) cleanupUploadedFile(`uploads/${req.file.filename}`);
+      return res.status(409).json({
+        message: "Dokumen SKP duplikat terdeteksi untuk staff/triwulan/tahun yang sama.",
+      });
     }
 
     await db.execute(

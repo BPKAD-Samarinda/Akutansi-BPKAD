@@ -23,6 +23,23 @@ const triwulanOptions = [
 
 const currentYear = new Date().getFullYear();
 const yearOptions = Array.from({ length: 8 }, (_, idx) => currentYear - idx);
+const MAX_SKP_FILE_SIZE = 30 * 1024 * 1024;
+const allowedSkpMimeTypes = new Set([
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "image/jpeg",
+  "image/jpg",
+  "image/pjpeg",
+  "image/jfif",
+  "image/png",
+  "image/heic",
+  "image/heif",
+]);
 
 type UploadForm = {
   nama_skp: string;
@@ -55,6 +72,33 @@ export default function SkpPage() {
 
   const showToast = (message: string, type: ToastState["type"]) => {
     setToast({ show: true, message, type });
+  };
+
+  const validateSkpInput = (payload: {
+    nama_skp: string;
+    triwulan: number;
+    tahun: number;
+    file?: File | null;
+  }): string | null => {
+    const name = payload.nama_skp.trim();
+    if (name.length < 3 || name.length > 255) {
+      return "Nama SKP harus 3-255 karakter.";
+    }
+    if (![1, 2, 3, 4].includes(payload.triwulan)) {
+      return "Triwulan tidak valid.";
+    }
+    if (Number.isNaN(payload.tahun) || payload.tahun < 2000 || payload.tahun > currentYear + 1) {
+      return "Tahun tidak valid.";
+    }
+    if (payload.file) {
+      if (!allowedSkpMimeTypes.has(payload.file.type)) {
+        return "Tipe file tidak didukung.";
+      }
+      if (payload.file.size > MAX_SKP_FILE_SIZE) {
+        return "Ukuran file maksimal 30MB.";
+      }
+    }
+    return null;
   };
 
   const loadData = async () => {
@@ -105,9 +149,9 @@ export default function SkpPage() {
 
   const handleSubmitUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!uploadForm.nama_skp.trim()) return showToast("Nama SKP wajib diisi.", "warning");
-    if (![1, 2, 3, 4].includes(uploadForm.triwulan)) return showToast("Triwulan tidak valid.", "warning");
     if (!uploadForm.file) return showToast("File dokumen SKP wajib dipilih.", "warning");
+    const uploadError = validateSkpInput(uploadForm);
+    if (uploadError) return showToast(uploadError, "warning");
 
     setIsSubmittingUpload(true);
     try {
@@ -131,6 +175,12 @@ export default function SkpPage() {
   const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!editing) return;
+    const editError = validateSkpInput({
+      nama_skp: editing.nama_skp,
+      triwulan: editing.triwulan,
+      tahun: editing.tahun,
+    });
+    if (editError) return showToast(editError, "warning");
     try {
       await updateSkpDocument(editing.id, {
         nama_skp: editing.nama_skp,
@@ -230,7 +280,7 @@ export default function SkpPage() {
       </div>
 
       {isUploadOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"><div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"><div className="flex items-center justify-between mb-4"><h2 className="text-lg font-semibold text-slate-900">Upload SKP</h2><button type="button" onClick={() => setIsUploadOpen(false)} className="text-slate-500 hover:text-slate-700">Tutup</button></div><form onSubmit={handleSubmitUpload} className="space-y-4"><div><label className="block text-sm font-medium text-slate-700 mb-1">Nama SKP</label><input type="text" value={uploadForm.nama_skp} onChange={(e) => setUploadForm((prev) => ({ ...prev, nama_skp: e.target.value }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm" placeholder="Masukkan nama SKP" /></div><div className="grid grid-cols-2 gap-3"><div><label className="block text-sm font-medium text-slate-700 mb-1">Triwulan</label><select value={uploadForm.triwulan} onChange={(e) => setUploadForm((prev) => ({ ...prev, triwulan: Number(e.target.value) }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm"><option value={1}>Triwulan 1</option><option value={2}>Triwulan 2</option><option value={3}>Triwulan 3</option><option value={4}>Triwulan 4</option></select></div><div><label className="block text-sm font-medium text-slate-700 mb-1">Tahun</label><select value={uploadForm.tahun} onChange={(e) => setUploadForm((prev) => ({ ...prev, tahun: Number(e.target.value) }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm">{yearOptions.map((year) => (<option key={year} value={year}>{year}</option>))}</select></div></div><div><label className="block text-sm font-medium text-slate-700 mb-1">File Dokumen SKP</label><input type="file" onChange={(e) => setUploadForm((prev) => ({ ...prev, file: e.target.files?.[0] || null }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm" /></div><div className="flex items-center justify-end gap-2 pt-2"><button type="button" onClick={() => setIsUploadOpen(false)} className="h-10 px-4 rounded-lg border border-slate-200 text-slate-700">Batal</button><button type="submit" disabled={isSubmittingUpload} className="h-10 px-4 rounded-lg bg-orange-500 text-white font-semibold disabled:opacity-70">{isSubmittingUpload ? "Mengunggah..." : "Upload SKP"}</button></div></form></div></div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"><div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"><div className="flex items-center justify-between mb-4"><h2 className="text-lg font-semibold text-slate-900">Upload SKP</h2><button type="button" onClick={() => setIsUploadOpen(false)} className="text-slate-500 hover:text-slate-700">Tutup</button></div><form onSubmit={handleSubmitUpload} className="space-y-4"><div><label className="block text-sm font-medium text-slate-700 mb-1">Nama SKP</label><input type="text" value={uploadForm.nama_skp} onChange={(e) => setUploadForm((prev) => ({ ...prev, nama_skp: e.target.value }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm" placeholder="Masukkan nama SKP" /></div><div className="grid grid-cols-2 gap-3"><div><label className="block text-sm font-medium text-slate-700 mb-1">Triwulan</label><select value={uploadForm.triwulan} onChange={(e) => setUploadForm((prev) => ({ ...prev, triwulan: Number(e.target.value) }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm"><option value={1}>Triwulan 1</option><option value={2}>Triwulan 2</option><option value={3}>Triwulan 3</option><option value={4}>Triwulan 4</option></select></div><div><label className="block text-sm font-medium text-slate-700 mb-1">Tahun</label><select value={uploadForm.tahun} onChange={(e) => setUploadForm((prev) => ({ ...prev, tahun: Number(e.target.value) }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm">{yearOptions.map((year) => (<option key={year} value={year}>{year}</option>))}</select></div></div><div><label className="block text-sm font-medium text-slate-700 mb-1">File Dokumen SKP</label><input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.jfif,.heic,.heif" onChange={(e) => setUploadForm((prev) => ({ ...prev, file: e.target.files?.[0] || null }))} className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm" /></div><div className="flex items-center justify-end gap-2 pt-2"><button type="button" onClick={() => setIsUploadOpen(false)} className="h-10 px-4 rounded-lg border border-slate-200 text-slate-700">Batal</button><button type="submit" disabled={isSubmittingUpload} className="h-10 px-4 rounded-lg bg-orange-500 text-white font-semibold disabled:opacity-70">{isSubmittingUpload ? "Mengunggah..." : "Upload SKP"}</button></div></form></div></div>
       )}
 
       {editing && (
