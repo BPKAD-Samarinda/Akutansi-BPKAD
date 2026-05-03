@@ -4,7 +4,12 @@ import path from "path";
 import fs from "fs";
 import { BACKEND_UPLOADS_DIR } from "../config/uploadPaths";
 import { authenticateToken, authorizeRoles } from "../middleware/authMiddleware";
-import { createSkpDocument, getSkpDocuments } from "../controllers/skpController";
+import {
+  createSkpDocument,
+  deleteSkpDocument,
+  getSkpDocuments,
+  updateSkpDocument,
+} from "../controllers/skpController";
 
 const router = Router();
 
@@ -88,6 +93,21 @@ router.post(
   authorizeRoles("Admin", "Staff", "Admin Akuntansi", "Staff Akuntansi"),
   uploadSingle,
   createSkpDocument,
+);
+
+router.put(
+  "/:id",
+  authenticateToken,
+  authorizeRoles("Admin", "Admin Akuntansi"),
+  uploadSingle,
+  updateSkpDocument,
+);
+
+router.delete(
+  "/:id",
+  authenticateToken,
+  authorizeRoles("Admin", "Admin Akuntansi"),
+  deleteSkpDocument,
 );
 
 export default router;

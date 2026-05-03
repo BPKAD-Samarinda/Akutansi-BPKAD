@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import db from "../config/db";
+import fs from "fs";
+import path from "path";
+import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
 
 type AuthenticatedRequest = Request & {
   user?: {
@@ -125,5 +128,87 @@ export const createSkpDocument = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Create SKP document error:", error);
     return res.status(500).json({ message: "Gagal mengunggah dokumen SKP" });
+  }
+};
+
+const cleanupUploadedFile = (filePath?: string | null) => {
+  if (!filePath) return;
+  const normalized = filePath.replace(/\\/g, "/").replace(/^\/+/, "");
+  const relative = normalized.replace(/^uploads\//i, "");
+  const backendPath = path.resolve(BACKEND_UPLOADS_DIR, relative);
+  const rootPath = path.resolve(ROOT_UPLOADS_DIR, relative);
+  try {
+    if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
+    if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
+  } catch (error) {
+    console.error("Cleanup SKP file error:", error);
+  }
+};
+
+export const updateSkpDocument = async (req: Request, res: Response) => {
+  try {
+    await ensureSkpTable();
+    const { id } = req.params;
+    const { nama_skp, triwulan, tahun } = req.body as {
+      nama_skp?: string;
+      triwulan?: string | number;
+      tahun?: string | number;
+    };
+
+    const parsedTriwulan = Number(triwulan);
+    const parsedTahun = Number(tahun);
+    const trimmedNamaSkp = String(nama_skp || "").trim();
+    if (!trimmedNamaSkp || ![1, 2, 3, 4].includes(parsedTriwulan)) {
+      return res.status(400).json({ message: "Data SKP tidak valid." });
+    }
+    if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > 3000) {
+      return res.status(400).json({ message: "Tahun tidak valid." });
+    }
+
+    const [rows]: any = await db.execute(
+      "SELECT id, file_path FROM skp_documents WHERE id = ? LIMIT 1",
+      [id],
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Dokumen SKP tidak ditemukan." });
+    }
+
+    let nextFilePath: string = rows[0].file_path;
+    if (req.file?.filename) {
+      nextFilePath = `uploads/${req.file.filename}`;
+      cleanupUploadedFile(rows[0].file_path);
+    }
+
+    await db.execute(
+      `UPDATE skp_documents
+       SET nama_skp = ?, triwulan = ?, tahun = ?, file_path = ?
+       WHERE id = ?`,
+      [trimmedNamaSkp, parsedTriwulan, parsedTahun, nextFilePath, id],
+    );
+
+    return res.status(200).json({ message: "Dokumen SKP berhasil diperbarui." });
+  } catch (error) {
+    console.error("Update SKP document error:", error);
+    return res.status(500).json({ message: "Gagal memperbarui dokumen SKP" });
+  }
+};
+
+export const deleteSkpDocument = async (req: Request, res: Response) => {
+  try {
+    await ensureSkpTable();
+    const { id } = req.params;
+    const [rows]: any = await db.execute(
+      "SELECT id, file_path FROM skp_documents WHERE id = ? LIMIT 1",
+      [id],
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Dokumen SKP tidak ditemukan." });
+    }
+    cleanupUploadedFile(rows[0].file_path);
+    await db.execute("DELETE FROM skp_documents WHERE id = ?", [id]);
+    return res.status(200).json({ message: "Dokumen SKP berhasil dihapus." });
+  } catch (error) {
+    console.error("Delete SKP document error:", error);
+    return res.status(500).json({ message: "Gagal menghapus dokumen SKP" });
   }
 };
