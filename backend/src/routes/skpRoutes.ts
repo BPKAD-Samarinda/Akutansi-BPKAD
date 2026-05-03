@@ -8,6 +8,7 @@ import {
   createSkpDocument,
   deleteSkpDocument,
   getSkpDocuments,
+  getSkpHistories,
   updateSkpDocument,
 } from "../controllers/skpController";
 
@@ -79,6 +80,13 @@ const uploadSingle = (req: any, res: any, next: any) => {
     return next();
   });
 };
+
+router.get(
+  "/history",
+  authenticateToken,
+  authorizeRoles("Admin", "Admin Akuntansi"),
+  getSkpHistories,
+);
 
 router.get(
   "/",

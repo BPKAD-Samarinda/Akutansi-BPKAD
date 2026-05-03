@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   Document,
   SkpDocument,
+  SkpHistory,
   UploadHistory,
   UploadHistoryQuery,
   UploadHistoryResult,
@@ -189,6 +190,25 @@ export const deleteSkpDocument = async (
 ): Promise<{ message: string }> => {
   const response = await apiClient.delete<{ message: string }>(`/skp/${id}`);
   return response.data;
+};
+
+export const getSkpHistories = async (query?: {
+  action?: "all" | "upload" | "edit" | "delete";
+  staff?: string;
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+}): Promise<SkpHistory[]> => {
+  const response = await apiClient.get<SkpHistory[]>("/skp/history", {
+    params: {
+      action: query?.action && query.action !== "all" ? query.action : undefined,
+      staff: (query?.staff || "").trim() || undefined,
+      search: (query?.search || "").trim() || undefined,
+      startDate: query?.startDate || undefined,
+      endDate: query?.endDate || undefined,
+    },
+  });
+  return Array.isArray(response.data) ? response.data : [];
 };
 
 export const getUploadHistories = async (

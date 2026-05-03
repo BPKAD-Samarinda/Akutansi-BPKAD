@@ -42,6 +42,52 @@ const ensureSkpTable = async () => {
   }
 };
 
+const ensureSkpHistoryTable = async () => {
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS skp_history (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      skp_document_id BIGINT NULL,
+      action_type VARCHAR(20) NOT NULL,
+      actor_username VARCHAR(255) NULL,
+      actor_role VARCHAR(50) NULL,
+      target_uploaded_by VARCHAR(255) NULL,
+      before_data TEXT NULL,
+      after_data TEXT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_skp_history_action_type (action_type),
+      INDEX idx_skp_history_actor_username (actor_username),
+      INDEX idx_skp_history_target_uploaded_by (target_uploaded_by),
+      INDEX idx_skp_history_created_at (created_at)
+    )
+  `);
+};
+
+const writeSkpHistory = async (payload: {
+  skpDocumentId?: number | string | null;
+  actionType: "upload" | "edit" | "delete";
+  actorUsername?: string | null;
+  actorRole?: string | null;
+  targetUploadedBy?: string | null;
+  beforeData?: Record<string, unknown> | null;
+  afterData?: Record<string, unknown> | null;
+}) => {
+  await ensureSkpHistoryTable();
+  await db.execute(
+    `INSERT INTO skp_history
+      (skp_document_id, action_type, actor_username, actor_role, target_uploaded_by, before_data, after_data)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [
+      payload.skpDocumentId ?? null,
+      payload.actionType,
+      payload.actorUsername ?? null,
+      payload.actorRole ?? null,
+      payload.targetUploadedBy ?? null,
+      payload.beforeData ? JSON.stringify(payload.beforeData) : null,
+      payload.afterData ? JSON.stringify(payload.afterData) : null,
+    ],
+  );
+};
+
 export const getSkpDocuments = async (req: Request, res: Response) => {
   try {
     await ensureSkpTable();
@@ -145,6 +191,21 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       [trimmedNamaSkp, parsedTriwulan, parsedTahun, filePath, uploaderName],
     );
 
+    await writeSkpHistory({
+      skpDocumentId: (result as any)?.insertId ?? null,
+      actionType: "upload",
+      actorUsername: (req as AuthenticatedRequest).user?.username || null,
+      actorRole: (req as AuthenticatedRequest).user?.role || null,
+      targetUploadedBy: uploaderName,
+      beforeData: null,
+      afterData: {
+        nama_skp: trimmedNamaSkp,
+        triwulan: parsedTriwulan,
+        tahun: parsedTahun,
+        file_path: filePath,
+      },
+    });
+
     return res.status(201).json({
       message: "Dokumen SKP berhasil diunggah.",
       data: {
@@ -193,7 +254,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     }
 
     const [rows]: any = await db.execute(
-      "SELECT id, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
+      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
       [id],
     );
     if (rows.length === 0) {
@@ -226,6 +287,26 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       [trimmedNamaSkp, parsedTriwulan, parsedTahun, nextFilePath, id],
     );
 
+    await writeSkpHistory({
+      skpDocumentId: Number(id),
+      actionType: "edit",
+      actorUsername: (req as AuthenticatedRequest).user?.username || null,
+      actorRole: (req as AuthenticatedRequest).user?.role || null,
+      targetUploadedBy: rows[0].uploaded_by || null,
+      beforeData: {
+        nama_skp: rows[0].nama_skp,
+        triwulan: rows[0].triwulan,
+        tahun: rows[0].tahun,
+        file_path: rows[0].file_path,
+      },
+      afterData: {
+        nama_skp: trimmedNamaSkp,
+        triwulan: parsedTriwulan,
+        tahun: parsedTahun,
+        file_path: nextFilePath,
+      },
+    });
+
     return res.status(200).json({ message: "Dokumen SKP berhasil diperbarui." });
   } catch (error) {
     console.error("Update SKP document error:", error);
@@ -238,7 +319,7 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
     await ensureSkpTable();
     const { id } = req.params;
     const [rows]: any = await db.execute(
-      "SELECT id, file_path FROM skp_documents WHERE id = ? LIMIT 1",
+      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
       [id],
     );
     if (rows.length === 0) {
@@ -246,9 +327,77 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
     }
     cleanupUploadedFile(rows[0].file_path);
     await db.execute("DELETE FROM skp_documents WHERE id = ?", [id]);
+
+    await writeSkpHistory({
+      skpDocumentId: Number(id),
+      actionType: "delete",
+      actorUsername: (req as AuthenticatedRequest).user?.username || null,
+      actorRole: (req as AuthenticatedRequest).user?.role || null,
+      targetUploadedBy: rows[0].uploaded_by || null,
+      beforeData: {
+        nama_skp: rows[0].nama_skp,
+        triwulan: rows[0].triwulan,
+        tahun: rows[0].tahun,
+        file_path: rows[0].file_path,
+      },
+      afterData: null,
+    });
+
     return res.status(200).json({ message: "Dokumen SKP berhasil dihapus." });
   } catch (error) {
     console.error("Delete SKP document error:", error);
     return res.status(500).json({ message: "Gagal menghapus dokumen SKP" });
+  }
+};
+
+export const getSkpHistories = async (req: Request, res: Response) => {
+  try {
+    await ensureSkpHistoryTable();
+    const action = String(req.query.action || "all").trim().toLowerCase();
+    const staff = String(req.query.staff || "").trim().toLowerCase();
+    const search = String(req.query.search || "").trim().toLowerCase();
+    const startDate = String(req.query.startDate || "").trim();
+    const endDate = String(req.query.endDate || "").trim();
+
+    const where: string[] = [];
+    const values: Array<string> = [];
+
+    if (action && action !== "all") {
+      where.push("action_type = ?");
+      values.push(action);
+    }
+    if (staff) {
+      where.push("LOWER(target_uploaded_by) LIKE ?");
+      values.push(`%${staff}%`);
+    }
+    if (search) {
+      where.push(
+        "(LOWER(actor_username) LIKE ? OR LOWER(target_uploaded_by) LIKE ? OR LOWER(action_type) LIKE ?)",
+      );
+      values.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    }
+    if (startDate) {
+      where.push("DATE(created_at) >= ?");
+      values.push(startDate);
+    }
+    if (endDate) {
+      where.push("DATE(created_at) <= ?");
+      values.push(endDate);
+    }
+
+    const whereSql = where.length > 0 ? `WHERE ${where.join(" AND ")}` : "";
+
+    const [rows] = await db.query(
+      `SELECT id, skp_document_id, action_type, actor_username, actor_role, target_uploaded_by, before_data, after_data, created_at
+       FROM skp_history
+       ${whereSql}
+       ORDER BY created_at DESC, id DESC`,
+      values,
+    );
+
+    return res.status(200).json(rows);
+  } catch (error) {
+    console.error("Get SKP history error:", error);
+    return res.status(500).json({ message: "Gagal mengambil riwayat SKP" });
   }
 };

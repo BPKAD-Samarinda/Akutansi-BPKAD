@@ -51,3 +51,15 @@ export interface SkpDocument {
   uploaded_by?: string;
   created_at?: string;
 }
+
+export interface SkpHistory {
+  id: number;
+  skp_document_id?: number | null;
+  action_type: "upload" | "edit" | "delete";
+  actor_username?: string | null;
+  actor_role?: string | null;
+  target_uploaded_by?: string | null;
+  before_data?: string | null;
+  after_data?: string | null;
+  created_at?: string;
+}
