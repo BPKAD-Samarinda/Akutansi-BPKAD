@@ -4,6 +4,7 @@ import {
   FiClipboard,
   FiDownload,
   FiEdit3,
+  FiEye,
   FiExternalLink,
   FiFileText,
   FiRefreshCw,
@@ -384,7 +385,7 @@ export default function SkpPage() {
         <Header title="Dokumen SKP" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-8">
-          <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px]">
+          <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px] animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <label className="flex h-12 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-orange-200">
               <input
                 type="text"
@@ -425,7 +426,7 @@ export default function SkpPage() {
           </div>
 
           {selectedIds.size > 0 && (
-            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between animate-[slideDown_0.3s_ease-out]">
               <p className="text-sm font-semibold text-orange-700">
                 {selectedIds.size} dokumen SKP dipilih
               </p>
@@ -440,7 +441,7 @@ export default function SkpPage() {
             </div>
           )}
 
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6">
+          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6 animate-[slideUp_0.6s_ease-out_0.2s_both]">
             <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-wrap gap-2">
                 <button
@@ -471,16 +472,16 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={handleOpenUploadModal}
-                  className="inline-flex h-14 items-center gap-2 rounded-[20px] bg-orange-500 px-6 text-base font-semibold text-white shadow-md shadow-orange-500/30 transition hover:bg-orange-600"
+                  className="bg-orange-500 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-orange-500/30 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 justify-center"
                 >
-                  <FiUploadCloud className="h-5 w-5" />
+                  <FiUploadCloud className="h-4 w-4 lg:h-5 lg:w-5" />
                   Unggah Baru
                 </button>
                 <AppTooltip content="Refresh">
                   <button
                     type="button"
                     onClick={handleRefresh}
-                    className="inline-flex h-14 w-14 items-center justify-center rounded-[20px] bg-orange-500 text-white shadow-md shadow-orange-500/30 transition hover:bg-orange-600"
+                    className="bg-orange-500 hover:bg-orange-600 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0"
                   >
                     <FiRefreshCw className={`h-5 w-5 ${isRefreshing ? "animate-spin" : ""}`} />
                   </button>
@@ -585,9 +586,9 @@ export default function SkpPage() {
                                 <button
                                   type="button"
                                   onClick={() => openFileInNewTab(item.file_path)}
-                                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600 transition hover:bg-orange-100 hover:text-orange-700"
+                                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-700"
                                 >
-                                  <FiExternalLink className="h-4 w-4" />
+                                  <FiEye className="h-4 w-4" />
                                 </button>
                               </AppTooltip>
                               {isAdmin && (
@@ -596,7 +597,7 @@ export default function SkpPage() {
                                     <button
                                       type="button"
                                       onClick={() => handleOpenEdit(item)}
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-700 transition hover:bg-amber-100 hover:text-amber-800"
+                                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition hover:bg-amber-100 hover:text-amber-700"
                                     >
                                       <FiEdit3 className="h-4 w-4" />
                                     </button>
@@ -605,7 +606,7 @@ export default function SkpPage() {
                                     <button
                                       type="button"
                                       onClick={() => setDeleteTarget(item)}
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-rose-600 transition hover:bg-rose-100 hover:text-rose-700"
+                                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-700"
                                     >
                                       <FiTrash2 className="h-4 w-4" />
                                     </button>
@@ -673,9 +674,9 @@ export default function SkpPage() {
                             <button
                               type="button"
                               onClick={() => openFileInNewTab(item.file_path)}
-                              className="inline-flex items-center gap-2 rounded-xl bg-orange-50 px-3 py-2 text-xs font-semibold text-orange-700"
+                              className="inline-flex items-center gap-2 rounded-xl bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700"
                             >
-                              <FiExternalLink className="h-4 w-4" />
+                              <FiEye className="h-4 w-4" />
                               Buka
                             </button>
                             {isAdmin && (
@@ -691,7 +692,7 @@ export default function SkpPage() {
                                 <button
                                   type="button"
                                   onClick={() => setDeleteTarget(item)}
-                                  className="inline-flex items-center gap-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700"
+                                  className="inline-flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-semibold text-red-700"
                                 >
                                   <FiTrash2 className="h-4 w-4" />
                                   Hapus
@@ -720,8 +721,8 @@ export default function SkpPage() {
       </div>
 
       {isUploadOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
+          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out]">
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -847,8 +848,8 @@ export default function SkpPage() {
       )}
 
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
+          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out]">
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
