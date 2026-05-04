@@ -34,6 +34,7 @@ export function useDashboardAnalytics() {
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("all");
   const [uploads, setUploads] = useState<NormalizedUpload[]>([]);
+  const [skpUploads, setSkpUploads] = useState<NormalizedUpload[]>([]);
   const [logins, setLogins] = useState<NormalizedLogin[]>([]);
   const [usersCount, setUsersCount] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -78,6 +79,9 @@ export function useDashboardAnalytics() {
         const safeLoginActivities = Array.isArray(payload?.loginActivities)
           ? payload.loginActivities
           : [];
+        const safeSkpDocuments = Array.isArray(payload?.skpDocuments)
+          ? payload.skpDocuments
+          : [];
 
         const normalizedUploads = safeDocuments
           .map((doc: DashboardApiDocument) => {
@@ -105,7 +109,24 @@ export function useDashboardAnalytics() {
           }),
         );
 
+        const normalizedSkpUploads = safeSkpDocuments
+          .map((doc): NormalizedUpload | null => {
+            const createdAtOnly = normalizeDateOnly(doc.created_at) || null;
+            if (!createdAtOnly) return null;
+
+            return {
+              id: Number(doc.id),
+              name: doc.nama_skp || `SKP_${doc.id}.pdf`,
+              kategori: toDashboardCategory("Keuangan"),
+              uploadedAt: createdAtOnly,
+              createdAt: createdAtOnly,
+              uploadedBy: doc.uploaded_by || "-",
+            };
+          })
+          .filter((item): item is NormalizedUpload => item !== null);
+
         setUploads(normalizedUploads);
+        setSkpUploads(normalizedSkpUploads);
         setLogins(normalizedLogins);
         setUsersCount(Number(payload.totalUsers ?? 0));
         setIsLoaded(true);
@@ -132,6 +153,7 @@ export function useDashboardAnalytics() {
               })
               .filter((item): item is NormalizedUpload => item !== null);
             setUploads(fallbackUploads);
+            setSkpUploads([]);
             setUsersCount(0);
             setIsLoaded(true);
           })
@@ -236,14 +258,17 @@ export function useDashboardAnalytics() {
   }, [logins, todayKey]);
 
   const totalDocuments = filteredUploads.length;
+  const totalSkpDocuments = skpUploads.length;
   const totalUsers = usersCount;
   const totalLogins = filteredLogins.length;
   const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
 
   const todayUploadCount = useMemo(() => {
     const todayIso = toIsoDate(new Date());
-    return uploads.filter((record) => record.createdAt === todayIso).length;
-  }, [uploads]);
+    const documentToday = uploads.filter((record) => record.createdAt === todayIso).length;
+    const skpToday = skpUploads.filter((record) => record.createdAt === todayIso).length;
+    return documentToday + skpToday;
+  }, [uploads, skpUploads]);
 
   const latestUploadedDocument = useMemo(() => {
     if (!uploads.length) return null;
@@ -303,6 +328,7 @@ export function useDashboardAnalytics() {
     yearOptions,
     categoryOptions,
     totalDocuments,
+    totalSkpDocuments,
     totalUsers,
     totalLogins,
     todayUploadCount,

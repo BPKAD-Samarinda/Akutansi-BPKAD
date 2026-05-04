@@ -91,7 +91,7 @@ export default function Dashboard() {
         <Header title="Dashboard" onMenuClick={() => setSidebarOpen(true)} />
 
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
-          <div data-animate-item className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white p-4 shadow-md shadow-orange-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-orange-500/30">
               <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
               <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
@@ -113,7 +113,32 @@ export default function Dashboard() {
                   <AnimatedStatNumber value={summary.totalDocuments} />
                 </p>
                 <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
-                  Total Dokumen
+                  Manajemen Dokumen
+                </p>
+              </div>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white p-4 shadow-md shadow-indigo-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-indigo-500/30">
+              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
+              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+              <div className="flex items-center justify-end">
+                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M8 7h8M8 12h8M8 17h5M6 4h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div className="mt-2 text-center">
+                <p className="text-4xl font-bold">
+                  <AnimatedStatNumber value={summary.totalSkpDocuments} />
+                </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
+                  Dokumen SKP
                 </p>
               </div>
             </div>

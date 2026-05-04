@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes";
 import skpRoutes from "./routes/skpRoutes";
 import { normalizeUserRoles } from "./config/roleNormalization";
 import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "./config/uploadPaths";
+import { syncUploadsToDatabase } from "./config/uploadSync";
 import { getJwtSecret } from "./config/jwt";
 
 const app = express();
@@ -17,6 +18,9 @@ const port = process.env.PORT || 3001;
 // Fail fast on startup if JWT secret is missing.
 getJwtSecret();
 normalizeUserRoles();
+syncUploadsToDatabase().catch((error) => {
+  console.error("Initial upload sync failed:", error);
+});
 
 app.use(cors());
 app.use(express.json());

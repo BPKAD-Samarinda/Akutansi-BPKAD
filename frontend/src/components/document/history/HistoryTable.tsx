@@ -70,10 +70,19 @@ const getEditChanges = (item: UploadHistory) => {
     label: string;
     type?: "date" | "file";
   }> = [
-    { key: "nama_sppd", label: "Nama" },
-    { key: "kategori", label: "Kategori" },
-    { key: "tanggal_sppd", label: "Tanggal", type: "date" },
-    { key: "file_path", label: "File", type: "file" },
+    ...(item.source === "skp"
+      ? [
+          { key: "nama_skp", label: "Nama" },
+          { key: "triwulan", label: "Triwulan" },
+          { key: "tahun", label: "Tahun" },
+          { key: "file_path", label: "File", type: "file" as const },
+        ]
+      : [
+          { key: "nama_sppd", label: "Nama" },
+          { key: "kategori", label: "Kategori" },
+          { key: "tanggal_sppd", label: "Tanggal", type: "date" as const },
+          { key: "file_path", label: "File", type: "file" as const },
+        ]),
   ];
 
   const formatValue = (
@@ -133,7 +142,7 @@ export default function HistoryTable({
                 <input
                   type="checkbox"
                   checked={selectedIds.has(String(item.id))}
-                  disabled={!item.isDeleted}
+                  disabled={!item.canRestore}
                   onChange={(event) =>
                     onToggleSelect(item.id, event.target.checked)
                   }
@@ -155,11 +164,14 @@ export default function HistoryTable({
                       {status}
                     </span>
                   </div>
-                  {item.fileSize && item.fileSize !== "-" && (
-                    <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
-                      {item.fileSize}
+                    {item.fileSize && item.fileSize !== "-" && (
+                      <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
+                        {item.fileSize}
+                      </p>
+                    )}
+                    <p className="mt-1 text-[11px] font-medium text-indigo-500 dark:text-indigo-300">
+                      {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </p>
-                  )}
                   {editChanges.length > 0 && (
                     <div className="mt-2 grid gap-2 text-[11px] text-gray-500 dark:text-slate-400">
                       <div>
@@ -269,7 +281,7 @@ export default function HistoryTable({
                     <input
                       type="checkbox"
                       checked={selectedIds.has(String(item.id))}
-                      disabled={!item.isDeleted}
+                      disabled={!item.canRestore}
                       onChange={(event) =>
                         onToggleSelect(item.id, event.target.checked)
                       }
@@ -288,6 +300,9 @@ export default function HistoryTable({
                         {item.fileSize}
                       </div>
                     )}
+                    <div className="mt-1 text-[11px] font-medium text-indigo-500 dark:text-indigo-300">
+                      {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
+                    </div>
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-700 dark:text-slate-200 align-top">
                     {formatDate(item.uploadedAt)}

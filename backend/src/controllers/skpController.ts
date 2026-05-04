@@ -113,8 +113,8 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
     }
 
     if (search.length > 0) {
-      clauses.push("LOWER(uploaded_by) LIKE ?");
-      values.push(`%${search.toLowerCase()}%`);
+      clauses.push("(LOWER(nama_skp) LIKE ? OR LOWER(uploaded_by) LIKE ?)");
+      values.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
     }
 
     const whereSql = clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";

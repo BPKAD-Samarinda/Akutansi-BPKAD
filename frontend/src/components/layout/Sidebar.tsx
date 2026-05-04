@@ -1,11 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
-import dashboardIcon from "../../assets/icons/dashboard.svg";
+import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun } from "react-icons/fi";
 import dokumenIcon from "../../assets/icons/dokumen.svg";
 import uploadIcon from "../../assets/icons/upload.svg";
 import addUserIcon from "../../assets/icons/add_user.svg";
-import riwayatIcon from "../../assets/icons/riwayat.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 import { getUser } from "../../utils/auth";
 
@@ -99,11 +97,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
               }`}
             >
-              <img
-                src={dashboardIcon}
-                className={iconClass(isActive("/dashboard"))}
-                alt="Dashboard"
-              />
+              <FiGrid className={iconClass(isActive("/dashboard"))} />
               Dashboard
             </button>
             <button
@@ -137,34 +131,9 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
               }`}
             >
-              <img
-                src={dokumenIcon}
-                className={iconClass(isActive("/skp"))}
-                alt="SKP"
-              />
+              <FiClipboard className={iconClass(isActive("/skp"))} />
               SKP
             </button>
-            {isAdmin && (
-              <button
-                onClick={() => {
-                  navigate("/skp-history");
-                  onClose?.();
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
-              ${
-                isActive("/skp-history")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-              >
-                <img
-                  src={riwayatIcon}
-                  className={iconClass(isActive("/skp-history"))}
-                  alt="Riwayat SKP"
-                />
-                Riwayat SKP
-              </button>
-            )}
             {(isAdmin || isMagang || isPkl) && (
               <button
                 onClick={() => {
@@ -220,12 +189,8 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
               }`}
               >
-                <img
-                  src={riwayatIcon}
-                  className={iconClass(isActive("/riwayat"))}
-                  alt="Riwayat"
-                />
-                Riwayat Unggah
+                <FiClock className={iconClass(isActive("/riwayat"))} />
+                Riwayat
               </button>
             )}
           </nav>

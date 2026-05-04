@@ -9,7 +9,6 @@ import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
 import AddUser from "../pages/AddUser";
 import SkpPage from "../pages/SKP";
-import SkpHistoryPage from "../pages/SkpHistory";
 import { getUser, isAuthenticated } from "../utils/auth";
 
 const normalizeRole = (role?: string): string => {
@@ -134,13 +133,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/skp-history"
-        element={
-          <ProtectedRoute>
-            <AdminOnlyRoute>
-              <SkpHistoryPage />
-            </AdminOnlyRoute>
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/riwayat" replace />}
       />
       <Route
         path="/upload"

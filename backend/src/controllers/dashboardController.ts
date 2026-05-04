@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import db from "../config/db";
+import { syncUploadsToDatabase } from "../config/uploadSync";
 
 type AuthenticatedRequest = Request & {
   user?: {
@@ -30,14 +31,36 @@ const ensureLoginActivitiesTable = async () => {
   `);
 };
 
+const ensureSkpDocumentsTable = async () => {
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS skp_documents (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      nama_skp VARCHAR(255) NOT NULL,
+      triwulan TINYINT NOT NULL,
+      tahun INT NOT NULL,
+      file_path VARCHAR(255) NOT NULL,
+      uploaded_by VARCHAR(255) NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+};
+
 export const getDashboardAnalytics = async (req: Request, res: Response) => {
   try {
+    await syncUploadsToDatabase();
     await ensureSoftDeleteColumns();
+    await ensureSkpDocumentsTable();
 
     const [documentRows] = await db.query(
       `SELECT id, nama_sppd, kategori, tanggal_sppd, created_at, uploaded_by
        FROM documents
        WHERE is_deleted = 0
+       ORDER BY created_at DESC, id DESC`,
+    );
+
+    const [skpRows] = await db.query(
+      `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
+       FROM skp_documents
        ORDER BY created_at DESC, id DESC`,
     );
 
@@ -70,6 +93,7 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       documents: documentRows,
+      skpDocuments: skpRows,
       loginActivities: loginRows,
       totalUsers,
     });

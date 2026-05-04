@@ -33,6 +33,14 @@ export interface DashboardApiLoginActivity {
 
 export interface DashboardAnalyticsResponse {
   documents: DashboardApiDocument[];
+  skpDocuments?: Array<{
+    id: number;
+    nama_skp: string | null;
+    triwulan: number;
+    tahun: number;
+    created_at?: string | null;
+    uploaded_by?: string | null;
+  }>;
   loginActivities: DashboardApiLoginActivity[];
   totalUsers?: number;
 }
@@ -228,6 +236,8 @@ export const getUploadHistories = async (
       file_size: string;
       file_path: string;
       status?: string;
+      canRestore?: boolean;
+      source?: "document" | "skp";
       edit_before?: string | null;
       edit_after?: string | null;
     }>;
@@ -263,6 +273,8 @@ export const getUploadHistories = async (
     filePath: item.file_path || "",
     status: (item.status as UploadHistory["status"]) || "diunggah",
     isDeleted: String(item.status || "").toLowerCase() === "dihapus",
+    canRestore: Boolean(item.canRestore),
+    source: item.source || "document",
     editBefore: parseEditPayload(item.edit_before),
     editAfter: parseEditPayload(item.edit_after),
   }));

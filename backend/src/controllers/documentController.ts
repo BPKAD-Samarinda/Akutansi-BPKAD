@@ -3,6 +3,7 @@ import db from "../config/db";
 import fs from "fs";
 import path from "path";
 import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
+import { syncUploadsToDatabase } from "../config/uploadSync";
 
 const allowedDefinitions: { [key: string]: string } = {
   is_deleted: "is_deleted TINYINT(1) NOT NULL DEFAULT 0",
@@ -127,6 +128,7 @@ const cleanupUploadedFile = (filePath?: string | null) => {
 
 export const getAllDocuments = async (req: Request, res: Response) => {
   try {
+    await syncUploadsToDatabase();
     await ensureSoftDeleteColumns();
     const [rows] = await db.query(
       "SELECT * FROM documents WHERE is_deleted = 0 ORDER BY created_at DESC",
@@ -314,13 +316,16 @@ export const deleteDocument = async (req: Request, res: Response) => {
       return res.status(200).json({ message: "Document already deleted" });
     }
 
+    const actorName =
+      (req as any)?.user?.username || (req as any)?.user?.role || null;
+
     await db.execute(
       `INSERT INTO document_history (document_id, document_name, uploaded_by, status, file_path, file_size)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         id,
         existingRows[0].nama_sppd || `Dokumen #${id}`,
-        existingRows[0].uploaded_by || null,
+        actorName,
         "dihapus",
         existingRows[0].file_path || null,
         "-",
@@ -343,6 +348,23 @@ export const getUploadHistory = async (req: Request, res: Response) => {
   try {
     await ensureSoftDeleteColumns();
     await ensureDocumentHistoryTable();
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS skp_history (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        skp_document_id BIGINT NULL,
+        action_type VARCHAR(20) NOT NULL,
+        actor_username VARCHAR(255) NULL,
+        actor_role VARCHAR(50) NULL,
+        target_uploaded_by VARCHAR(255) NULL,
+        before_data TEXT NULL,
+        after_data TEXT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_skp_history_action_type (action_type),
+        INDEX idx_skp_history_actor_username (actor_username),
+        INDEX idx_skp_history_target_uploaded_by (target_uploaded_by),
+        INDEX idx_skp_history_created_at (created_at)
+      )
+    `);
 
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = Math.max(Number(req.query.limit) || 10, 1);
@@ -357,7 +379,7 @@ export const getUploadHistory = async (req: Request, res: Response) => {
        ORDER BY created_at DESC, id DESC`,
     );
 
-    const mappedItems = (rows as Record<string, any>[]).map((row) => ({
+    const mappedDocumentItems = (rows as Record<string, any>[]).map((row) => ({
       id: row.id,
       document_name: row.document_name,
       uploaded_at: row.created_at,
@@ -368,7 +390,81 @@ export const getUploadHistory = async (req: Request, res: Response) => {
       edit_before: row.edit_before || null,
       edit_after: row.edit_after || null,
       isDeleted: String(row.status || "").toLowerCase() === "dihapus",
+      source: "document",
+      canRestore:
+        String(row.status || "").toLowerCase() === "dihapus",
     }));
+
+    const [skpRows] = await db.query(
+      `SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at
+       FROM skp_history
+       ORDER BY created_at DESC, id DESC`,
+    );
+
+    const parseJson = (value: unknown): Record<string, any> | null => {
+      if (!value || typeof value !== "string") return null;
+      try {
+        return JSON.parse(value);
+      } catch {
+        return null;
+      }
+    };
+
+    const resolveSkpName = (
+      before: Record<string, any> | null,
+      after: Record<string, any> | null,
+      fallbackId: number | string,
+    ) => {
+      return (
+        after?.nama_skp ||
+        before?.nama_skp ||
+        `Dokumen SKP #${fallbackId}`
+      );
+    };
+
+    const resolveSkpFilePath = (
+      before: Record<string, any> | null,
+      after: Record<string, any> | null,
+    ) => {
+      return after?.file_path || before?.file_path || "";
+    };
+
+    const mapSkpActionToStatus = (actionType: string) => {
+      const normalized = String(actionType || "").toLowerCase();
+      if (normalized === "edit") return "diedit";
+      if (normalized === "delete") return "dihapus";
+      return "diunggah";
+    };
+
+    const mappedSkpItems = (skpRows as Record<string, any>[]).map((row) => {
+      const before = parseJson(row.before_data);
+      const after = parseJson(row.after_data);
+      const statusValue = mapSkpActionToStatus(row.action_type);
+
+      return {
+        id: `skp-${row.id}`,
+        document_name: resolveSkpName(before, after, row.skp_document_id || row.id),
+        uploaded_at: row.created_at,
+        uploaded_by: row.actor_username || row.target_uploaded_by || "-",
+        file_size: "-",
+        file_path: resolveSkpFilePath(before, after),
+        status: statusValue,
+        edit_before: before ? JSON.stringify(before) : null,
+        edit_after: after ? JSON.stringify(after) : null,
+        isDeleted: statusValue === "dihapus",
+        source: "skp",
+        canRestore: false,
+      };
+    });
+
+    const mappedItems = [...mappedDocumentItems, ...mappedSkpItems].sort((a, b) => {
+      const timeA = new Date(a.uploaded_at || 0).getTime();
+      const timeB = new Date(b.uploaded_at || 0).getTime();
+      if (timeA === timeB) {
+        return String(b.id).localeCompare(String(a.id));
+      }
+      return timeB - timeA;
+    });
 
     const statusFiltered =
       status === "all"

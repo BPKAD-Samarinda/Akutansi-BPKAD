@@ -46,7 +46,7 @@ export function useUploadHistory({
   }, [limit, total]);
 
   const restorableItems = useMemo(
-    () => items.filter((item) => item.isDeleted),
+    () => items.filter((item) => item.isDeleted && item.canRestore),
     [items],
   );
 
@@ -108,7 +108,9 @@ export function useUploadHistory({
     }
 
     const validSelectedIds = new Set(
-      items.filter((item) => item.isDeleted).map((item) => String(item.id)),
+      items
+        .filter((item) => item.isDeleted && item.canRestore)
+        .map((item) => String(item.id)),
     );
 
     setSelectedIds((previous) => {
