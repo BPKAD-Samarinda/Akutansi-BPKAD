@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import searchIcon from "../assets/icons/search.svg";
 import {
   FiCheckSquare,
   FiClipboard,
@@ -17,6 +18,13 @@ import Header from "../components/layout/Header";
 import DocumentTablePagination from "../components/document/table/DocumentTablePagination";
 import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
 import AppTooltip from "../components/ui/app-tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Toast } from "../components/snackbar";
 import {
   createSkpDocument,
@@ -86,6 +94,9 @@ const initialUploadForm = (): UploadForm => ({
   tahun: currentYear,
   file: null,
 });
+
+const skpSelectTriggerClass =
+  "h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-left text-xs font-medium text-gray-700 shadow-sm transition focus:border-orange-400 focus:ring-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 lg:text-sm";
 
 const getFileNameFromPath = (value: string) => {
   if (!value) return "";
@@ -245,6 +256,7 @@ export default function SkpPage() {
     setSelectedIds(new Set());
     setCurrentPage(1);
     await loadData({ search: "", triwulan: undefined, tahun: undefined });
+    showToast("Data SKP berhasil diperbarui.", "success");
     setTimeout(() => setIsRefreshing(false), 600);
   };
 
@@ -385,44 +397,72 @@ export default function SkpPage() {
         <Header title="Dokumen SKP" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-8">
-          <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px] animate-[slideUp_0.6s_ease-out_0.1s_both]">
-            <label className="flex h-12 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-orange-200 dark:border-slate-700 dark:bg-slate-900">
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") handleSearchSubmit();
-                }}
-                placeholder="Cari nama SKP atau pengunggah"
-                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
-              />
-            </label>
+          <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px] lg:gap-4 animate-[slideUp_0.6s_ease-out_0.1s_both]">
+            <div>
+              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                Pencarian
+              </label>
+              <label className="flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 shadow-sm transition focus-within:border-orange-400 dark:border-slate-700 dark:bg-slate-900">
+                <img
+                  src={searchIcon}
+                  className="mr-3 h-4 w-4 opacity-50 lg:h-5 lg:w-5"
+                  alt="search"
+                />
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") handleSearchSubmit();
+                  }}
+                  placeholder="Cari nama SKP atau pengunggah"
+                  className="w-full bg-transparent text-xs text-gray-700 outline-none placeholder:text-gray-400 dark:text-slate-100 dark:placeholder:text-slate-500 lg:text-sm"
+                />
+              </label>
+            </div>
 
-            <select
-              value={selectedTriwulan}
-              onChange={(event) => setSelectedTriwulan(Number(event.target.value))}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-            >
-              {triwulanFilterOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                Triwulan
+              </label>
+              <Select
+                value={String(selectedTriwulan)}
+                onValueChange={(value) => setSelectedTriwulan(Number(value))}
+              >
+                <SelectTrigger className={skpSelectTriggerClass}>
+                  <SelectValue placeholder="Semua Triwulan" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                  {triwulanFilterOptions.map((option) => (
+                    <SelectItem key={option.value} value={String(option.value)}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-            <select
-              value={selectedYear}
-              onChange={(event) => setSelectedYear(Number(event.target.value))}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-            >
-              <option value={0}>Semua Tahun</option>
-              {yearOptions.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                Tahun
+              </label>
+              <Select
+                value={String(selectedYear)}
+                onValueChange={(value) => setSelectedYear(Number(value))}
+              >
+                <SelectTrigger className={skpSelectTriggerClass}>
+                  <SelectValue placeholder="Semua Tahun" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                  <SelectItem value="0">Semua Tahun</SelectItem>
+                  {yearOptions.map((year) => (
+                    <SelectItem key={year} value={String(year)}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {selectedIds.size > 0 && (
@@ -761,38 +801,46 @@ export default function SkpPage() {
                   <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Triwulan
                   </label>
-                  <select
-                    value={uploadForm.triwulan}
-                    onChange={(event) =>
-                      setUploadForm((prev) => ({ ...prev, triwulan: Number(event.target.value) }))
+                  <Select
+                    value={String(uploadForm.triwulan)}
+                    onValueChange={(value) =>
+                      setUploadForm((prev) => ({ ...prev, triwulan: Number(value) }))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
-                    {triwulanFormOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                      {triwulanFormOptions.map((option) => (
+                        <SelectItem key={option.value} value={String(option.value)}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
 	                <div>
 	                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
 	                    Tahun
                   </label>
-                  <select
-                    value={uploadForm.tahun}
-                    onChange={(event) =>
-                      setUploadForm((prev) => ({ ...prev, tahun: Number(event.target.value) }))
+                  <Select
+                    value={String(uploadForm.tahun)}
+                    onValueChange={(value) =>
+                      setUploadForm((prev) => ({ ...prev, tahun: Number(value) }))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
-                    {yearOptions.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-	                  </select>
+                    <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                      {yearOptions.map((year) => (
+                        <SelectItem key={year} value={String(year)}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 	                </div>
 		              </div>
 	
@@ -883,41 +931,49 @@ export default function SkpPage() {
                   <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Triwulan
                   </label>
-                  <select
-                    value={editing.triwulan}
-                    onChange={(event) =>
+                  <Select
+                    value={String(editing.triwulan)}
+                    onValueChange={(value) =>
                       setEditing((prev) =>
-                        prev ? { ...prev, triwulan: Number(event.target.value) } : prev,
+                        prev ? { ...prev, triwulan: Number(value) } : prev,
                       )
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
-                    {triwulanFormOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                      {triwulanFormOptions.map((option) => (
+                        <SelectItem key={option.value} value={String(option.value)}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Tahun
                   </label>
-                  <select
-                    value={editing.tahun}
-                    onChange={(event) =>
+                  <Select
+                    value={String(editing.tahun)}
+                    onValueChange={(value) =>
                       setEditing((prev) =>
-                        prev ? { ...prev, tahun: Number(event.target.value) } : prev,
+                        prev ? { ...prev, tahun: Number(value) } : prev,
                       )
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
-                    {yearOptions.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                      {yearOptions.map((year) => (
+                        <SelectItem key={year} value={String(year)}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
