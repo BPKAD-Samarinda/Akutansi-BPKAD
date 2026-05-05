@@ -68,7 +68,7 @@ type SkpDocumentApiItem = {
 const resolveBaseUrl = (): string => {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
   if (!envBase || envBase.trim().length === 0) {
-    return "http://localhost:3001/api";
+    return "/api";
   }
 
   if (envBase.startsWith("http://") || envBase.startsWith("https://")) {
