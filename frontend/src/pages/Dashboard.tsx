@@ -114,6 +114,7 @@ export default function Dashboard() {
                 </p>
                 <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
                   Manajemen Dokumen
+                  Manajemen Dokumen
                 </p>
               </div>
             </div>
