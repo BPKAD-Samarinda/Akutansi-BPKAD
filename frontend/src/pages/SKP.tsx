@@ -46,7 +46,7 @@ const triwulanFormOptions = [
 
 const currentYear = new Date().getFullYear();
 const yearOptions = Array.from({ length: 8 }, (_, idx) => currentYear - idx);
-const MAX_SKP_FILE_SIZE = 30 * 1024 * 1024;
+const MAX_SKP_FILE_SIZE = 10 * 1024 * 1024;
 const allowedSkpMimeTypes = new Set([
   "application/pdf",
   "application/msword",
@@ -161,7 +161,7 @@ export default function SkpPage() {
         return "Tipe file tidak didukung.";
       }
       if (payload.file.size > MAX_SKP_FILE_SIZE) {
-        return "Ukuran file maksimal 30MB.";
+        return "Ukuran file maksimal 10MB.";
       }
     }
     return null;
@@ -386,7 +386,7 @@ export default function SkpPage() {
 
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px] animate-[slideUp_0.6s_ease-out_0.1s_both]">
-            <label className="flex h-12 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-orange-200">
+            <label className="flex h-12 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-orange-200 dark:border-slate-700 dark:bg-slate-900">
               <input
                 type="text"
                 value={searchInput}
@@ -395,14 +395,14 @@ export default function SkpPage() {
                   if (event.key === "Enter") handleSearchSubmit();
                 }}
                 placeholder="Cari nama SKP atau pengunggah"
-                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </label>
 
             <select
               value={selectedTriwulan}
               onChange={(event) => setSelectedTriwulan(Number(event.target.value))}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200"
+              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
               {triwulanFilterOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -414,7 +414,7 @@ export default function SkpPage() {
             <select
               value={selectedYear}
               onChange={(event) => setSelectedYear(Number(event.target.value))}
-              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200"
+              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-sm outline-none focus:ring-2 focus:ring-orange-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
               <option value={0}>Semua Tahun</option>
               {yearOptions.map((year) => (
@@ -426,7 +426,7 @@ export default function SkpPage() {
           </div>
 
           {selectedIds.size > 0 && (
-            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between animate-[slideDown_0.3s_ease-out]">
+            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between animate-[slideDown_0.3s_ease-out] dark:border-orange-500/30 dark:bg-orange-500/10">
               <p className="text-sm font-semibold text-orange-700">
                 {selectedIds.size} dokumen SKP dipilih
               </p>
@@ -441,7 +441,7 @@ export default function SkpPage() {
             </div>
           )}
 
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6 animate-[slideUp_0.6s_ease-out_0.2s_both]">
+          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6 animate-[slideUp_0.6s_ease-out_0.2s_both] dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-wrap gap-2">
                 <button
@@ -450,7 +450,7 @@ export default function SkpPage() {
                   className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
                     sortOrder === "newest"
                       ? "bg-orange-500 text-white shadow-md shadow-orange-500/30"
-                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
+                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
                   }`}
                 >
                   TERBARU
@@ -461,7 +461,7 @@ export default function SkpPage() {
                   className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
                     sortOrder === "oldest"
                       ? "bg-orange-500 text-white shadow-md shadow-orange-500/30"
-                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600"
+                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
                   }`}
                 >
                   TERLAMA
@@ -481,15 +481,17 @@ export default function SkpPage() {
                   <button
                     type="button"
                     onClick={handleRefresh}
-                    className="bg-orange-500 hover:bg-orange-600 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-white transition-all duration-200 shadow-md shadow-orange-500/30 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px]"
                   >
-                    <FiRefreshCw className={`h-5 w-5 ${isRefreshing ? "animate-spin" : ""}`} />
+                    <FiRefreshCw
+                      className={`h-[18px] w-[18px] text-white ${isRefreshing ? "animate-[spin_0.8s_linear_infinite]" : ""}`}
+                    />
                   </button>
                 </AppTooltip>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-900">
               <div className="hidden overflow-x-auto md:block">
                 <table className="relative z-10 w-full min-w-full table-fixed border-collapse border-spacing-0 text-sm">
                   <thead className="rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
@@ -528,16 +530,16 @@ export default function SkpPage() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white">
+                  <tbody className="bg-white dark:bg-slate-900">
                     {loading ? (
                       <tr>
-                        <td colSpan={7} className="py-12 text-center text-slate-400">
+                        <td colSpan={7} className="py-12 text-center text-slate-400 dark:text-slate-500">
                           Memuat data SKP...
                         </td>
                       </tr>
                     ) : currentRows.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="py-12 text-center text-slate-400">
+                        <td colSpan={7} className="py-12 text-center text-slate-400 dark:text-slate-500">
                           Data SKP tidak ditemukan.
                         </td>
                       </tr>
@@ -545,8 +547,8 @@ export default function SkpPage() {
                       currentRows.map((item, index) => (
                         <tr
                           key={item.id}
-                          className={`border-b border-slate-100 transition-colors hover:bg-slate-50/70 ${
-                            selectedIds.has(item.id) ? "bg-orange-50/70" : ""
+                          className={`border-b border-slate-100 transition-colors hover:bg-slate-50/70 dark:border-slate-800 dark:hover:bg-slate-800/70 ${
+                            selectedIds.has(item.id) ? "bg-orange-50/70 dark:bg-orange-500/10" : ""
                           }`}
                         >
                           <td className="py-4 px-3 text-center">
@@ -563,21 +565,18 @@ export default function SkpPage() {
                           </td>
                           <td className="py-4 px-3">
                             <AppTooltip content={item.nama_skp}>
-                              <div className="truncate text-sm font-semibold text-slate-800">
+                              <div className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
                                 {item.nama_skp}
                               </div>
                             </AppTooltip>
-                            <div className="mt-1 text-xs text-slate-500">
-                              {item.uploaded_by || "-"}
-                            </div>
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-700">
+                          <td className="py-4 px-3 text-center text-slate-700 dark:text-slate-200">
                             Triwulan {item.triwulan}
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-700">
+                          <td className="py-4 px-3 text-center text-slate-700 dark:text-slate-200">
                             {item.tahun}
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-600">
+                          <td className="py-4 px-3 text-center text-slate-600 dark:text-slate-300">
                             {formatIndonesianDate(item.created_at || "")}
                           </td>
                           <td className="py-4 px-3">
@@ -624,16 +623,16 @@ export default function SkpPage() {
 
               <div className="divide-y divide-slate-100 md:hidden">
                 {loading ? (
-                  <div className="px-4 py-10 text-center text-sm text-slate-400">
+                  <div className="px-4 py-10 text-center text-sm text-slate-400 dark:text-slate-500">
                     Memuat data SKP...
                   </div>
                 ) : currentRows.length === 0 ? (
-                  <div className="px-4 py-10 text-center text-sm text-slate-400">
+                  <div className="px-4 py-10 text-center text-sm text-slate-400 dark:text-slate-500">
                     Data SKP tidak ditemukan.
                   </div>
                 ) : (
                   currentRows.map((item, index) => (
-                    <div key={item.id} className="p-4">
+                    <div key={item.id} className="p-4 dark:bg-slate-900">
                       <div className="flex items-start gap-3">
                         <input
                           type="checkbox"
@@ -647,7 +646,7 @@ export default function SkpPage() {
                               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600">
                                 No {(safeCurrentPage - 1) * rowsPerPage + index + 1}
                               </p>
-                              <p className="mt-1 text-sm font-semibold text-slate-800">
+                              <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">
                                 {item.nama_skp}
                               </p>
                             </div>
@@ -655,20 +654,17 @@ export default function SkpPage() {
                               TW {item.triwulan}
                             </span>
                           </div>
-                          <div className="mt-3 grid grid-cols-2 gap-3 text-xs text-slate-500">
+                          <div className="mt-3 grid grid-cols-2 gap-3 text-xs text-slate-500 dark:text-slate-400">
                             <div>
                               <p className="uppercase tracking-wide">Tahun</p>
-                              <p className="mt-1 font-medium text-slate-700">{item.tahun}</p>
+                              <p className="mt-1 font-medium text-slate-700 dark:text-slate-200">{item.tahun}</p>
                             </div>
                             <div>
                               <p className="uppercase tracking-wide">Tanggal</p>
-                              <p className="mt-1 font-medium text-slate-700">
+                              <p className="mt-1 font-medium text-slate-700 dark:text-slate-200">
                                 {formatIndonesianDate(item.created_at || "")}
                               </p>
                             </div>
-                          </div>
-                          <div className="mt-2 text-xs text-slate-500">
-                            Pengunggah: <span className="font-medium text-slate-700">{item.uploaded_by || "-"}</span>
                           </div>
                           <div className="mt-4 flex flex-wrap gap-2">
                             <button
@@ -722,7 +718,7 @@ export default function SkpPage() {
 
       {isUploadOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
-          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out]">
+          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -747,7 +743,7 @@ export default function SkpPage() {
             <form onSubmit={handleSubmitUpload} className="space-y-5 px-6 py-6">
 	              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Nama SKP
                   </label>
                   <input
@@ -757,12 +753,12 @@ export default function SkpPage() {
                       setUploadForm((prev) => ({ ...prev, nama_skp: event.target.value }))
                     }
                     placeholder="Contoh: SKP Triwulan 1 Staff Akuntansi"
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Triwulan
                   </label>
                   <select
@@ -770,7 +766,7 @@ export default function SkpPage() {
                     onChange={(event) =>
                       setUploadForm((prev) => ({ ...prev, triwulan: Number(event.target.value) }))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
                     {triwulanFormOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -781,7 +777,7 @@ export default function SkpPage() {
                 </div>
 
 	                <div>
-	                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+	                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
 	                    Tahun
                   </label>
                   <select
@@ -789,7 +785,7 @@ export default function SkpPage() {
                     onChange={(event) =>
                       setUploadForm((prev) => ({ ...prev, tahun: Number(event.target.value) }))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
                     {yearOptions.map((year) => (
                       <option key={year} value={year}>
@@ -800,17 +796,14 @@ export default function SkpPage() {
 	                </div>
 		              </div>
 	
-	              <label className="block rounded-[24px] border border-dashed border-orange-200 bg-orange-50/50 p-5 transition hover:border-orange-300 hover:bg-orange-50">
+		              <label className="block rounded-[24px] border border-dashed border-orange-200 bg-orange-50/50 p-5 transition hover:border-orange-300 hover:bg-orange-50 dark:border-orange-500/30 dark:bg-orange-500/10 dark:hover:bg-orange-500/15">
 	                <div className="flex flex-col items-center justify-center text-center">
 	                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-orange-600 shadow-sm">
                     <FiFileText className="h-6 w-6" />
                   </div>
-                  <p className="text-sm font-semibold text-slate-800">
-                    {uploadForm.file ? uploadForm.file.name : "Pilih dokumen SKP"}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Format yang didukung: PDF, Word, Excel, PowerPoint, JPG, PNG, HEIC. Maksimal 30MB.
-                  </p>
+	                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+	                    {uploadForm.file ? uploadForm.file.name : "Pilih dokumen SKP"}
+	                  </p>
 	                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white">
                     <FiUploadCloud className="h-4 w-4" />
                     Pilih File
@@ -830,7 +823,7 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={() => setIsUploadOpen(false)}
-                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+	                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100"
                 >
                   Batal
                 </button>
@@ -849,7 +842,7 @@ export default function SkpPage() {
 
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
-          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out]">
+          <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -874,7 +867,7 @@ export default function SkpPage() {
             <form onSubmit={handleSubmitEdit} className="space-y-5 px-6 py-6">
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Nama SKP
                   </label>
                   <input
@@ -883,11 +876,11 @@ export default function SkpPage() {
                     onChange={(event) =>
                       setEditing((prev) => (prev ? { ...prev, nama_skp: event.target.value } : prev))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Triwulan
                   </label>
                   <select
@@ -897,7 +890,7 @@ export default function SkpPage() {
                         prev ? { ...prev, triwulan: Number(event.target.value) } : prev,
                       )
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
                     {triwulanFormOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -907,7 +900,7 @@ export default function SkpPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Tahun
                   </label>
                   <select
@@ -917,7 +910,7 @@ export default function SkpPage() {
                         prev ? { ...prev, tahun: Number(event.target.value) } : prev,
                       )
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   >
                     {yearOptions.map((year) => (
                       <option key={year} value={year}>
@@ -928,21 +921,21 @@ export default function SkpPage() {
                 </div>
               </div>
 
-              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">Ganti file SKP</p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Ganti file SKP</p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                       Opsional. Jika tidak dipilih, file lama tetap digunakan.
                     </p>
-                    <p className="mt-3 text-sm text-slate-600">
+                    <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
                       File saat ini:{" "}
-                      <span className="font-medium text-slate-800">
+                      <span className="font-medium text-slate-800 dark:text-slate-100">
                         {getFileNameFromPath(editing.file_path)}
                       </span>
                     </p>
                     {editing.file && (
-                      <p className="mt-1 text-xs font-medium text-orange-600">
+                      <p className="mt-1 text-xs font-medium text-orange-600 dark:text-orange-400">
                         File baru: {editing.file.name}
                       </p>
                     )}
@@ -969,7 +962,7 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={() => setEditing(null)}
-                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100"
                 >
                   Batal
                 </button>
