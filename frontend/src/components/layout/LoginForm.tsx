@@ -3,7 +3,8 @@ import { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import userIcon from "../../assets/icons/profile.svg";
 import lockIcon from "../../assets/icons/kunci.svg";
-import logoBpkad from "../../assets/images/bpkad-building.png";
+import bpkadBuildingPutih from "../../assets/images/bpkad-building-putih.png";
+import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.png";
 
 type LoginFormProps = {
   username: string;
@@ -37,9 +38,14 @@ export default function LoginForm({
           <div className="relative mb-4">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-2xl opacity-20 animate-pulse"></div>
             <img
-              src={logoBpkad}
+              src={bpkadBuildingHitam}
               alt="BPKAD Logo"
-              className="relative h-20 sm:h-24 object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300"
+              className="relative h-20 sm:h-24 object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300 dark:hidden"
+            />
+            <img
+              src={bpkadBuildingPutih}
+              alt="BPKAD Logo"
+              className="relative h-20 sm:h-24 object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300 hidden dark:block"
             />
           </div>
         </div>

@@ -31,15 +31,9 @@ export default function Login() {
 
     try {
       const data = await login(safeUsername, safePassword);
-      localStorage.setItem("rememberMe", String(rememberMe));
-
-      if (rememberMe) {
-        localStorage.setItem("authToken", data.token);
-        sessionStorage.removeItem("authToken");
-      } else {
-        sessionStorage.setItem("authToken", data.token);
-        localStorage.removeItem("authToken");
-      }
+      localStorage.setItem("rememberMe", "true");
+      localStorage.setItem("authToken", data.token);
+      sessionStorage.removeItem("authToken");
 
       navigate("/dashboard");
     } catch (err: Error | unknown) {

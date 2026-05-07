@@ -395,11 +395,24 @@ export const getUploadHistory = async (req: Request, res: Response) => {
         String(row.status || "").toLowerCase() === "dihapus",
     }));
 
-    const [skpRows] = await db.query(
-      `SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at
+    const currentUser = (req as any)?.user;
+    const isAdminRole = currentUser?.role === "Admin" || currentUser?.role === "Admin Akuntansi";
+    const uploaderName = currentUser?.username || currentUser?.role || "-";
+
+    let skpHistoryQuery = `SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at
        FROM skp_history
-       ORDER BY created_at DESC, id DESC`,
-    );
+       ORDER BY created_at DESC, id DESC`;
+    let skpHistoryParams: any[] = [];
+
+    if (!isAdminRole) {
+      skpHistoryQuery = `SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at
+       FROM skp_history
+       WHERE target_uploaded_by = ?
+       ORDER BY created_at DESC, id DESC`;
+      skpHistoryParams = [uploaderName];
+    }
+
+    const [skpRows] = await db.query(skpHistoryQuery, skpHistoryParams);
 
     const parseJson = (value: unknown): Record<string, any> | null => {
       if (!value || typeof value !== "string") return null;

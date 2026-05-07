@@ -127,7 +127,6 @@ const downloadFile = (filePath: string) => {
 
 export default function SkpPage() {
   const user = getUser();
-  const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState<SkpDocument[]>([]);
@@ -630,8 +629,6 @@ export default function SkpPage() {
                                   <FiEye className="h-4 w-4" />
                                 </button>
                               </AppTooltip>
-                              {isAdmin && (
-                                <>
                                   <AppTooltip content="Edit dokumen SKP">
                                     <button
                                       type="button"
@@ -650,8 +647,6 @@ export default function SkpPage() {
                                       <FiTrash2 className="h-4 w-4" />
                                     </button>
                                   </AppTooltip>
-                                </>
-                              )}
                             </div>
                           </td>
                         </tr>
@@ -715,8 +710,6 @@ export default function SkpPage() {
                               <FiEye className="h-4 w-4" />
                               Buka
                             </button>
-                            {isAdmin && (
-                              <>
                                 <button
                                   type="button"
                                   onClick={() => handleOpenEdit(item)}
@@ -733,8 +726,6 @@ export default function SkpPage() {
                                   <FiTrash2 className="h-4 w-4" />
                                   Hapus
                                 </button>
-                              </>
-                            )}
                           </div>
                         </div>
                       </div>

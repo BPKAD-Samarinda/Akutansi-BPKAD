@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import bpkadBuilding from "../../assets/images/bpkad-building.png";
+import bpkadBuildingPutih from "../../assets/images/bpkad-building-putih.png";
+import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.png";
 
 interface HeaderProps {
   title?: string;
@@ -64,11 +65,18 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
         </div>
       </div>
 
-      <img
-        src={bpkadBuilding}
-        className="h-9 lg:h-11 object-contain"
-        alt="BPKAD Kota Samarinda"
-      />
+      <>
+        <img
+          src={bpkadBuildingHitam}
+          className="h-9 lg:h-11 object-contain dark:hidden"
+          alt="BPKAD Kota Samarinda"
+        />
+        <img
+          src={bpkadBuildingPutih}
+          className="h-9 lg:h-11 object-contain hidden dark:block"
+          alt="BPKAD Kota Samarinda"
+        />
+      </>
     </header>
   );
 }

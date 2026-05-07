@@ -169,12 +169,14 @@ export const createSkpDocument = async (payload: {
   triwulan: number;
   tahun: number;
   file: File;
+  target_user?: string;
 }): Promise<{ message: string }> => {
   const formData = new FormData();
   formData.append("nama_skp", payload.nama_skp);
   formData.append("triwulan", String(payload.triwulan));
   formData.append("tahun", String(payload.tahun));
   formData.append("file", payload.file);
+  if (payload.target_user) formData.append("target_user", payload.target_user);
 
   const response = await apiClient.post<{ message: string }>("/skp", formData);
   return response.data;

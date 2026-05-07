@@ -117,6 +117,15 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
       values.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
     }
 
+    const user = (req as AuthenticatedRequest).user;
+    const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+    const uploaderName = user?.username || user?.role || "-";
+
+    if (!isAdmin) {
+      clauses.push("uploaded_by = ?");
+      values.push(uploaderName);
+    }
+
     const whereSql = clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";
 
     const [rows] = await db.query(
@@ -139,10 +148,11 @@ export const createSkpDocument = async (req: Request, res: Response) => {
   try {
     await ensureSkpTable();
 
-    const { nama_skp, triwulan, tahun } = req.body as {
+    const { nama_skp, triwulan, tahun, target_user } = req.body as {
       nama_skp?: string;
       triwulan?: string | number;
       tahun?: string | number;
+      target_user?: string;
     };
 
     if ((req as any).fileValidationError) {
@@ -170,10 +180,13 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Tahun tidak valid." });
     }
 
-    const uploaderName =
-      (req as AuthenticatedRequest).user?.username ||
-      (req as AuthenticatedRequest).user?.role ||
-      "-";
+    const user = (req as AuthenticatedRequest).user;
+    const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+    let uploaderName = user?.username || user?.role || "-";
+    
+    if (isAdmin && target_user && target_user.trim().length > 0) {
+      uploaderName = target_user.trim();
+    }
 
     const filePath = `uploads/${req.file.filename}`;
     const [duplicateRows]: any = await db.execute(
@@ -257,10 +270,11 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
   try {
     await ensureSkpTable();
     const { id } = req.params;
-    const { nama_skp, triwulan, tahun } = req.body as {
+    const { nama_skp, triwulan, tahun, target_user } = req.body as {
       nama_skp?: string;
       triwulan?: string | number;
       tahun?: string | number;
+      target_user?: string;
     };
 
     const parsedTriwulan = Number(triwulan);
@@ -413,8 +427,17 @@ export const getSkpHistories = async (req: Request, res: Response) => {
     const startDate = String(req.query.startDate || "").trim();
     const endDate = String(req.query.endDate || "").trim();
 
+    const user = (req as AuthenticatedRequest).user;
+    const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+    const uploaderName = user?.username || user?.role || "-";
+
     const where: string[] = [];
     const values: Array<string> = [];
+
+    if (!isAdmin) {
+      where.push("target_uploaded_by = ?");
+      values.push(uploaderName);
+    }
 
     if (action && action !== "all") {
       where.push("action_type = ?");

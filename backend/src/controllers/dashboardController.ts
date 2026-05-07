@@ -4,6 +4,7 @@ import { syncUploadsToDatabase } from "../config/uploadSync";
 
 type AuthenticatedRequest = Request & {
   user?: {
+    username?: string;
     role: string;
   };
 };
@@ -58,15 +59,25 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
        ORDER BY created_at DESC, id DESC`,
     );
 
-    const [skpRows] = await db.query(
-      `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
-       FROM skp_documents
-       ORDER BY created_at DESC, id DESC`,
-    );
-
     const currentUser = (req as AuthenticatedRequest).user;
     const isAdminRole =
       currentUser?.role === "Admin" || currentUser?.role === "Admin Akuntansi";
+    const uploaderName = currentUser?.username || currentUser?.role || "-";
+
+    let skpQuery = `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
+       FROM skp_documents
+       ORDER BY created_at DESC, id DESC`;
+    let skpParams: any[] = [];
+
+    if (!isAdminRole) {
+      skpQuery = `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
+       FROM skp_documents
+       WHERE uploaded_by = ?
+       ORDER BY created_at DESC, id DESC`;
+      skpParams = [uploaderName];
+    }
+
+    const [skpRows] = await db.query(skpQuery, skpParams);
 
     let loginRows: unknown[] = [];
     if (isAdminRole) {
