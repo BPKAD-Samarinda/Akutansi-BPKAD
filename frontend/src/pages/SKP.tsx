@@ -4,6 +4,7 @@ import {
   FiDownload,
   FiEdit3,
   FiEye,
+  FiFileText,
   FiRefreshCw,
   FiTrash2,
   FiUploadCloud,
