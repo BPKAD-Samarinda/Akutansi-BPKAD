@@ -1,13 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import searchIcon from "../assets/icons/search.svg";
 import {
-  FiCheckSquare,
-  FiClipboard,
   FiDownload,
   FiEdit3,
   FiEye,
-  FiExternalLink,
-  FiFileText,
   FiRefreshCw,
   FiTrash2,
   FiUploadCloud,
@@ -34,7 +30,6 @@ import {
   uploadsBaseUrl,
 } from "../services/api";
 import { formatIndonesianDate } from "../utils/localDate";
-import { getUser } from "../utils/auth";
 import type { SkpDocument, ToastState } from "../types";
 
 const triwulanFilterOptions = [
@@ -126,7 +121,6 @@ const downloadFile = (filePath: string) => {
 };
 
 export default function SkpPage() {
-  const user = getUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState<SkpDocument[]>([]);
@@ -195,6 +189,7 @@ export default function SkpPage() {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTriwulan, selectedYear, search]);
 
   useEffect(() => {
@@ -337,8 +332,9 @@ export default function SkpPage() {
       setIsUploadOpen(false);
       setUploadForm(initialUploadForm());
       await loadData();
-    } catch (error: any) {
-      showToast(error?.response?.data?.message || "Gagal mengunggah dokumen SKP.", "error");
+    } catch (error: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      showToast((error as any)?.response?.data?.message || "Gagal mengunggah dokumen SKP.", "error");
     } finally {
       setIsSubmittingUpload(false);
     }
@@ -365,8 +361,9 @@ export default function SkpPage() {
       showToast("Dokumen SKP berhasil diperbarui.", "success");
       setEditing(null);
       await loadData();
-    } catch (error: any) {
-      showToast(error?.response?.data?.message || "Gagal memperbarui dokumen SKP.", "error");
+    } catch (error: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      showToast((error as any)?.response?.data?.message || "Gagal memperbarui dokumen SKP.", "error");
     } finally {
       setIsSubmittingEdit(false);
     }
@@ -384,8 +381,9 @@ export default function SkpPage() {
         return next;
       });
       await loadData();
-    } catch (error: any) {
-      showToast(error?.response?.data?.message || "Gagal menghapus dokumen SKP.", "error");
+    } catch (error: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      showToast((error as any)?.response?.data?.message || "Gagal menghapus dokumen SKP.", "error");
     }
   };
 
