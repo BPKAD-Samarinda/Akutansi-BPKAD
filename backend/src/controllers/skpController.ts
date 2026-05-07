@@ -43,6 +43,12 @@ const ensureSkpTable = async () => {
   }
 };
 
+const ensureSkpSoftDeleteColumns = async () => {
+  try { await db.execute("ALTER TABLE skp_documents ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0"); } catch (e) {}
+  try { await db.execute("ALTER TABLE skp_documents ADD COLUMN deleted_at DATETIME NULL"); } catch (e) {}
+  try { await db.execute("DROP INDEX uniq_skp_uploader_period_name ON skp_documents"); } catch (e) {}
+};
+
 const ensureSkpHistoryTable = async () => {
   await db.execute(`
     CREATE TABLE IF NOT EXISTS skp_history (
@@ -94,6 +100,7 @@ const writeSkpHistory = async (
 export const getSkpDocuments = async (req: Request, res: Response) => {
   try {
     await ensureSkpTable();
+    await ensureSkpSoftDeleteColumns();
 
     const triwulan = Number(req.query.triwulan || 0);
     const tahun = Number(req.query.tahun || 0);
@@ -126,6 +133,7 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
       values.push(uploaderName);
     }
 
+    clauses.push("is_deleted = 0");
     const whereSql = clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "";
 
     const [rows] = await db.query(
@@ -147,6 +155,7 @@ export const createSkpDocument = async (req: Request, res: Response) => {
   let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
+    await ensureSkpSoftDeleteColumns();
 
     const { nama_skp, triwulan, tahun, target_user } = req.body as {
       nama_skp?: string;
@@ -191,7 +200,7 @@ export const createSkpDocument = async (req: Request, res: Response) => {
     const filePath = `uploads/${req.file.filename}`;
     const [duplicateRows]: any = await db.execute(
       `SELECT id FROM skp_documents
-       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ?
+       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND is_deleted = 0
        LIMIT 1`,
       [uploaderName, parsedTahun, parsedTriwulan, trimmedNamaSkp],
     );
@@ -269,6 +278,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
   let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
+    await ensureSkpSoftDeleteColumns();
     const { id } = req.params;
     const { nama_skp, triwulan, tahun, target_user } = req.body as {
       nama_skp?: string;
@@ -289,7 +299,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     }
 
     const [rows]: any = await db.execute(
-      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
+      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? AND is_deleted = 0 LIMIT 1",
       [id],
     );
     if (rows.length === 0) {
@@ -304,7 +314,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
 
     const [duplicateRows]: any = await db.execute(
       `SELECT id FROM skp_documents
-       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND id <> ?
+       WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND id <> ? AND is_deleted = 0
        LIMIT 1`,
       [rows[0].uploaded_by || "-", parsedTahun, parsedTriwulan, trimmedNamaSkp, id],
     );
@@ -373,9 +383,10 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
   let connection: PoolConnection | null = null;
   try {
     await ensureSkpTable();
+    await ensureSkpSoftDeleteColumns();
     const { id } = req.params;
     const [rows]: any = await db.execute(
-      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? LIMIT 1",
+      "SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents WHERE id = ? AND is_deleted = 0 LIMIT 1",
       [id],
     );
     if (rows.length === 0) {
@@ -383,7 +394,7 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
     }
     connection = await db.getConnection();
     await connection.beginTransaction();
-    await connection.execute("DELETE FROM skp_documents WHERE id = ?", [id]);
+    await connection.execute("UPDATE skp_documents SET is_deleted = 1, deleted_at = NOW() WHERE id = ? AND is_deleted = 0", [id]);
 
     await writeSkpHistory(connection, {
       skpDocumentId: Number(id),
@@ -402,7 +413,7 @@ export const deleteSkpDocument = async (req: Request, res: Response) => {
     await connection.commit();
     connection.release();
     connection = null;
-    cleanupUploadedFile(rows[0].file_path);
+    // cleanupUploadedFile(rows[0].file_path);
 
     return res.status(200).json({ message: "Dokumen SKP berhasil dihapus." });
   } catch (error) {

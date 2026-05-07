@@ -466,7 +466,7 @@ export const getUploadHistory = async (req: Request, res: Response) => {
         edit_after: after ? JSON.stringify(after) : null,
         isDeleted: statusValue === "dihapus",
         source: "skp",
-        canRestore: false,
+        canRestore: statusValue === "dihapus",
       };
     });
 
@@ -514,10 +514,30 @@ export const restoreDocumentFromHistory = async (
   res: Response,
 ) => {
   try {
+    const { id } = req.params;
+
+    if (String(id).startsWith("skp-")) {
+      const historyId = String(id).replace("skp-", "");
+      const [historyRows]: any = await db.execute(
+        "SELECT id, skp_document_id, action_type FROM skp_history WHERE id = ?",
+        [historyId]
+      );
+      if (historyRows.length === 0) {
+        return res.status(404).json({ message: "History item not found" });
+      }
+      if (historyRows[0].action_type !== "delete") {
+        return res.status(400).json({ message: "Document is not in history" });
+      }
+
+      await db.execute(
+        "UPDATE skp_documents SET is_deleted = 0, deleted_at = NULL WHERE id = ?",
+        [historyRows[0].skp_document_id]
+      );
+      return res.status(200).json({ message: "SKP Document restored successfully" });
+    }
+
     await ensureSoftDeleteColumns();
     await ensureDocumentHistoryTable();
-
-    const { id } = req.params;
     const [historyRows]: any = await db.execute(
       "SELECT id, document_id, status FROM document_history WHERE id = ?",
       [id],
@@ -553,10 +573,33 @@ export const permanentlyDeleteDocumentFromHistory = async (
   res: Response,
 ) => {
   try {
+    const { id } = req.params;
+
+    if (String(id).startsWith("skp-")) {
+      const historyId = String(id).replace("skp-", "");
+      const [historyRows]: any = await db.execute(
+        "SELECT id, skp_document_id, action_type, before_data FROM skp_history WHERE id = ?",
+        [historyId]
+      );
+
+      if (historyRows.length === 0) {
+        return res.status(404).json({ message: "History item not found" });
+      }
+
+      const skpDocId = historyRows[0].skp_document_id;
+      
+      if (skpDocId) {
+        await db.execute("DELETE FROM skp_documents WHERE id = ? AND is_deleted = 1", [skpDocId]);
+        await db.execute("DELETE FROM skp_history WHERE skp_document_id = ?", [skpDocId]);
+      } else {
+        await db.execute("DELETE FROM skp_history WHERE id = ?", [historyId]);
+      }
+
+      return res.status(200).json({ message: "SKP Document permanently deleted successfully" });
+    }
+
     await ensureSoftDeleteColumns();
     await ensureDocumentHistoryTable();
-
-    const { id } = req.params;
     const [historyRows]: any = await db.execute(
       "SELECT id, document_id, file_path, status FROM document_history WHERE id = ?",
       [id],
@@ -616,3 +659,4 @@ export const permanentlyDeleteDocumentFromHistory = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
+

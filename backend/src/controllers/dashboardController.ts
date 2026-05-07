@@ -66,13 +66,14 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
 
     let skpQuery = `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
        FROM skp_documents
+       WHERE is_deleted = 0
        ORDER BY created_at DESC, id DESC`;
     let skpParams: any[] = [];
 
     if (!isAdminRole) {
       skpQuery = `SELECT id, nama_skp, triwulan, tahun, created_at, uploaded_by
        FROM skp_documents
-       WHERE uploaded_by = ?
+       WHERE uploaded_by = ? AND is_deleted = 0
        ORDER BY created_at DESC, id DESC`;
       skpParams = [uploaderName];
     }
@@ -113,3 +114,4 @@ export const getDashboardAnalytics = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+

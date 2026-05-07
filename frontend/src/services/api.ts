@@ -482,3 +482,13 @@ export const deleteUser = async (
   const response = await apiClient.delete<{ message: string }>(`/users/${id}`);
   return response.data;
 };
+
+export const restoreSkpDocument = async (id: number | string): Promise<{ message: string }> => {
+  const response = await apiClient.post<{ message: string }>(/skp//restore);
+  return response.data;
+};
+
+export const permanentlyDeleteSkpDocument = async (id: number | string): Promise<{ message: string }> => {
+  const response = await apiClient.delete<{ message: string }>(/skp//permanent);
+  return response.data;
+};
