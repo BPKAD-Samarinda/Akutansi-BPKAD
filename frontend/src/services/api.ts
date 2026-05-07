@@ -275,7 +275,7 @@ export const getUploadHistories = async (
     filePath: item.file_path || "",
     status: (item.status as UploadHistory["status"]) || "diunggah",
     isDeleted: String(item.status || "").toLowerCase() === "dihapus",
-    canRestore: Boolean(item.canRestore),
+    canRestore: item.canRestore !== undefined ? Boolean(item.canRestore) : String(item.status || "").toLowerCase() === "dihapus",
     source: item.source || "document",
     editBefore: parseEditPayload(item.edit_before),
     editAfter: parseEditPayload(item.edit_after),
@@ -484,11 +484,13 @@ export const deleteUser = async (
 };
 
 export const restoreSkpDocument = async (id: number | string): Promise<{ message: string }> => {
-  const response = await apiClient.post<{ message: string }>(/skp//restore);
+  const response = await apiClient.post<{ message: string }>(`/skp/${id}/restore`);
   return response.data;
 };
 
 export const permanentlyDeleteSkpDocument = async (id: number | string): Promise<{ message: string }> => {
-  const response = await apiClient.delete<{ message: string }>(/skp//permanent);
+  const response = await apiClient.delete<{ message: string }>(`/skp/${id}/permanent`);
   return response.data;
 };
+
+

@@ -533,6 +533,7 @@ export const restoreDocumentFromHistory = async (
         "UPDATE skp_documents SET is_deleted = 0, deleted_at = NULL WHERE id = ?",
         [historyRows[0].skp_document_id]
       );
+      await db.execute("DELETE FROM skp_history WHERE id = ?", [historyId]);
       return res.status(200).json({ message: "SKP Document restored successfully" });
     }
 
@@ -659,4 +660,5 @@ export const permanentlyDeleteDocumentFromHistory = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
