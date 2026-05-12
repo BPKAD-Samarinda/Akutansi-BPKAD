@@ -487,7 +487,7 @@ export default function SkpPage() {
                   onClick={() => setSortOrder("newest")}
                   className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
                     sortOrder === "newest"
-                      ? "bg-orange-500 text-white shadow-md shadow-orange-500/30"
+                      ? "bg-orange-500 text-white shadow-md shadow-blue-500/30"
                       : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
                   }`}
                 >
@@ -498,7 +498,7 @@ export default function SkpPage() {
                   onClick={() => setSortOrder("oldest")}
                   className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
                     sortOrder === "oldest"
-                      ? "bg-orange-500 text-white shadow-md shadow-orange-500/30"
+                      ? "bg-orange-500 text-white shadow-md shadow-blue-500/30"
                       : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
                   }`}
                 >
@@ -510,7 +510,7 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={handleOpenUploadModal}
-                  className="bg-orange-500 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-orange-500/30 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 justify-center"
+                  className="bg-blue-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-blue-500/30 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 justify-center"
                 >
                   <FiUploadCloud className="h-4 w-4 lg:h-5 lg:w-5" />
                   Unggah Baru
@@ -519,7 +519,7 @@ export default function SkpPage() {
                   <button
                     type="button"
                     onClick={handleRefresh}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-white transition-all duration-200 shadow-md shadow-orange-500/30 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px]"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white transition-all duration-200 shadow-md shadow-blue-500/30 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px]"
                   >
                     <FiRefreshCw
                       className={`h-[18px] w-[18px] text-white ${isRefreshing ? "animate-[spin_0.8s_linear_infinite]" : ""}`}
@@ -868,7 +868,7 @@ export default function SkpPage() {
                 <button
                   type="submit"
                   disabled={isSubmittingUpload}
-                  className="h-12 rounded-2xl bg-orange-500 px-5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-70"
+                  className="h-12 rounded-2xl bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70"
                 >
                   {isSubmittingUpload ? "Mengunggah..." : "Unggah SKP"}
                 </button>
@@ -1015,7 +1015,7 @@ export default function SkpPage() {
                 <button
                   type="submit"
                   disabled={isSubmittingEdit}
-                  className="h-12 rounded-2xl bg-orange-500 px-5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-70"
+                  className="h-12 rounded-2xl bg-emerald-500 px-5 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:opacity-70"
                 >
                   {isSubmittingEdit ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
@@ -1047,3 +1047,4 @@ export default function SkpPage() {
     </div>
   );
 }
+

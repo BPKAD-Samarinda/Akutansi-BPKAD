@@ -71,14 +71,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 {user?.role ?? "Akuntansi"}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="h-8 w-8 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 transition-colors flex items-center justify-center dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Keluar"
-            >
-              <img src={logoutIcon} className="w-4 h-4" alt="Logout" />
-            </button>
           </div>
         </div>
 
@@ -214,11 +206,21 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               }`}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ease-in-out ${
                   isDark ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 mt-2 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
+            aria-label="Keluar"
+          >
+            <img src={logoutIcon} className="w-4 h-4 filter brightness-0 saturate-100 invert-[34%] sepia-[82%] saturate-[2385%] hue-rotate-[336deg] brightness-[96%] contrast-[97%] dark:invert-[67%] dark:sepia-[33%] dark:saturate-[2343%] dark:hue-rotate-[320deg] dark:brightness-[104%] dark:contrast-[101%]" alt="" />
+            Keluar
           </button>
         </div>
       </aside>
