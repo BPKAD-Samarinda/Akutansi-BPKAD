@@ -52,19 +52,19 @@ export default function SkpHistoryPage() {
     setToast({ show: true, message, type });
   };
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const rows = await getSkpHistories({ action, staff, search, startDate, endDate });
-      setItems(rows);
-    } catch {
-      showToast("Gagal mengambil riwayat SKP.", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const rows = await getSkpHistories({ action, staff, search, startDate, endDate });
+        setItems(rows);
+      } catch {
+        showToast("Gagal mengambil riwayat SKP.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadData();
   }, [action, staff, search, startDate, endDate]);
 
@@ -93,7 +93,7 @@ export default function SkpHistoryPage() {
         <Header title="Riwayat SKP" onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
-            <select value={action} onChange={(e) => setAction(e.target.value as any)} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm">
+            <select value={action} onChange={(e) => setAction(e.target.value as (typeof actionOptions)[number]["value"])} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm">
               {actionOptions.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
