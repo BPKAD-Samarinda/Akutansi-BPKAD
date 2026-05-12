@@ -10,9 +10,6 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(
-    () => localStorage.getItem("rememberMe") === "true",
-  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,7 +28,6 @@ export default function Login() {
 
     try {
       const data = await login(safeUsername, safePassword);
-      localStorage.setItem("rememberMe", "true");
       localStorage.setItem("authToken", data.token);
       sessionStorage.removeItem("authToken");
 
@@ -50,12 +46,10 @@ export default function Login() {
       <LoginForm
         username={username}
         password={password}
-        rememberMe={rememberMe}
         isLoading={isLoading}
         error={error}
         onUsernameChange={setUsername}
         onPasswordChange={setPassword}
-        onRememberMeChange={setRememberMe}
         onSubmit={handleLogin}
       />
       <AuthHero />
