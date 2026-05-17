@@ -104,7 +104,7 @@ router.get(
   ),
   getDashboardAnalytics,
 );
-router.get("/documents/history", authenticateToken, getUploadHistory);
+router.get("/documents/history", authenticateToken, authorizeRoles("Admin", "Admin Akuntansi"), getUploadHistory);
 router.post(
   "/documents",
   authenticateToken,

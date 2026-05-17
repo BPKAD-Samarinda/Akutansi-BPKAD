@@ -366,7 +366,13 @@ export const permanentlyDeleteUploadHistories = async (
   for (const id of ids) {
     try {
       const result = await permanentlyDeleteUploadHistory(id);
-      if (result.message.toLowerCase().includes("successfully")) {
+      const normalizedMessage = result.message.toLowerCase();
+      if (
+        normalizedMessage.includes("successfully") ||
+        normalizedMessage.includes("success") ||
+        normalizedMessage.includes("berhasil") ||
+        normalizedMessage.includes("deleted")
+      ) {
         deletedCount += 1;
       } else {
         failedCount += 1;
@@ -500,5 +506,6 @@ export const permanentlyDeleteSkpDocument = async (
   );
   return response.data;
 };
+
 
 

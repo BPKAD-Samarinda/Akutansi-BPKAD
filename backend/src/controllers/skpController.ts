@@ -46,7 +46,7 @@ const ensureSkpTable = async () => {
 const ensureSkpSoftDeleteColumns = async () => {
   try { await db.execute("ALTER TABLE skp_documents ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0"); } catch (e) {}
   try { await db.execute("ALTER TABLE skp_documents ADD COLUMN deleted_at DATETIME NULL"); } catch (e) {}
-  try { await db.execute("DROP INDEX uniq_skp_uploader_period_name ON skp_documents"); } catch (e) {}
+
 };
 
 const ensureSkpHistoryTable = async () => {
