@@ -38,11 +38,16 @@ describe("SKP controller critical safety", () => {
   });
 
   it("does not delete old file when update fails on duplicate", async () => {
-    dbMock.execute
-      .mockResolvedValueOnce([{}])
-      .mockResolvedValueOnce([[{ id: 10, file_path: "uploads/old.pdf", uploaded_by: "staff", nama_skp: "A", triwulan: 1, tahun: 2026 }]])
-      .mockResolvedValueOnce([[{ id: 99 }]]);
-    dbMock.query.mockResolvedValueOnce([[{ 1: 1 }]]);
+    dbMock.query.mockResolvedValue([[{ 1: 1 }]]);
+    dbMock.execute.mockImplementation(async (sql: string) => {
+      if (sql.includes("SELECT id, nama_skp, triwulan, tahun, file_path, uploaded_by FROM skp_documents")) {
+        return [[{ id: 10, file_path: "uploads/old.pdf", uploaded_by: "staff", nama_skp: "A", triwulan: 1, tahun: 2026 }]];
+      }
+      if (sql.includes("SELECT id FROM skp_documents")) {
+        return [[{ id: 99 }]];
+      }
+      return [[]];
+    });
 
     const req: AnyRecord = {
       params: { id: "10" },
@@ -65,15 +70,20 @@ describe("SKP controller critical safety", () => {
       commit: vi.fn().mockResolvedValue(undefined),
       rollback: vi.fn().mockResolvedValue(undefined),
       release: vi.fn(),
-      execute: vi.fn().mockResolvedValueOnce([{ insertId: 77 }]),
+      execute: vi
+        .fn()
+        .mockResolvedValueOnce([{ insertId: 77 }])
+        .mockRejectedValueOnce(new Error("history failed")),
     };
 
     dbMock.getConnection.mockResolvedValue(connection);
-    dbMock.execute
-      .mockResolvedValueOnce([{}])
-      .mockResolvedValueOnce([[]])
-      .mockRejectedValueOnce(new Error("history failed"));
-    dbMock.query.mockResolvedValueOnce([[{ 1: 1 }]]);
+    dbMock.query.mockResolvedValue([[{ 1: 1 }]]);
+    dbMock.execute.mockImplementation(async (sql: string) => {
+      if (sql.includes("SELECT id FROM skp_documents")) {
+        return [[]];
+      }
+      return [[]];
+    });
 
     const req: AnyRecord = {
       body: { nama_skp: "SKP Test", triwulan: 2, tahun: 2026 },
