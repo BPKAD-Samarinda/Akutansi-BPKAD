@@ -45,7 +45,7 @@ Catatan:
 
 | Frontend function | Method | Frontend path (relative) | Backend endpoint final | Auth | Role | Status |
 |---|---|---|---|---|---|---|
-| `getUploadHistories(query)` | `GET` | `/documents/history` | `/api/documents/history` | Ya | Semua user terautentikasi | Aktif |
+| `getUploadHistories(query)` | `GET` | `/documents/history` | `/api/documents/history` | Ya | `Admin`, `Admin Akuntansi` | Aktif |
 | `restoreUploadHistory(id)` | `POST` | `/documents/history/:id/restore` | `/api/documents/history/:id/restore` | Ya | `Admin`, `Admin Akuntansi` | Aktif |
 | `permanentlyDeleteUploadHistory(id)` | `DELETE` | `/documents/history/:id` | `/api/documents/history/:id` | Ya | `Admin`, `Admin Akuntansi` | Aktif |
 | `restoreUploadHistories(ids[])` | loop `POST` | `/documents/history/:id/restore` | `/api/documents/history/:id/restore` | Ya | `Admin`, `Admin Akuntansi` | Aktif |
