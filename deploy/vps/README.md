@@ -47,7 +47,7 @@ Salin source project ke:
 ```bash
 cd /var/www/akuntansi-bpkad/backend
 npm install
-cp .env.production.example .env
+cp .env.example .env
 nano .env
 ```
 
@@ -141,3 +141,4 @@ sudo systemctl reload nginx
 - Upload file berhasil
 - Tombol Lihat Dokumen membuka file
 - `https://api.your-domain.com/api/documents` merespon 401 jika tanpa token (normal)
+
