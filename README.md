@@ -43,6 +43,8 @@ Lihat README di masing-masing folder untuk detail lebih lanjut.
 - `docs/backup-restore.md`
 - `docs/troubleshooting.md`
 - `docs/maintenance.md`
+- `docs/hostinger-vps-deploy.md`
+- `docs/hostinger-vps-troubleshooting.md`
 
 ## Deploy VPS
 
