@@ -483,13 +483,21 @@ export const deleteUser = async (
   return response.data;
 };
 
-export const restoreSkpDocument = async (id: number | string): Promise<{ message: string }> => {
-  const response = await apiClient.post<{ message: string }>(`/skp/${id}/restore`);
+export const restoreSkpDocument = async (
+  historyId: number | string,
+): Promise<{ message: string }> => {
+  const response = await apiClient.post<{ message: string }>(
+    `/documents/history/skp-${historyId}/restore`,
+  );
   return response.data;
 };
 
-export const permanentlyDeleteSkpDocument = async (id: number | string): Promise<{ message: string }> => {
-  const response = await apiClient.delete<{ message: string }>(`/skp/${id}/permanent`);
+export const permanentlyDeleteSkpDocument = async (
+  historyId: number | string,
+): Promise<{ message: string }> => {
+  const response = await apiClient.delete<{ message: string }>(
+    `/documents/history/skp-${historyId}`,
+  );
   return response.data;
 };
 
