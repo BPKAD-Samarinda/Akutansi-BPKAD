@@ -22,7 +22,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     return saved ? saved === "dark" : false;
   });
   const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
-  const isStaff = user?.role === "Staff" || user?.role === "Staff Akuntansi";
   const isMagang = user?.role === "Anak Magang";
   const isPkl = user?.role === "Anak PKL";
   const canViewUploadHistory = isAdmin;
@@ -219,7 +218,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             className="w-full flex items-center justify-center gap-2 mt-2 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
             aria-label="Keluar"
           >
-            <img src={logoutIcon} className="w-4 h-4 filter brightness-0 saturate-100 invert-[34%] sepia-[82%] saturate-[2385%] hue-rotate-[336deg] brightness-[96%] contrast-[97%] dark:invert-[67%] dark:sepia-[33%] dark:saturate-[2343%] dark:hue-rotate-[320deg] dark:brightness-[104%] dark:contrast-[101%]" alt="" />
+            <img src={logoutIcon} className="w-4 h-4 filter invert-[34%] sepia-[82%] saturate-[2385%] hue-rotate-[336deg] brightness-[96%] contrast-[97%] dark:invert-[67%] dark:sepia-[33%] dark:saturate-[2343%] dark:hue-rotate-[320deg] dark:brightness-[104%] dark:contrast-[101%]" alt="" />
             Keluar
           </button>
         </div>
