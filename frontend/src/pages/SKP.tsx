@@ -29,9 +29,12 @@ import {
   getSkpDocuments,
   updateSkpDocument,
   uploadsBaseUrl,
+  getUsers,
 } from "../services/api";
 import { formatIndonesianDate } from "../utils/localDate";
+import { getUser } from "../utils/auth";
 import type { SkpDocument, ToastState } from "../types";
+import type { UserApiItem } from "../types/user";
 
 const triwulanFilterOptions = [
   { value: 0, label: "Semua Triwulan" },
@@ -73,6 +76,7 @@ type UploadForm = {
   triwulan: number;
   tahun: number;
   file: File | null;
+  target_user?: string;
 };
 
 type EditForm = {
@@ -89,6 +93,7 @@ const initialUploadForm = (): UploadForm => ({
   triwulan: 1,
   tahun: currentYear,
   file: null,
+  target_user: "",
 });
 
 const skpSelectTriggerClass =
@@ -122,6 +127,16 @@ const downloadFile = (filePath: string) => {
 };
 
 export default function SkpPage() {
+  const user = getUser();
+  const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+  const [usersList, setUsersList] = useState<UserApiItem[]>([]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      getUsers().then(setUsersList).catch(() => {});
+    }
+  }, [isAdmin]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [documents, setDocuments] = useState<SkpDocument[]>([]);
@@ -129,6 +144,7 @@ export default function SkpPage() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedTriwulan, setSelectedTriwulan] = useState(0);
   const [selectedYear, setSelectedYear] = useState(0);
+  const [selectedUserFilter, setSelectedUserFilter] = useState("");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -172,13 +188,14 @@ export default function SkpPage() {
     return null;
   };
 
-  const loadData = async (overrides?: { search?: string; triwulan?: number; tahun?: number }) => {
+  const loadData = async (overrides?: { search?: string; triwulan?: number; tahun?: number; uploader_name?: string }) => {
     setLoading(true);
     try {
       const data = await getSkpDocuments({
         search: overrides?.search ?? search,
         triwulan: overrides?.triwulan ?? (selectedTriwulan || undefined),
         tahun: overrides?.tahun ?? (selectedYear || undefined),
+        uploader_name: overrides?.uploader_name ?? (selectedUserFilter || undefined),
       });
       setDocuments(Array.isArray(data) ? data : []);
     } catch {
@@ -191,7 +208,7 @@ export default function SkpPage() {
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTriwulan, selectedYear, search]);
+  }, [selectedTriwulan, selectedYear, search, selectedUserFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -248,9 +265,10 @@ export default function SkpPage() {
     setSearchInput("");
     setSelectedTriwulan(0);
     setSelectedYear(0);
+    setSelectedUserFilter("");
     setSelectedIds(new Set());
     setCurrentPage(1);
-    await loadData({ search: "", triwulan: undefined, tahun: undefined });
+    await loadData({ search: "", triwulan: undefined, tahun: undefined, uploader_name: undefined });
     showToast("Data SKP berhasil diperbarui.", "success");
     setTimeout(() => setIsRefreshing(false), 600);
   };
@@ -323,12 +341,13 @@ export default function SkpPage() {
 
     setIsSubmittingUpload(true);
     try {
-      await createSkpDocument({
-        nama_skp: uploadForm.nama_skp.trim(),
-        triwulan: uploadForm.triwulan,
-        tahun: uploadForm.tahun,
-        file: uploadForm.file,
-      });
+        await createSkpDocument({
+          nama_skp: uploadForm.nama_skp.trim(),
+          triwulan: uploadForm.triwulan,
+          tahun: uploadForm.tahun,
+          file: uploadForm.file,
+          target_user: uploadForm.target_user || undefined,
+        });
       showToast("Dokumen SKP berhasil diunggah.", "success");
       setIsUploadOpen(false);
       setUploadForm(initialUploadForm());
@@ -395,71 +414,97 @@ export default function SkpPage() {
         <Header title="Sasaran Kinerja Pegawai" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-8">
-          <div className="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.3fr)_220px_220px] lg:gap-4 animate-[slideUp_0.6s_ease-out_0.1s_both]">
-            <div>
-              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
-                Pencarian
-              </label>
-              <label className="flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 shadow-sm transition focus-within:border-orange-400 dark:border-slate-700 dark:bg-slate-900">
-                <img
-                  src={searchIcon}
-                  className="mr-3 h-4 w-4 opacity-50 lg:h-5 lg:w-5"
-                  alt="search"
-                />
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") handleSearchSubmit();
-                  }}
-                  placeholder="Cari nama SKP atau pengunggah"
-                  className="w-full bg-transparent text-xs text-gray-700 outline-none placeholder:text-gray-400 dark:text-slate-100 dark:placeholder:text-slate-500 lg:text-sm"
-                />
-              </label>
-            </div>
+          <div className="mb-4 flex flex-col lg:flex-row gap-3 lg:gap-4 lg:items-start animate-[slideUp_0.6s_ease-out_0.1s_both]">
+            <div className={`flex-1 grid grid-cols-1 gap-3 lg:gap-4 w-full ${isAdmin ? 'lg:grid-cols-[minmax(0,1.3fr)_160px_160px_160px]' : 'lg:grid-cols-[minmax(0,1.3fr)_220px_220px]'}`}>
+              <div>
+                <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                  Pencarian
+                </label>
+                <label className="flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 shadow-sm transition focus-within:border-orange-400 dark:border-slate-700 dark:bg-slate-900">
+                  <img
+                    src={searchIcon}
+                    className="mr-3 h-4 w-4 opacity-50 lg:h-5 lg:w-5"
+                    alt="search"
+                  />
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={(event) => setSearchInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") handleSearchSubmit();
+                    }}
+                    placeholder="Cari nama SKP atau pengunggah"
+                    className="w-full bg-transparent text-xs text-gray-700 outline-none placeholder:text-gray-400 dark:text-slate-100 dark:placeholder:text-slate-500 lg:text-sm"
+                  />
+                </label>
+              </div>
 
-            <div>
-              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
-                Triwulan
-              </label>
-              <Select
-                value={String(selectedTriwulan)}
-                onValueChange={(value) => setSelectedTriwulan(Number(value))}
-              >
-                <SelectTrigger className={skpSelectTriggerClass}>
-                  <SelectValue placeholder="Semua Triwulan" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-                  {triwulanFilterOptions.map((option) => (
-                    <SelectItem key={option.value} value={String(option.value)}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              <div>
+                <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                  Triwulan
+                </label>
+                <Select
+                  value={String(selectedTriwulan)}
+                  onValueChange={(value) => setSelectedTriwulan(Number(value))}
+                >
+                  <SelectTrigger className={skpSelectTriggerClass}>
+                    <SelectValue placeholder="Semua Triwulan" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                    {triwulanFilterOptions.map((option) => (
+                      <SelectItem key={option.value} value={String(option.value)}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div>
-              <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
-                Tahun
-              </label>
-              <Select
-                value={String(selectedYear)}
-                onValueChange={(value) => setSelectedYear(Number(value))}
-              >
-                <SelectTrigger className={skpSelectTriggerClass}>
-                  <SelectValue placeholder="Semua Tahun" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-                  <SelectItem value="0">Semua Tahun</SelectItem>
-                  {yearOptions.map((year) => (
-                    <SelectItem key={year} value={String(year)}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div>
+                <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                  Tahun
+                </label>
+                <Select
+                  value={String(selectedYear)}
+                  onValueChange={(value) => setSelectedYear(Number(value))}
+                >
+                  <SelectTrigger className={skpSelectTriggerClass}>
+                    <SelectValue placeholder="Semua Tahun" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                    <SelectItem value="0">Semua Tahun</SelectItem>
+                    {yearOptions.map((year) => (
+                      <SelectItem key={year} value={String(year)}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {isAdmin && (
+                <div>
+                  <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
+                    Filter User
+                  </label>
+                  <Select
+                    value={selectedUserFilter || "all"}
+                    onValueChange={(value) => setSelectedUserFilter(value === "all" ? "" : value)}
+                  >
+                    <SelectTrigger className={skpSelectTriggerClass}>
+                      <SelectValue placeholder="Semua User" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60 rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                      <SelectItem value="all">Semua User</SelectItem>
+                      {usersList.map((u) => (
+                        <SelectItem key={u.id} value={u.username}>
+                          {u.username}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           </div>
 
@@ -771,8 +816,37 @@ export default function SkpPage() {
             </div>
 
             <form onSubmit={handleSubmitUpload} className="space-y-5 px-6 py-6">
-	              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <div className="md:col-span-2">
+  	              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {isAdmin && (
+                    <div className="md:col-span-2">
+                      <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        Unggah Untuk User (Opsional)
+                      </label>
+                      <Select
+                        value={uploadForm.target_user || "self"}
+                        onValueChange={(value) =>
+                          setUploadForm((prev) => ({
+                            ...prev,
+                            target_user: value === "self" ? "" : value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                          <SelectValue placeholder="Pilih User" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                          <SelectItem value="self">Diri Sendiri (Anda)</SelectItem>
+                          {usersList.map((u) => (
+                            <SelectItem key={u.id} value={String(u.id)}>
+                              {u.username}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  <div className="md:col-span-2">
                   <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Nama SKP
                   </label>

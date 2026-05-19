@@ -105,6 +105,7 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
     const triwulan = Number(req.query.triwulan || 0);
     const tahun = Number(req.query.tahun || 0);
     const search = String(req.query.search || "").trim();
+    const uploaderFilter = String(req.query.uploader_name || "").trim();
 
     const clauses: string[] = [];
     const values: Array<string | number> = [];
@@ -122,6 +123,11 @@ export const getSkpDocuments = async (req: Request, res: Response) => {
     if (search.length > 0) {
       clauses.push("(LOWER(nama_skp) LIKE ? OR LOWER(uploaded_by) LIKE ?)");
       values.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
+    }
+
+    if (uploaderFilter.length > 0) {
+      clauses.push("uploaded_by = ?");
+      values.push(uploaderFilter);
     }
 
     const user = (req as AuthenticatedRequest).user;

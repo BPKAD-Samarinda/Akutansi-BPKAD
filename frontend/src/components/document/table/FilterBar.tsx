@@ -43,13 +43,16 @@ export default function FilterBar({
 
   useEffect(() => {
     if (resetSignal === undefined) return;
-    setSearchQuery("");
-    setCategory("");
-    setStartDate("");
-    setEndDate("");
-    onSearchRef.current?.("");
-    onCategoryRef.current?.("");
-    onDateRangeRef.current?.("", "");
+    const timeoutId = setTimeout(() => {
+      setSearchQuery("");
+      setCategory("");
+      setStartDate("");
+      setEndDate("");
+      onSearchRef.current?.("");
+      onCategoryRef.current?.("");
+      onDateRangeRef.current?.("", "");
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, [resetSignal]);
 
   const activeItems: string[] = [];
@@ -88,9 +91,7 @@ export default function FilterBar({
     <div className="p-0">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-3 lg:gap-4 items-center">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
-
         <DateRangePicker onChange={handleDateChange} resetSignal={resetSignal} />
-
         <CategoryFilterSelect value={category} onChange={handleCategoryChange} />
       </div>
 

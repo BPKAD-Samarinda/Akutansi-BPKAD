@@ -144,12 +144,14 @@ export const getSkpDocuments = async (query?: {
   triwulan?: number;
   tahun?: number;
   search?: string;
+  uploader_name?: string;
 }): Promise<SkpDocument[]> => {
   const response = await apiClient.get<SkpDocumentApiItem[]>("/skp", {
     params: {
       triwulan: query?.triwulan || undefined,
       tahun: query?.tahun || undefined,
       search: (query?.search || "").trim() || undefined,
+      uploader_name: (query?.uploader_name || "").trim() || undefined,
     },
   });
 

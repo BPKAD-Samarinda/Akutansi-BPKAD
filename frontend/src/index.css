@@ -114,6 +114,14 @@ input[type="password"]::-ms-clear {
     animation: float 6s ease-in-out infinite;
   }
 
+  .animate-float-subtle {
+    animation: float-subtle 3s ease-in-out infinite;
+  }
+
+  .animate-float-subtle-reverse {
+    animation: float-subtle 3s ease-in-out infinite reverse;
+  }
+
   .animate-gradient {
     animation: gradient 3s ease infinite;
   }
@@ -286,6 +294,16 @@ input[type="password"]::-ms-clear {
   100% {
     transform: translateY(-100vh) translateX(20px);
     opacity: 0;
+  }
+}
+
+@keyframes float-subtle {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) translateX(6px) scale(1.05);
   }
 }
 

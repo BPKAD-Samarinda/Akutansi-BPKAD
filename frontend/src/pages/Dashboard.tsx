@@ -93,8 +93,10 @@ export default function Dashboard() {
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
           <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white p-4 shadow-md shadow-orange-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-orange-500/30">
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
+              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
+              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -118,8 +120,10 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white p-4 shadow-md shadow-indigo-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-indigo-500/30">
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
+              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
+              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -143,8 +147,10 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 shadow-md shadow-blue-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-blue-500/30">
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
+              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
+              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -168,8 +174,10 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-4 shadow-md shadow-emerald-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-emerald-500/30">
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/15"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
+              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
+              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
