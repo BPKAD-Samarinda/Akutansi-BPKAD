@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun } from "react-icons/fi";
 import dokumenIcon from "../../assets/icons/dokumen.svg";
 import uploadIcon from "../../assets/icons/upload.svg";
@@ -43,6 +43,33 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     window.localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
+  const menuItems = useMemo(() => {
+    return [
+      { path: "/dashboard", icon: <FiGrid className={iconClass(isActive("/dashboard"))} />, label: "Dashboard", visible: true },
+      { path: "/dokumen-management", icon: <img src={dokumenIcon} className={iconClass(isActive("/dokumen-management"))} alt="Dokumen" />, label: "Manajemen Dokumen", visible: true },
+      { path: "/skp", icon: <FiClipboard className={iconClass(isActive("/skp"))} />, label: "Sasaran Kinerja Pegawai", visible: true },
+      { path: "/upload", icon: <img src={uploadIcon} className={iconClass(isActive("/upload"))} alt="Unggah" />, label: "Unggah Dokumen", visible: isAdmin || isMagang || isPkl },
+      { path: "/add-user", icon: <img src={addUserIcon} className={iconClass(isActive("/add-user"))} alt="Tambah User" />, label: "Tambah Pengguna", visible: isAdmin },
+      { path: "/riwayat", icon: <FiClock className={iconClass(isActive("/riwayat"))} />, label: "Riwayat", visible: canViewUploadHistory },
+    ].filter(item => item.visible);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, isAdmin, isMagang, isPkl, canViewUploadHistory]);
+
+  const currentIndex = menuItems.findIndex(item => isActive(item.path));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fromPath = (location.state as any)?.fromPath;
+  const previousIndex = fromPath ? menuItems.findIndex(item => item.path === fromPath) : -1;
+  const [animatedIndex, setAnimatedIndex] = useState(previousIndex !== -1 ? previousIndex : currentIndex);
+
+  useEffect(() => {
+    if (animatedIndex !== currentIndex) {
+      const timer = setTimeout(() => {
+        setAnimatedIndex(currentIndex);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, animatedIndex]);
+
   return (
     <Fragment>
       {isOpen && (
@@ -75,115 +102,32 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
         <div className="px-4">
           <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
-          <nav className="flex flex-col gap-1">
-            <button
-              onClick={() => {
-                navigate("/dashboard");
-                onClose?.();
+          <nav className="relative flex flex-col gap-1">
+            <div
+              className="absolute left-0 w-full rounded-xl bg-orange-50 border border-orange-200 dark:bg-slate-800 dark:border-slate-700 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+              style={{
+                height: '46px',
+                top: animatedIndex >= 0 ? `${animatedIndex * 50}px` : '0px',
+                opacity: animatedIndex >= 0 ? 1 : 0
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/dashboard")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-            >
-              <FiGrid className={iconClass(isActive("/dashboard"))} />
-              Dashboard
-            </button>
-            <button
-              onClick={() => {
-                navigate("/dokumen-management");
-                onClose?.();
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/dokumen-management")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-            >
-              <img
-                src={dokumenIcon}
-                className={iconClass(isActive("/dokumen-management"))}
-                alt="Dokumen"
-              />
-              Manajemen Dokumen
-            </button>
-            <button
-              onClick={() => {
-                navigate("/skp");
-                onClose?.();
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/skp")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-            >
-              <FiClipboard className={iconClass(isActive("/skp"))} />
-              <span className="whitespace-nowrap truncate">Sasaran Kinerja Pegawai</span>
-            </button>
-            {(isAdmin || isMagang || isPkl) && (
-              <button
-                onClick={() => {
-                  navigate("/upload");
-                  onClose?.();
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/upload")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-              >
-                <img
-                  src={uploadIcon}
-                  className={iconClass(isActive("/upload"))}
-                  alt="Unggah"
-                />
-                Unggah Dokumen
-              </button>
-            )}
-            {isAdmin && (
-              <button
-                onClick={() => {
-                  navigate("/add-user");
-                  onClose?.();
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/add-user")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-              >
-                <img
-                  src={addUserIcon}
-                  className={iconClass(isActive("/add-user"))}
-                  alt="Tambah User"
-                />
-                Tambah Pengguna
-              </button>
-            )}
-            {canViewUploadHistory && (
-              <button
-                onClick={() => {
-                  navigate("/riwayat");
-                  onClose?.();
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
-              ${
-                isActive("/riwayat")
-                  ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                  : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"
-              }`}
-              >
-                <FiClock className={iconClass(isActive("/riwayat"))} />
-                Riwayat
-              </button>
-            )}
+            />
+            {menuItems.map((item) => {
+              const active = isActive(item.path);
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path, { state: { fromPath: location.pathname } });
+                    onClose?.();
+                  }}
+                  className={`relative z-10 w-full flex items-center gap-3 px-4 rounded-xl text-sm font-semibold text-left transition-colors h-[46px]
+                  ${active ? "text-orange-600 dark:text-slate-100" : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"}`}
+                >
+                  {item.icon}
+                  <span className="whitespace-nowrap truncate">{item.label}</span>
+                </button>
+              );
+            })}
           </nav>
         </div>
 
