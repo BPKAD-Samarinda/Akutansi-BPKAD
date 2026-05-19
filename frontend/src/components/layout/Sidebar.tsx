@@ -81,7 +81,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 navigate("/dashboard");
                 onClose?.();
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/dashboard")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -96,7 +96,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 navigate("/dokumen-management");
                 onClose?.();
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/dokumen-management")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -115,7 +115,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 navigate("/skp");
                 onClose?.();
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/skp")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -123,7 +123,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               }`}
             >
               <FiClipboard className={iconClass(isActive("/skp"))} />
-              SKP
+              <span className="whitespace-nowrap truncate">Sasaran Kinerja Pegawai</span>
             </button>
             {(isAdmin || isMagang || isPkl) && (
               <button
@@ -131,7 +131,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   navigate("/upload");
                   onClose?.();
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/upload")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -152,7 +152,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   navigate("/add-user");
                   onClose?.();
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/add-user")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -173,7 +173,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   navigate("/riwayat");
                   onClose?.();
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors
               ${
                 isActive("/riwayat")
                   ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
@@ -226,3 +226,5 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     </Fragment>
   );
 }
+
+

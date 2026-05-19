@@ -60,7 +60,7 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
             </div>
           </button>
         )}
-        <div className="text-lg lg:text-2xl font-bold text-gray-800 dark:text-slate-100">
+        <div className="text-xl md:text-3xl font-extrabold text-gray-800 tracking-tight dark:text-slate-100">
           {title}
         </div>
       </div>
