@@ -567,7 +567,7 @@ export default function SkpPage() {
                     className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white transition-all duration-200 shadow-md shadow-blue-500/30 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px]"
                   >
                     <FiRefreshCw
-                      className={`h-[18px] w-[18px] text-white ${isRefreshing ? "animate-[spin_0.8s_linear_infinite]" : ""}`}
+                      className={`h-[18px] w-[18px] text-white ${isRefreshing ? "animate-[spin-clean_0.8s_linear_infinite]" : ""}`}
                     />
                   </button>
                 </AppTooltip>

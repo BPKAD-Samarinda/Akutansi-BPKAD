@@ -41,17 +41,7 @@ export default function DocumentTableToolbar({
 
   return (
     <>
-      {/* Animasi spin sekali */}
-      <style>{`
-        @keyframes spin-once {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .spin-once {
-          animation: spin-once 0.6s ease-in-out;
-          transform-origin: 50% 50%;
-        }
-      `}</style>
+
 
       {/* Toast Notification */}
       <div
@@ -107,7 +97,7 @@ export default function DocumentTableToolbar({
               className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px] disabled:opacity-80"
             >
               <FiRefreshCw
-                className={`h-[18px] w-[18px] text-white ${isSpinning ? "animate-[spin_0.8s_linear_infinite]" : ""}`}
+                className={`h-[18px] w-[18px] text-white ${isSpinning ? "animate-[spin-clean_0.8s_linear_infinite]" : ""}`}
               />
             </button>
           </AppTooltip>
