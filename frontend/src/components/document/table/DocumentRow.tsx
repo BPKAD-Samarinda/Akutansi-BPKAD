@@ -1,6 +1,4 @@
-import { MdEdit } from "react-icons/md";
-import { IoMdEye } from "react-icons/io";
-import { FaTrashAlt } from "react-icons/fa";
+import { FiEdit3, FiEye, FiTrash2 } from "react-icons/fi";
 import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
 import { formatIndonesianDate } from "../../../utils/localDate";
@@ -106,7 +104,7 @@ export default function DocumentRow({
               aria-label="View document"
               className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-blue-600 bg-blue-50/60 hover:bg-blue-100 hover:text-blue-700 transition-colors"
             >
-              <IoMdEye className="w-5 h-5" />
+              <FiEye className="h-4 w-4" />
             </button>
           </AppTooltip>
           {user && (user.role === "Admin" || user.role === "Admin Akuntansi") && (
@@ -117,7 +115,7 @@ export default function DocumentRow({
                   aria-label="Edit document"
                   className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-600 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-700 transition-colors"
                 >
-                  <MdEdit className="w-5 h-5" />
+                  <FiEdit3 className="h-4 w-4" />
                 </button>
               </AppTooltip>
               <AppTooltip content="Hapus dokumen">
@@ -126,7 +124,7 @@ export default function DocumentRow({
                   aria-label="Delete document"
                   className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 bg-red-50/70 hover:bg-red-100 hover:text-red-700 transition-colors"
                 >
-                  <FaTrashAlt className="w-4 h-4" />
+                  <FiTrash2 className="h-4 w-4" />
                 </button>
               </AppTooltip>
             </>

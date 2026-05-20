@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { SortOrder } from "../../../hooks/document/useDocumentTableState";
-import uploadIcon from "../../../assets/icons/upload.svg";
-import refreshIcon from "../../../assets/icons/refresh.svg";
+import { FiUploadCloud, FiRefreshCw } from "react-icons/fi";
 import AppTooltip from "../../ui/app-tooltip";
 import { getUser } from "../../../utils/auth";
 
@@ -95,28 +94,21 @@ export default function DocumentTableToolbar({
               onClick={onUploadClick}
               className="bg-orange-500 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-orange-500/30 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 flex-1 sm:flex-none justify-center"
             >
-              <img
-                src={uploadIcon}
-                className="w-4 h-4 lg:w-5 lg:h-5 icon-white"
-                alt="Upload"
-              />
+              <FiUploadCloud className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
               Unggah Baru
             </button>
           )}
 
           <AppTooltip content="Refresh">
             <button
+              type="button"
               onClick={handleRefresh}
               disabled={isSpinning}
-              className="bg-orange-500 hover:bg-orange-600 p-2.5 lg:p-3 rounded-xl transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 disabled:opacity-80"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition-all duration-200 shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px] disabled:opacity-80"
             >
-              <span className={`inline-flex ${isSpinning ? "spin-once" : ""}`}>
-                <img
-                  src={refreshIcon}
-                  className="w-4 h-4 lg:w-5 lg:h-5"
-                  alt="refresh"
-                />
-              </span>
+              <FiRefreshCw
+                className={`h-[18px] w-[18px] text-white ${isSpinning ? "animate-[spin_0.8s_linear_infinite]" : ""}`}
+              />
             </button>
           </AppTooltip>
         </div>
