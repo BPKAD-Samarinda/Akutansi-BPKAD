@@ -145,6 +145,14 @@ export const syncUploadsToDatabase = async () => {
 
         const fullPath = path.resolve(BACKEND_UPLOADS_DIR, filename);
         const stats = fs.statSync(fullPath);
+        
+        // Skip files that were created or modified within the last 30 seconds to prevent race conditions during upload
+        const ageInSeconds = (Date.now() - stats.mtimeMs) / 1000;
+        if (ageInSeconds < 30) {
+          console.log(`Skipping sync for very new file to prevent race conditions: ${filename}`);
+          continue;
+        }
+
         const tanggal = formatDateOnly(stats.mtime);
         const namaDokumen = titleFromFilename(filename) || filename;
         const kategori = guessCategory(filename);
