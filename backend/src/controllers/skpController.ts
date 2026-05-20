@@ -190,7 +190,7 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Triwulan harus antara 1 sampai 4." });
     }
 
-    const maxAllowedYear = new Date().getFullYear() + 1;
+    const maxAllowedYear = 2031;
     if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > maxAllowedYear) {
       return res.status(400).json({ message: "Tahun tidak valid." });
     }
@@ -312,7 +312,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     if (trimmedNamaSkp.length < 3 || trimmedNamaSkp.length > 255 || ![1, 2, 3, 4].includes(parsedTriwulan)) {
       return res.status(400).json({ message: "Data SKP tidak valid." });
     }
-    const maxAllowedYear = new Date().getFullYear() + 1;
+    const maxAllowedYear = 2031;
     if (Number.isNaN(parsedTahun) || parsedTahun < 2000 || parsedTahun > maxAllowedYear) {
       return res.status(400).json({ message: "Tahun tidak valid." });
     }

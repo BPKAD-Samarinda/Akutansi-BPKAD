@@ -52,7 +52,7 @@ const triwulanFormOptions = [
 ];
 
 const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 8 }, (_, idx) => currentYear - idx);
+const yearOptions = Array.from({ length: 11 }, (_, idx) => 2031 - idx);
 const MAX_SKP_FILE_SIZE = 10 * 1024 * 1024;
 const allowedSkpMimeTypes = new Set([
   "application/pdf",
@@ -174,7 +174,7 @@ export default function SkpPage() {
     if (![1, 2, 3, 4].includes(payload.triwulan)) {
       return "Triwulan tidak valid.";
     }
-    if (Number.isNaN(payload.tahun) || payload.tahun < 2000 || payload.tahun > currentYear + 1) {
+    if (Number.isNaN(payload.tahun) || payload.tahun < 2000 || payload.tahun > 2031) {
       return "Tahun tidak valid.";
     }
     if (payload.file) {
