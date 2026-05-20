@@ -1,6 +1,5 @@
 import type { UserItem } from "../../hooks/add-user/types";
-import editIcon from "../../assets/icons/edit.svg";
-import deleteIcon from "../../assets/icons/delete.svg";
+import { FiEdit3, FiTrash2 } from "react-icons/fi";
 
 type UserTableProps = {
   users: UserItem[];
@@ -75,7 +74,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
                     className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-600 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-700 transition-colors"
                     aria-label="Edit pengguna"
                   >
-                    <img src={editIcon} className="w-4 h-4 icon-amber" alt="Edit" />
+                    <FiEdit3 className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
@@ -83,7 +82,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
                     className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 bg-red-50/70 hover:bg-red-100 hover:text-red-700 transition-colors"
                     aria-label="Hapus pengguna"
                   >
-                    <img src={deleteIcon} className="w-4 h-4 icon-red" alt="Delete" />
+                    <FiTrash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
