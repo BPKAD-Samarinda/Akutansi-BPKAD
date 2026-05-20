@@ -97,6 +97,23 @@ export const syncUploadsToDatabase = async () => {
         )
       `);
 
+      // Get all SKP document filenames to exclude them from documents sync
+      const skpFilenames = new Set<string>();
+      try {
+        const [skpRows]: any = await db.query("SELECT file_path FROM skp_documents");
+        for (const row of skpRows) {
+          if (row.file_path) {
+            const filename = path.basename(row.file_path);
+            if (filename) {
+              skpFilenames.add(filename.toLowerCase());
+            }
+          }
+        }
+      } catch (err) {
+        // If skp_documents table doesn't exist yet, we just ignore it
+        console.log("skp_documents table not queried (might not exist yet):", err);
+      }
+
       const [rows] = await db.query(
         "SELECT id, nama_sppd, tanggal_sppd, kategori, file_path, uploaded_by, is_deleted FROM documents",
       );
@@ -114,6 +131,19 @@ export const syncUploadsToDatabase = async () => {
 
       for (const doc of documents) {
         const storedPath = normalizeStoredPath(doc.file_path);
+        const docFilename = path.basename(storedPath).toLowerCase();
+
+        // If this document is actually an SKP document, soft-delete it from documents table
+        if (skpFilenames.has(docFilename)) {
+          if (doc.is_deleted === 0) {
+            await db.execute(
+              "UPDATE documents SET is_deleted = 1, deleted_at = NOW() WHERE id = ?",
+              [doc.id],
+            );
+          }
+          continue;
+        }
+
         const exists = resolvePhysicalPath(storedPath);
 
         if (!exists && doc.is_deleted === 0) {
@@ -135,7 +165,8 @@ export const syncUploadsToDatabase = async () => {
         .readdirSync(BACKEND_UPLOADS_DIR, { withFileTypes: true })
         .filter((entry) => entry.isFile())
         .map((entry) => entry.name)
-        .filter((name) => ALLOWED_EXTENSIONS.has(path.extname(name).toLowerCase()));
+        .filter((name) => ALLOWED_EXTENSIONS.has(path.extname(name).toLowerCase()))
+        .filter((name) => !skpFilenames.has(name.toLowerCase()));
 
       for (const filename of files) {
         const storedPath = `uploads/${filename}`;
