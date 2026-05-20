@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { BACKEND_UPLOADS_DIR } from "../config/uploadPaths";
+import { BACKEND_SKP_DIR } from "../config/uploadPaths";
 import { authenticateToken, authorizeRoles } from "../middleware/authMiddleware";
 import {
   createSkpDocument,
@@ -16,8 +16,8 @@ const router = Router();
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    fs.mkdirSync(BACKEND_UPLOADS_DIR, { recursive: true });
-    cb(null, BACKEND_UPLOADS_DIR);
+    fs.mkdirSync(BACKEND_SKP_DIR, { recursive: true });
+    cb(null, BACKEND_SKP_DIR);
   },
   filename: function (_req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);

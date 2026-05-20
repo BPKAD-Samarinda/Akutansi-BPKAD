@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import db from "../config/db";
 import fs from "fs";
 import path from "path";
-import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
+import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR, BACKEND_SKP_DIR, ROOT_SKP_DIR } from "../config/uploadPaths";
 import { syncUploadsToDatabase } from "../config/uploadSync";
 
 const allowedDefinitions: { [key: string]: string } = {
@@ -588,6 +588,52 @@ export const permanentlyDeleteDocumentFromHistory = async (
       }
 
       const skpDocId = historyRows[0].skp_document_id;
+      let filePath: string | null = null;
+
+      // 1. Attempt to get filePath from skp_documents
+      if (skpDocId) {
+        const [skpRows]: any = await db.execute(
+          "SELECT file_path FROM skp_documents WHERE id = ?",
+          [skpDocId]
+        );
+        if (skpRows.length > 0) {
+          filePath = skpRows[0].file_path;
+        }
+      }
+
+      // 2. Fallback to before_data
+      if (!filePath && historyRows[0].before_data) {
+        try {
+          const before = JSON.parse(historyRows[0].before_data);
+          filePath = before?.file_path || null;
+        } catch {}
+      }
+
+      // 3. Delete physical file
+      if (filePath) {
+        const normalized = filePath.replace(/\\/g, "/").replace(/^\/+/, "");
+        if (normalized.startsWith("uploads/skp/")) {
+          const relative = normalized.replace(/^uploads\/skp\//i, "");
+          const backendPath = path.resolve(BACKEND_SKP_DIR, relative);
+          const rootPath = path.resolve(ROOT_SKP_DIR, relative);
+          try {
+            if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
+            if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
+          } catch (err) {
+            console.error("Failed permanent deleting SKP file (new path):", err);
+          }
+        } else if (normalized.startsWith("uploads/")) {
+          const relative = normalized.replace(/^uploads\//i, "");
+          const backendPath = path.resolve(BACKEND_SKP_DIR, "../uploads", relative);
+          const rootPath = path.resolve(ROOT_SKP_DIR, "../uploads", relative);
+          try {
+            if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
+            if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
+          } catch (err) {
+            console.error("Failed permanent deleting SKP file (old path):", err);
+          }
+        }
+      }
       
       if (skpDocId) {
         await db.execute("DELETE FROM skp_documents WHERE id = ? AND is_deleted = 1", [skpDocId]);

@@ -8,7 +8,7 @@ import documentRoutes from "./routes/documentRoutes";
 import userRoutes from "./routes/userRoutes";
 import skpRoutes from "./routes/skpRoutes";
 import { normalizeUserRoles } from "./config/roleNormalization";
-import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "./config/uploadPaths";
+import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR, BACKEND_SKP_DIR, ROOT_SKP_DIR } from "./config/uploadPaths";
 import { syncUploadsToDatabase } from "./config/uploadSync";
 import { getJwtSecret } from "./config/jwt";
 
@@ -27,6 +27,8 @@ app.use(express.json());
 
 app.use("/uploads", express.static(BACKEND_UPLOADS_DIR));
 app.use("/uploads", express.static(ROOT_UPLOADS_DIR));
+app.use("/uploads/skp", express.static(BACKEND_SKP_DIR));
+app.use("/uploads/skp", express.static(ROOT_SKP_DIR));
 
 app.use("/api/auth", authRoutes);
 app.use("/api", documentRoutes);

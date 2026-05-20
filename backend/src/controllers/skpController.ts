@@ -3,7 +3,7 @@ import db from "../config/db";
 import fs from "fs";
 import path from "path";
 import type { PoolConnection } from "mysql2/promise";
-import { BACKEND_UPLOADS_DIR, ROOT_UPLOADS_DIR } from "../config/uploadPaths";
+import { BACKEND_SKP_DIR, ROOT_SKP_DIR } from "../config/uploadPaths";
 
 type AuthenticatedRequest = Request & {
   user?: {
@@ -203,7 +203,7 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       uploaderName = target_user.trim();
     }
 
-    const filePath = `uploads/${req.file.filename}`;
+    const filePath = `uploads/skp/${req.file.filename}`;
     const [duplicateRows]: any = await db.execute(
       `SELECT id FROM skp_documents
        WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND is_deleted = 0
@@ -259,7 +259,7 @@ export const createSkpDocument = async (req: Request, res: Response) => {
       connection = null;
     }
     if (req.file?.filename) {
-      cleanupUploadedFile(`uploads/${req.file.filename}`);
+      cleanupUploadedFile(`uploads/skp/${req.file.filename}`);
     }
     console.error("Create SKP document error:", error);
     return res.status(500).json({ message: "Gagal mengunggah dokumen SKP" });
@@ -269,14 +269,27 @@ export const createSkpDocument = async (req: Request, res: Response) => {
 const cleanupUploadedFile = (filePath?: string | null) => {
   if (!filePath) return;
   const normalized = filePath.replace(/\\/g, "/").replace(/^\/+/, "");
-  const relative = normalized.replace(/^uploads\//i, "");
-  const backendPath = path.resolve(BACKEND_UPLOADS_DIR, relative);
-  const rootPath = path.resolve(ROOT_UPLOADS_DIR, relative);
-  try {
-    if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
-    if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
-  } catch (error) {
-    console.error("Cleanup SKP file error:", error);
+  
+  if (normalized.startsWith("uploads/skp/")) {
+    const relative = normalized.replace(/^uploads\/skp\//i, "");
+    const backendPath = path.resolve(BACKEND_SKP_DIR, relative);
+    const rootPath = path.resolve(ROOT_SKP_DIR, relative);
+    try {
+      if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
+      if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
+    } catch (error) {
+      console.error("Cleanup SKP file error (new path):", error);
+    }
+  } else if (normalized.startsWith("uploads/")) {
+    const relative = normalized.replace(/^uploads\//i, "");
+    const backendPath = path.resolve(BACKEND_SKP_DIR, "../uploads", relative);
+    const rootPath = path.resolve(ROOT_SKP_DIR, "../uploads", relative);
+    try {
+      if (fs.existsSync(backendPath)) fs.unlinkSync(backendPath);
+      if (fs.existsSync(rootPath)) fs.unlinkSync(rootPath);
+    } catch (error) {
+      console.error("Cleanup SKP file error (old path):", error);
+    }
   }
 };
 
@@ -315,7 +328,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
     let nextFilePath: string = rows[0].file_path;
     const hadNewUpload = Boolean(req.file?.filename);
     if (hadNewUpload) {
-      nextFilePath = `uploads/${req.file!.filename}`;
+      nextFilePath = `uploads/skp/${req.file!.filename}`;
     }
 
     const [duplicateRows]: any = await db.execute(
@@ -325,7 +338,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       [rows[0].uploaded_by || "-", parsedTahun, parsedTriwulan, trimmedNamaSkp, id],
     );
     if (duplicateRows.length > 0) {
-      if (req.file?.filename) cleanupUploadedFile(`uploads/${req.file.filename}`);
+      if (req.file?.filename) cleanupUploadedFile(`uploads/skp/${req.file.filename}`);
       return res.status(409).json({
         message: "Dokumen SKP duplikat terdeteksi untuk staff/triwulan/tahun yang sama.",
       });
@@ -378,7 +391,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       connection = null;
     }
     if (req.file?.filename) {
-      cleanupUploadedFile(`uploads/${req.file.filename}`);
+      cleanupUploadedFile(`uploads/skp/${req.file.filename}`);
     }
     console.error("Update SKP document error:", error);
     return res.status(500).json({ message: "Gagal memperbarui dokumen SKP" });
