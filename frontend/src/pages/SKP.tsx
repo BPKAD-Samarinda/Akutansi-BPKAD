@@ -935,16 +935,18 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={() => setIsUploadOpen(false)}
-	                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100"
+                  className="h-12 rounded-2xl px-5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-95"
+                  style={{ backgroundColor: "oklch(63.7% 0.237 25.331)" }}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingUpload}
-                  className="h-12 rounded-2xl bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70"
+                  className="h-12 rounded-2xl px-5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-70"
+                  style={{ backgroundColor: "oklch(72.3% 0.219 149.579)" }}
                 >
-                  {isSubmittingUpload ? "Mengunggah..." : "Unggah SKP"}
+                  {isSubmittingUpload ? "Menyimpan..." : "Simpan"}
                 </button>
               </div>
             </form>
@@ -1082,14 +1084,16 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={() => setEditing(null)}
-                  className="h-12 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100"
+                  className="h-12 rounded-2xl px-5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-95"
+                  style={{ backgroundColor: "oklch(63.7% 0.237 25.331)" }}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingEdit}
-                  className="h-12 rounded-2xl bg-emerald-500 px-5 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:opacity-70"
+                  className="h-12 rounded-2xl px-5 text-sm font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-70"
+                  style={{ backgroundColor: "oklch(72.3% 0.219 149.579)" }}
                 >
                   {isSubmittingEdit ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
