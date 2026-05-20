@@ -303,7 +303,7 @@ input[type="password"]::-ms-clear {
     transform: translateY(0) translateX(0) scale(1);
   }
   50% {
-    transform: translateY(-8px) translateX(6px) scale(1.05);
+    transform: translateY(-16px) translateX(12px) scale(1.08);
   }
 }
 

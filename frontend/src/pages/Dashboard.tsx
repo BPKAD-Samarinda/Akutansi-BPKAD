@@ -97,6 +97,8 @@ export default function Dashboard() {
               <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
               <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
               <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
+              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -124,6 +126,8 @@ export default function Dashboard() {
               <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
               <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
               <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
+              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -151,6 +155,8 @@ export default function Dashboard() {
               <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
               <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
               <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
+              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -178,6 +184,8 @@ export default function Dashboard() {
               <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
               <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
               <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
+              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
+              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
               <div className="flex items-center justify-end">
                 <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">

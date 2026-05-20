@@ -103,6 +103,8 @@ export default function UserStats({
             <span className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse" />
             <span className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle" />
             <span className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse" />
+            <span className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle" />
+            <span className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse" />
             <div className="absolute right-4 top-4 h-10 w-10 rounded-2xl bg-white/20 flex items-center justify-center">
               <Icon className="text-white/90" size={18} />
             </div>
