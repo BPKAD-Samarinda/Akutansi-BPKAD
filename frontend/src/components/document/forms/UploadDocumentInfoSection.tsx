@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { FaChevronDown } from "react-icons/fa";
+import { FiCalendar, FiFileText, FiLayers } from "react-icons/fi";
 import { Calendar } from "../../layout/ui/calendar";
 import {
   Select,
@@ -126,20 +127,8 @@ export default function UploadDocumentInfoSection({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-300">
-          <svg
-            className="w-7 h-7 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 animate-bounce animate-delay-300">
+          <FiFileText className="w-6 h-6 text-white" />
         </div>
         <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Informasi Dokumen</h2>
       </div>
@@ -147,8 +136,9 @@ export default function UploadDocumentInfoSection({
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3"
+          className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5"
         >
+          <FiFileText className="text-indigo-500 w-4 h-4" />
           Nama Dokumen
         </label>
         <input
@@ -158,14 +148,15 @@ export default function UploadDocumentInfoSection({
           value={formData.name}
           onChange={onInputChange}
           placeholder="Nama akan otomatis terisi dari file..."
-          className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100"
+          className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 shadow-sm"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3">
-          Tanggal
+        <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5">
+          <FiCalendar className="text-indigo-500 w-4 h-4" />
+          Tanggal Dokumen
         </label>
         <div ref={calendarWrapperRef} className="relative">
           <button
@@ -183,7 +174,7 @@ export default function UploadDocumentInfoSection({
               });
               setIsCategoryOpen(false);
             }}
-            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
           >
             <span
               className={
@@ -202,7 +193,7 @@ export default function UploadDocumentInfoSection({
           </button>
 
           {isCalendarOpen && (
-            <div className="absolute top-full left-0 mt-2 z-30 border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-xl p-2">
+            <div className="absolute top-full left-0 mt-2 z-30 border border-gray-250 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-2xl p-3 animate-[scaleInFast_0.2s_ease-out]">
               <div className="mb-2 grid grid-cols-[1fr_110px] gap-2 px-1">
                 <Select
                   value={String(viewMonth.getMonth())}
@@ -213,7 +204,7 @@ export default function UploadDocumentInfoSection({
                     )
                   }
                 >
-                  <SelectTrigger className="h-9 text-sm upload-date-month-trigger">
+                  <SelectTrigger className="h-9 text-xs upload-date-month-trigger border-slate-200 dark:border-slate-800">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="max-h-56 upload-date-month-content z-[100000]">
@@ -234,7 +225,7 @@ export default function UploadDocumentInfoSection({
                     )
                   }
                 >
-                  <SelectTrigger className="h-9 text-sm upload-date-year-trigger">
+                  <SelectTrigger className="h-9 text-xs upload-date-year-trigger border-slate-200 dark:border-slate-800">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="max-h-56 upload-date-year-content z-[100000]">
@@ -267,7 +258,8 @@ export default function UploadDocumentInfoSection({
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-3">
+        <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5">
+          <FiLayers className="text-indigo-500 w-4 h-4" />
           Kategori
         </label>
         <div ref={categoryWrapperRef} className="relative">
@@ -277,7 +269,7 @@ export default function UploadDocumentInfoSection({
               setIsCategoryOpen((prev) => !prev);
               setIsCalendarOpen(false);
             }}
-            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
           >
             <span
               className={
@@ -296,7 +288,7 @@ export default function UploadDocumentInfoSection({
           </button>
 
           {isCategoryOpen && (
-            <div className="absolute top-full left-0 mt-2 z-30 w-full border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-xl p-2">
+            <div className="absolute top-full left-0 mt-2 z-30 w-full border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 shadow-2xl p-2 animate-[scaleInFast_0.2s_ease-out]">
               {(["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"] as const).map((option) => (
                 <button
                   key={option}
@@ -305,10 +297,10 @@ export default function UploadDocumentInfoSection({
                     emitFieldChange("category", option);
                     setIsCategoryOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-base transition-colors ${
+                  className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     formData.category === option
-                      ? "bg-orange-50 text-orange-600 dark:bg-slate-800 dark:text-slate-100"
-                      : "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-200"
+                      ? "bg-indigo-50 text-indigo-650 font-bold border-l-4 border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-400"
+                      : "hover:bg-slate-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200"
                   }`}
                 >
                   {option}

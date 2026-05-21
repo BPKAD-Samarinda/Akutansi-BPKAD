@@ -55,11 +55,11 @@ export default function EditModal({
       />
       <div
         ref={modalRef}
-        className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-orange-100 dark:border-slate-700"
+        className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-indigo-100/50 dark:border-slate-800"
       >
         <div className="flex items-start justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M4 20h4l10-10-4-4L4 16v4z"

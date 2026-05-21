@@ -1,3 +1,5 @@
+import { FiX, FiCheck } from "react-icons/fi";
+
 type UploadFormActionsProps = {
   isUploading: boolean;
   onCancel: () => void;
@@ -13,20 +15,21 @@ export default function UploadFormActions({
         type="button"
         onClick={onCancel}
         disabled={isUploading}
-        className="px-8 py-3.5 border-2 border-gray-300 dark:border-slate-700 rounded-xl text-gray-700 dark:text-slate-200 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1"
+        className="px-8 py-3.5 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-350 font-semibold bg-white dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed order-2 sm:order-1 flex items-center justify-center gap-2 shadow-sm"
       >
-        Batal
+        <FiX className="w-4 h-4" />
+        <span>Batal</span>
       </button>
       <button
         type="submit"
         disabled={isUploading}
-        className="relative px-8 py-3.5 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group min-w-[190px] flex items-center justify-center"
+        className="relative px-8 py-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-indigo-600/20 hover:shadow-xl hover:shadow-indigo-600/35 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group min-w-[190px] flex items-center justify-center"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
         <span className="relative flex items-center gap-2 leading-none">
           {isUploading ? (
             <>
-              <svg className="animate-spin h-5 w-5 shrink-0 align-middle" viewBox="0 0 24 24" style={{ verticalAlign: "middle" }}>
+              <svg className="animate-spin h-5 w-5 shrink-0 align-middle animate-delay-75" viewBox="0 0 24 24" style={{ verticalAlign: "middle" }}>
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -47,19 +50,7 @@ export default function UploadFormActions({
           ) : (
             <>
               <span className="block">Simpan Dokumen</span>
-              <svg
-                className="w-5 h-5 shrink-0 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <FiCheck className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform" />
             </>
           )}
         </span>
