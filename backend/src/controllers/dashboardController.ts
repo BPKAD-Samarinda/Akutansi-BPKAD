@@ -10,12 +10,19 @@ type AuthenticatedRequest = Request & {
 };
 
 const ensureSoftDeleteColumns = async () => {
-  await db.execute(
-    "ALTER TABLE documents ADD COLUMN IF NOT EXISTS is_deleted TINYINT(1) NOT NULL DEFAULT 0",
-  );
-  await db.execute(
-    "ALTER TABLE documents ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL",
-  );
+  const [columns]: any = await db.query("SHOW COLUMNS FROM documents");
+  const columnNames = new Set(columns.map((col: any) => col.Field));
+
+  if (!columnNames.has("is_deleted")) {
+    await db.execute(
+      "ALTER TABLE documents ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0",
+    );
+  }
+  if (!columnNames.has("deleted_at")) {
+    await db.execute(
+      "ALTER TABLE documents ADD COLUMN deleted_at DATETIME NULL",
+    );
+  }
 };
 
 const ensureLoginActivitiesTable = async () => {

@@ -53,6 +53,9 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		transitionTimingFunction: {
+  			'custom-bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
   		}
   	}
   },

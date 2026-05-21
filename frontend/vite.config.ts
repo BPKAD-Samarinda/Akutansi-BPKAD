@@ -6,7 +6,8 @@ import path from "node:path";
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ["terina-undappled-stacy.ngrok-free.dev"],
+    host: true,
+    allowedHosts: true,
     proxy: {
       "/api": {
         target: "http://localhost:3001",

@@ -71,15 +71,24 @@ export const syncUploadsToDatabase = async () => {
 
   syncPromise = (async () => {
     try {
-      await db.execute(
-        "ALTER TABLE documents ADD COLUMN IF NOT EXISTS is_deleted TINYINT(1) NOT NULL DEFAULT 0",
-      );
-      await db.execute(
-        "ALTER TABLE documents ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL",
-      );
-      await db.execute(
-        "ALTER TABLE documents ADD COLUMN IF NOT EXISTS uploaded_by VARCHAR(255) NULL",
-      );
+      const [columns]: any = await db.query("SHOW COLUMNS FROM documents");
+      const columnNames = new Set(columns.map((col: any) => col.Field));
+
+      if (!columnNames.has("is_deleted")) {
+        await db.execute(
+          "ALTER TABLE documents ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0",
+        );
+      }
+      if (!columnNames.has("deleted_at")) {
+        await db.execute(
+          "ALTER TABLE documents ADD COLUMN deleted_at DATETIME NULL",
+        );
+      }
+      if (!columnNames.has("uploaded_by")) {
+        await db.execute(
+          "ALTER TABLE documents ADD COLUMN uploaded_by VARCHAR(255) NULL",
+        );
+      }
       await db.execute(`
         CREATE TABLE IF NOT EXISTS document_history (
           id BIGINT AUTO_INCREMENT PRIMARY KEY,

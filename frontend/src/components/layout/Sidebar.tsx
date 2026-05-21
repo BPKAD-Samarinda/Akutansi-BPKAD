@@ -129,7 +129,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
           <nav className="relative flex flex-col gap-1">
             <div
-              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-custom-bounce ${
                 location.pathname === "/upload"
                   ? "bg-indigo-50/70 border-indigo-200 dark:bg-indigo-950/30 dark:border-indigo-900/60"
                   : "bg-orange-50 border-orange-200 dark:bg-slate-800 dark:border-slate-700"
