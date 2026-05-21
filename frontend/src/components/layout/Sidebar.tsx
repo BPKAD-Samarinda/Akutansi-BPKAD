@@ -1,9 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Fragment, useEffect, useState, useMemo } from "react";
-import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun } from "react-icons/fi";
-import dokumenIcon from "../../assets/icons/dokumen.svg";
-import uploadIcon from "../../assets/icons/upload.svg";
-import addUserIcon from "../../assets/icons/add_user.svg";
+import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun, FiFileText, FiUploadCloud, FiUserPlus } from "react-icons/fi";
 import logoutIcon from "../../assets/icons/logout.svg";
 import { getUser } from "../../utils/auth";
 
@@ -34,8 +31,37 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
-  const iconClass = (active: boolean) =>
-    `w-4 h-4 ${active ? "text-orange-600 sidebar-icon-active" : "text-gray-500 sidebar-icon"} dark:text-slate-300`;
+
+  const getReactIcon = (path: string, className: string) => {
+    switch (path) {
+      case "/dashboard":
+        return <FiGrid className={className} />;
+      case "/dokumen-management":
+        return <FiFileText className={className} />;
+      case "/skp":
+        return <FiClipboard className={className} />;
+      case "/upload":
+        return <FiUploadCloud className={className} />;
+      case "/add-user":
+        return <FiUserPlus className={className} />;
+      case "/riwayat":
+        return <FiClock className={className} />;
+      default:
+        return <FiFileText className={className} />;
+    }
+  };
+
+  const getIcon = (path: string, active: boolean) => {
+    const baseClass = "w-[18px] h-[18px] transition-colors duration-200";
+    if (active) {
+      if (path === "/upload") {
+        return <FiUploadCloud className={`${baseClass} text-indigo-600 dark:text-indigo-400`} />;
+      }
+      return getReactIcon(path, `${baseClass} text-orange-650 dark:text-orange-400`);
+    } else {
+      return getReactIcon(path, `${baseClass} text-slate-400 dark:text-slate-500 group-hover:text-slate-650 dark:group-hover:text-slate-350`);
+    }
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -45,15 +71,14 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   const menuItems = useMemo(() => {
     return [
-      { path: "/dashboard", icon: <FiGrid className={iconClass(isActive("/dashboard"))} />, label: "Dashboard", visible: true },
-      { path: "/dokumen-management", icon: <img src={dokumenIcon} className={iconClass(isActive("/dokumen-management"))} alt="Dokumen" />, label: "Manajemen Dokumen", visible: true },
-      { path: "/skp", icon: <FiClipboard className={iconClass(isActive("/skp"))} />, label: "Sasaran Kinerja Pegawai", visible: true },
-      { path: "/upload", icon: <img src={uploadIcon} className={iconClass(isActive("/upload"))} alt="Unggah" />, label: "Unggah Dokumen", visible: isAdmin || isMagang || isPkl },
-      { path: "/add-user", icon: <img src={addUserIcon} className={iconClass(isActive("/add-user"))} alt="Tambah User" />, label: "Tambah Pengguna", visible: isAdmin },
-      { path: "/riwayat", icon: <FiClock className={iconClass(isActive("/riwayat"))} />, label: "Riwayat", visible: canViewUploadHistory },
+      { path: "/dashboard", label: "Dashboard", visible: true },
+      { path: "/dokumen-management", label: "Manajemen Dokumen", visible: true },
+      { path: "/skp", label: "Sasaran Kinerja Pegawai", visible: true },
+      { path: "/upload", label: "Unggah Dokumen", visible: isAdmin || isMagang || isPkl },
+      { path: "/add-user", label: "Tambah Pengguna", visible: isAdmin },
+      { path: "/riwayat", label: "Riwayat", visible: canViewUploadHistory },
     ].filter(item => item.visible);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, isAdmin, isMagang, isPkl, canViewUploadHistory]);
+  }, [isAdmin, isMagang, isPkl, canViewUploadHistory]);
 
   const currentIndex = menuItems.findIndex(item => isActive(item.path));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,7 +129,11 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
           <nav className="relative flex flex-col gap-1">
             <div
-              className="absolute left-0 w-full rounded-xl bg-orange-50 border border-orange-200 dark:bg-slate-800 dark:border-slate-700 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+                location.pathname === "/upload"
+                  ? "bg-indigo-50/70 border-indigo-200 dark:bg-indigo-950/30 dark:border-indigo-900/60"
+                  : "bg-orange-50 border-orange-200 dark:bg-slate-800 dark:border-slate-700"
+              }`}
               style={{
                 height: '46px',
                 top: animatedIndex >= 0 ? `${animatedIndex * 50}px` : '0px',
@@ -113,6 +142,12 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             />
             {menuItems.map((item) => {
               const active = isActive(item.path);
+              
+              let activeTextClass = "text-orange-650 dark:text-slate-100";
+              if (item.path === "/upload") {
+                activeTextClass = "text-indigo-650 dark:text-indigo-400 font-bold";
+              }
+              
               return (
                 <button
                   key={item.path}
@@ -120,10 +155,12 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     navigate(item.path, { state: { fromPath: location.pathname } });
                     onClose?.();
                   }}
-                  className={`relative z-10 w-full flex items-center gap-3 px-4 rounded-xl text-sm font-semibold text-left transition-colors h-[46px]
-                  ${active ? "text-orange-600 dark:text-slate-100" : "text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-900"}`}
+                  className={`group relative z-10 w-full flex items-center gap-3 px-4 rounded-xl text-sm font-semibold text-left transition-all duration-300 h-[46px]
+                  ${active 
+                    ? activeTextClass 
+                    : "text-gray-600 dark:text-slate-350 hover:bg-gray-50 dark:hover:bg-slate-900/60"}`}
                 >
-                  {item.icon}
+                  {getIcon(item.path, active)}
                   <span className="whitespace-nowrap truncate">{item.label}</span>
                 </button>
               );
