@@ -86,6 +86,7 @@ type EditForm = {
   tahun: number;
   file_path: string;
   file: File | null;
+  target_user?: string;
 };
 
 const initialUploadForm = (): UploadForm => ({
@@ -322,6 +323,7 @@ export default function SkpPage() {
       triwulan: item.triwulan,
       tahun: item.tahun,
       file_path: item.file_path,
+      target_user: item.uploaded_by || "",
       file: null,
     });
   };
@@ -376,6 +378,7 @@ export default function SkpPage() {
         nama_skp: editing.nama_skp.trim(),
         triwulan: editing.triwulan,
         tahun: editing.tahun,
+        target_user: editing.target_user || undefined,
         file: editing.file,
       });
       showToast("Dokumen SKP berhasil diperbarui.", "success");
@@ -861,7 +864,7 @@ export default function SkpPage() {
                         <SelectContent className="max-h-60 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                           <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" value="self">Diri Sendiri (Anda)</SelectItem>
                           {usersList.map((u) => (
-                            <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={u.id} value={String(u.id)}>
+                            <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={u.id} value={u.username}>
                               {u.username}
                             </SelectItem>
                           ))}
@@ -1004,6 +1007,36 @@ export default function SkpPage() {
 
             <form onSubmit={handleSubmitEdit} className="space-y-5 px-6 py-6">
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                {isAdmin && (
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      Ubah User Dokumen (Opsional)
+                    </label>
+                    <Select
+                      value={editing.target_user || "self"}
+                      onValueChange={(value) =>
+                        setEditing((prev) =>
+                          prev
+                            ? { ...prev, target_user: value === "self" ? "" : value }
+                            : prev,
+                        )
+                      }
+                    >
+                      <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                        <SelectValue placeholder="Pilih User" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" value="self">Diri Sendiri (Anda)</SelectItem>
+                        {usersList.map((u) => (
+                          <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={u.id} value={u.username}>
+                            {u.username}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 <div className="md:col-span-2">
                   <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                     Nama SKP

@@ -325,6 +325,14 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Dokumen SKP tidak ditemukan." });
     }
 
+    const user = (req as AuthenticatedRequest).user;
+    const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+    let updatedUploadedBy = rows[0].uploaded_by;
+    
+    if (isAdmin && target_user && target_user.trim().length > 0) {
+      updatedUploadedBy = target_user.trim();
+    }
+
     let nextFilePath: string = rows[0].file_path;
     const hadNewUpload = Boolean(req.file?.filename);
     if (hadNewUpload) {
@@ -335,7 +343,7 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       `SELECT id FROM skp_documents
        WHERE uploaded_by = ? AND tahun = ? AND triwulan = ? AND nama_skp = ? AND id <> ? AND is_deleted = 0
        LIMIT 1`,
-      [rows[0].uploaded_by || "-", parsedTahun, parsedTriwulan, trimmedNamaSkp, id],
+      [updatedUploadedBy || "-", parsedTahun, parsedTriwulan, trimmedNamaSkp, id],
     );
     if (duplicateRows.length > 0) {
       if (req.file?.filename) cleanupUploadedFile(`uploads/skp/${req.file.filename}`);
@@ -349,9 +357,9 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
 
     await connection.execute(
       `UPDATE skp_documents
-       SET nama_skp = ?, triwulan = ?, tahun = ?, file_path = ?
+       SET nama_skp = ?, triwulan = ?, tahun = ?, file_path = ?, uploaded_by = ?
        WHERE id = ?`,
-      [trimmedNamaSkp, parsedTriwulan, parsedTahun, nextFilePath, id],
+      [trimmedNamaSkp, parsedTriwulan, parsedTahun, nextFilePath, updatedUploadedBy, id],
     );
 
     await writeSkpHistory(connection, {
@@ -359,18 +367,20 @@ export const updateSkpDocument = async (req: Request, res: Response) => {
       actionType: "edit",
       actorUsername: (req as AuthenticatedRequest).user?.username || null,
       actorRole: (req as AuthenticatedRequest).user?.role || null,
-      targetUploadedBy: rows[0].uploaded_by || null,
+      targetUploadedBy: updatedUploadedBy || null,
       beforeData: {
         nama_skp: rows[0].nama_skp,
         triwulan: rows[0].triwulan,
         tahun: rows[0].tahun,
         file_path: rows[0].file_path,
+        uploaded_by: rows[0].uploaded_by,
       },
       afterData: {
         nama_skp: trimmedNamaSkp,
         triwulan: parsedTriwulan,
         tahun: parsedTahun,
         file_path: nextFilePath,
+        uploaded_by: updatedUploadedBy,
       },
     });
     await connection.commit();
