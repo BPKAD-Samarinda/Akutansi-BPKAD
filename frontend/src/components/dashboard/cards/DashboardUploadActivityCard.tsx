@@ -3,14 +3,16 @@ type Props = {
     id: number;
     name: string;
     kategori: string;
-    tanggal: string;
+    tanggalDokumen: string;
+    tanggalUnggah: string;
     fileName?: string;
   }>;
   latestRows: Array<{
     id: number;
     name: string;
     kategori: string;
-    tanggal: string;
+    tanggalDokumen: string;
+    tanggalUnggah: string;
     fileName?: string;
   }>;
 };
@@ -23,10 +25,11 @@ export default function DashboardUploadActivityCard({
   const latestShouldScroll = latestRows.length > 10;
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800/60 pb-4">
         <div>
-          <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
             Aktivitas Dokumen
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -38,40 +41,47 @@ export default function DashboardUploadActivityCard({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-orange-100 dark:border-slate-800 overflow-hidden">
-          <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 px-4 py-3 border-b border-orange-100 dark:border-slate-800">
-            <h4 className="text-sm font-semibold text-orange-700 dark:text-slate-200">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="rounded-xl border border-slate-200/60 dark:border-slate-800/60 overflow-hidden shadow-sm">
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 px-5 py-3.5 border-b border-slate-200/60 dark:border-slate-800/60">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-orange-500"></span>
               Aktivitas Hari Ini
             </h4>
           </div>
 
           <div
-            className={`overflow-x-auto ${todayShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
+            className={`overflow-x-auto custom-scrollbar ${todayShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-900">
-                <tr className="text-slate-500 dark:text-slate-400">
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama Dokumen</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
+              <thead className="bg-white dark:bg-slate-900 sticky top-0 z-10 backdrop-blur-sm">
+                <tr className="text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/60">
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Pengunggah</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Nama Dokumen</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Kategori</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Tanggal Dokumen</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Tanggal Unggah</th>
                 </tr>
               </thead>
               <tbody>
                 {todayRows.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-orange-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                    <td className="px-3 py-2 text-slate-900 dark:text-slate-100 font-medium">{row.name}</td>
-                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
+                  <tr key={row.id} className="border-b border-slate-50 dark:border-slate-800/40 hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
+                    <td className="px-4 py-3 text-slate-900 dark:text-slate-100 font-semibold">{row.name}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
                       {row.fileName || "-"}
                     </td>
-                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{row.kategori}</td>
-                    <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{row.tanggal}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
+                      <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+                        {row.kategori}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{row.tanggalDokumen}</td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{row.tanggalUnggah}</td>
                   </tr>
                 ))}
                 {todayRows.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={5} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
                       Belum ada upload hari ini.
                     </td>
                   </tr>
@@ -81,39 +91,46 @@ export default function DashboardUploadActivityCard({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-indigo-100 dark:border-slate-800 overflow-hidden">
-          <div className="bg-gradient-to-r from-indigo-50 via-sky-50 to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 px-4 py-3 border-b border-indigo-100 dark:border-slate-800">
-            <h4 className="text-sm font-semibold text-indigo-700 dark:text-slate-200">
+        <div className="rounded-xl border border-slate-200/60 dark:border-slate-800/60 overflow-hidden shadow-sm">
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 px-5 py-3.5 border-b border-slate-200/60 dark:border-slate-800/60">
+            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
               Dokumen Terakhir Diunggah
             </h4>
           </div>
 
           <div
-            className={`overflow-x-auto ${latestShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
+            className={`overflow-x-auto custom-scrollbar ${latestShouldScroll ? "max-h-[400px] overflow-y-auto" : ""}`}
           >
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-900">
-                <tr className="text-slate-500 dark:text-slate-400">
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Pengunggah</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Nama Dokumen</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Jumlah</th>
-                  <th className="text-left px-3 py-2 text-xs font-semibold">Tanggal</th>
+              <thead className="bg-white dark:bg-slate-900 sticky top-0 z-10 backdrop-blur-sm">
+                <tr className="text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/60">
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Pengunggah</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Nama Dokumen</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Kategori</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Tanggal Dokumen</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold uppercase tracking-wider">Tanggal Unggah</th>
                 </tr>
               </thead>
               <tbody>
                 {latestRows.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-indigo-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                    <td className="px-3 py-2 text-slate-900 dark:text-slate-100 font-medium">{row.name}</td>
-                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
+                  <tr key={row.id} className="border-b border-slate-50 dark:border-slate-800/40 hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors">
+                    <td className="px-4 py-3 text-slate-900 dark:text-slate-100 font-semibold">{row.name}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-normal break-words max-w-[260px]">
                       {row.fileName || "-"}
                     </td>
-                    <td className="px-3 py-2 text-slate-700 dark:text-slate-300">{row.kategori}</td>
-                    <td className="px-3 py-2 text-slate-600 dark:text-slate-300">{row.tanggal}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">
+                      <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+                        {row.kategori}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{row.tanggalDokumen}</td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{row.tanggalUnggah}</td>
                   </tr>
                 ))}
                 {latestRows.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan={5} className="px-3 py-3 text-center text-slate-500 dark:text-slate-400">
                       Belum ada dokumen terbaru.
                     </td>
                   </tr>

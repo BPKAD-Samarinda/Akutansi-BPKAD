@@ -191,19 +191,20 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
+    "h-9 w-full sm:w-[135px] rounded-lg border border-slate-200/80 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/50 px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none focus:ring-0 focus:border-indigo-400 dark:focus:border-indigo-500 focus-visible:ring-0 shadow-sm cursor-pointer";
 
   const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
-      <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300 h-full flex flex-col">
+      <div className="mb-6 flex flex-wrap gap-4 items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-4">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap flex items-center gap-2">
+          <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
           Perkembangan Upload
         </h3>
 
-        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
+        <div className="flex flex-wrap w-full sm:w-auto gap-2">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}
@@ -257,9 +258,9 @@ function DashboardTrendChart({
         </div>
       )}
 
-      <div className="h-[260px] sm:h-[300px]">
+      <div className="h-[260px] sm:h-[300px] flex-1">
         {!canRenderChart ? (
-          <div className="h-full rounded-xl border border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+          <div className="h-full rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-center text-sm font-medium text-slate-500 dark:text-slate-400">
             Pilih tahun untuk menampilkan data bulan yang dipilih.
           </div>
         ) : (

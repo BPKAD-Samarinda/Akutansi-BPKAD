@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Fragment, useEffect, useState, useMemo } from "react";
-import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun, FiFileText, FiUploadCloud, FiUserPlus } from "react-icons/fi";
-import logoutIcon from "../../assets/icons/logout.svg";
+import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun, FiFileText, FiUploadCloud, FiUserPlus, FiLogOut } from "react-icons/fi";
 import { getUser } from "../../utils/auth";
 
 interface SidebarProps {
@@ -52,7 +51,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const getIcon = (path: string, active: boolean) => {
     const baseClass = "w-[18px] h-[18px] transition-colors duration-200";
     if (active) {
-      return getReactIcon(path, `${baseClass} text-orange-650 dark:text-orange-400`);
+      return getReactIcon(path, `${baseClass} text-indigo-600 dark:text-indigo-400`);
     } else {
       return getReactIcon(path, `${baseClass} text-slate-400 dark:text-slate-500 group-hover:text-slate-650 dark:group-hover:text-slate-350`);
     }
@@ -100,32 +99,32 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         />
       )}
       <aside
-        className={`fixed top-0 left-0 w-64 h-screen bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 shadow-sm z-50 flex flex-col transform transition-transform duration-300
+        className={`fixed top-0 left-0 w-[280px] h-screen bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-r border-slate-200/60 dark:border-slate-800/60 shadow-2xl shadow-slate-200/20 dark:shadow-none z-50 flex flex-col transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
-        <div className="p-4">
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-3 flex items-center gap-3 shadow-sm">
-            <div className="h-11 w-11 rounded-full bg-orange-200 text-orange-700 font-bold flex items-center justify-center">
+        <div className="p-5">
+          <div className="group bg-slate-50/50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-3 flex items-center gap-3 transition-all duration-300 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:shadow-slate-200/20 dark:hover:shadow-none hover:border-slate-200 dark:hover:border-slate-700">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold flex items-center justify-center shadow-inner text-sm tracking-wider">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-800 dark:text-slate-100 truncate">
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                 {user?.username ?? "Admin"}
               </p>
-              <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">
                 {user?.role ?? "Akuntansi"}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="px-4">
-          <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
-          <nav className="relative flex flex-col gap-1">
+        <div className="px-3 flex-1 overflow-y-auto custom-scrollbar">
+          <div className="mx-2 mb-4 h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent"></div>
+          <nav className="relative flex flex-col gap-1.5 px-2">
             <div
-              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-custom-bounce bg-orange-50 border-orange-200 dark:bg-slate-800 dark:border-slate-700`}
+              className={`absolute left-2 right-2 rounded-xl transition-all duration-500 ease-custom-bounce bg-indigo-50/80 border border-indigo-100/50 shadow-sm shadow-indigo-100/20 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:shadow-none`}
               style={{
-                height: '46px',
+                height: '44px',
                 top: animatedIndex >= 0 ? `${animatedIndex * 50}px` : '0px',
                 opacity: animatedIndex >= 0 ? 1 : 0
               }}
@@ -133,7 +132,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             {menuItems.map((item) => {
               const active = isActive(item.path);
               
-              let activeTextClass = "text-orange-650 dark:text-slate-100";
+              let activeTextClass = "text-indigo-700 dark:text-indigo-300 font-bold";
               
               return (
                 <button
@@ -142,12 +141,14 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     navigate(item.path, { state: { fromPath: location.pathname } });
                     onClose?.();
                   }}
-                  className={`group relative z-10 w-full flex items-center gap-3 px-4 rounded-xl text-sm font-semibold text-left transition-all duration-300 h-[46px]
+                  className={`group relative z-10 w-full flex items-center gap-3.5 px-4 rounded-xl text-sm font-semibold text-left transition-all duration-300 h-[44px]
                   ${active 
                     ? activeTextClass 
-                    : "text-gray-600 dark:text-slate-350 hover:bg-gray-50 dark:hover:bg-slate-900/60"}`}
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200"}`}
                 >
-                  {getIcon(item.path, active)}
+                  <div className={`flex items-center justify-center transition-transform duration-300 ${active ? "scale-110" : "group-hover:scale-110"}`}>
+                    {getIcon(item.path, active)}
+                  </div>
                   <span className="whitespace-nowrap truncate">{item.label}</span>
                 </button>
               );
@@ -155,26 +156,26 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </nav>
         </div>
 
-        <div className="mt-auto px-4 pb-4">
-          <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
+        <div className="mt-auto px-5 pb-6 pt-4">
+          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent mb-5"></div>
           <button
             type="button"
             onClick={() => setIsDark((prev) => !prev)}
-            className="w-full flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm font-semibold text-gray-600 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+            className="w-full flex items-center justify-between rounded-xl border border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-900/50 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
             aria-label="Ubah mode tampilan"
           >
-            <span className="flex items-center gap-2">
-              {isDark ? <FiSun className="h-4 w-4" /> : <FiMoon className="h-4 w-4" />}
+            <span className="flex items-center gap-2.5">
+              {isDark ? <FiSun className="h-4.5 w-4.5 text-indigo-400" /> : <FiMoon className="h-4.5 w-4.5 text-indigo-500" />}
               {isDark ? "Mode Terang" : "Mode Gelap"}
             </span>
             <span
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                isDark ? "bg-slate-700" : "bg-gray-200"
+              className={`relative inline-flex h-[22px] w-[38px] items-center rounded-full transition-colors duration-300 ${
+                isDark ? "bg-indigo-500" : "bg-slate-300"
               }`}
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ease-in-out ${
-                  isDark ? "translate-x-6" : "translate-x-1"
+                className={`inline-block h-[18px] w-[18px] transform rounded-full bg-white transition-transform duration-300 ease-in-out shadow-sm ${
+                  isDark ? "translate-x-[18px]" : "translate-x-[2px]"
                 }`}
               />
             </span>
@@ -183,10 +184,10 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 mt-2 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
+            className="group w-full flex items-center justify-center gap-2 mt-3 rounded-xl border border-transparent bg-slate-50 dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-red-50 hover:border-red-100 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:border-red-500/20 dark:hover:text-red-400 transition-all duration-300"
             aria-label="Keluar"
           >
-            <img src={logoutIcon} className="w-4 h-4 filter invert-[34%] sepia-[82%] saturate-[2385%] hue-rotate-[336deg] brightness-[96%] contrast-[97%] dark:invert-[67%] dark:sepia-[33%] dark:saturate-[2343%] dark:hue-rotate-[320deg] dark:brightness-[104%] dark:contrast-[101%]" alt="" />
+            <FiLogOut className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
             Keluar
           </button>
         </div>

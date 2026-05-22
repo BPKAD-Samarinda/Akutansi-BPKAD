@@ -119,7 +119,7 @@ export default function DashboardPieChart({ data }: Props) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300 h-full flex flex-col">
       <style>{`
         @keyframes slideInRightSoft {
           from {
@@ -142,8 +142,11 @@ export default function DashboardPieChart({ data }: Props) {
         }
       `}</style>
 
-      <div className="mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-slate-100">Persentase Dokumen per Kategori</h3>
+      <div className="mb-6 border-b border-slate-100 dark:border-slate-800/60 pb-4">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap flex items-center gap-2">
+          <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
+          Persentase Dokumen per Kategori
+        </h3>
       </div>
 
       {!hasData ? (

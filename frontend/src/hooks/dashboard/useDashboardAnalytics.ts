@@ -288,7 +288,8 @@ export function useDashboardAnalytics() {
         id: record.id,
         name: record.uploadedBy || "-",
         kategori: record.kategori,
-        tanggal: formatDateLabel(record.createdAt),
+        tanggalDokumen: formatDateLabel(record.uploadedAt),
+        tanggalUnggah: formatDateLabel(record.createdAt),
         fileName: record.name,
       }));
   }, [uploads]);
@@ -312,7 +313,8 @@ export function useDashboardAnalytics() {
         id: record.id,
         name: record.uploadedBy || "-",
         kategori: record.kategori,
-        tanggal: formatDateLabel(record.uploadedAt),
+        tanggalDokumen: formatDateLabel(record.uploadedAt),
+        tanggalUnggah: formatDateLabel(record.createdAt),
         fileName: record.name,
       }));
   }, [uploads]);

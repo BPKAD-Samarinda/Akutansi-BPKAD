@@ -17,10 +17,11 @@ type Props = {
 
 export default function DashboardLoginActivity({ data }: Props) {
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300 h-full flex flex-col">
+      <div className="mb-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-4">
         <div>
-          <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
             Aktivitas Login
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -32,14 +33,14 @@ export default function DashboardLoginActivity({ data }: Props) {
         </span>
       </div>
 
-      <div className="max-h-[420px] overflow-y-auto overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
+      <div className="max-h-[380px] overflow-y-auto overflow-x-auto rounded-xl border border-slate-200/60 dark:border-slate-800/60 custom-scrollbar">
         <table className="w-full text-sm">
-          <thead className="bg-gradient-to-r from-slate-50 to-indigo-50/60 dark:from-slate-900 dark:to-slate-900/60">
-            <tr className="text-slate-500 dark:text-slate-400 border-y border-slate-100 dark:border-slate-800">
-              <th className="text-left px-4 py-3 text-xs font-semibold">No</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold">User</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold">Waktu login</th>
+          <thead className="bg-slate-50/80 dark:bg-slate-800/50 sticky top-0 backdrop-blur-sm z-10">
+            <tr className="text-slate-500 dark:text-slate-400 border-b border-slate-200/60 dark:border-slate-800/60">
+              <th className="text-left px-4 py-3.5 text-xs font-bold uppercase tracking-wider">No</th>
+              <th className="text-left px-4 py-3.5 text-xs font-bold uppercase tracking-wider">User</th>
+              <th className="text-left px-4 py-3.5 text-xs font-bold uppercase tracking-wider">Role</th>
+              <th className="text-left px-4 py-3.5 text-xs font-bold uppercase tracking-wider">Waktu login</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-900">

@@ -90,7 +90,7 @@ export default function UploadHistory() {
     >
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="ml-0 lg:ml-64 flex-1 flex flex-col">
+      <div className="ml-0 lg:ml-[280px] flex-1 flex flex-col">
         <Header title="Riwayat" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-1 md:p-8" data-history-animate>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { FiFileText, FiClipboard, FiUsers, FiUploadCloud, FiTrendingUp } from "react-icons/fi";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import DashboardDistributionChart from "../components/dashboard/charts/DashboardDistributionChart";
@@ -85,127 +86,98 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-gray-100 dark:bg-slate-950 font-sans">
+    <div className="min-h-screen flex bg-slate-50/50 dark:bg-slate-950 font-sans selection:bg-indigo-500/30">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="ml-0 lg:ml-64 flex-1 flex flex-col">
+      <div className="ml-0 lg:ml-[280px] flex-1 flex flex-col relative transition-all duration-300">
         <Header title="Dashboard" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6">
-          <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white p-4 shadow-md shadow-orange-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-orange-500/30">
-              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
-              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
-              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
-              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
-              <div className="flex items-center justify-end">
-                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M7 3h7l5 5v13H7V3z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+        <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6 lg:space-y-8 relative z-10">
+          <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6">
+            {/* Card 1: Manajemen Dokumen */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-orange-500/10 dark:hover:shadow-orange-500/5 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/10 to-amber-500/5 dark:from-orange-500/10 dark:to-transparent rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150"></div>
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
+                    Manajemen Dokumen
+                  </p>
+                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                    <AnimatedStatNumber value={summary.totalDocuments} />
+                  </h3>
+                </div>
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <FiFileText className="w-6 h-6" />
+                </div>
               </div>
-              <div className="mt-2 text-center">
-                <p className="text-4xl font-bold">
-                  <AnimatedStatNumber value={summary.totalDocuments} />
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
-                  Manajemen Dokumen
-                </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 w-fit px-2.5 py-1 rounded-full">
+                <FiTrendingUp className="w-3.5 h-3.5" />
+                <span>Selalu diperbarui</span>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white p-4 shadow-md shadow-indigo-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-indigo-500/30">
-              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
-              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
-              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
-              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
-              <div className="flex items-center justify-end">
-                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M8 7h8M8 12h8M8 17h5M6 4h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+
+            {/* Card 2: Dokumen SKP */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/5 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-purple-500/5 dark:from-indigo-500/10 dark:to-transparent rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150"></div>
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
+                    Dokumen SKP
+                  </p>
+                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                    <AnimatedStatNumber value={summary.totalSkpDocuments} />
+                  </h3>
+                </div>
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <FiClipboard className="w-6 h-6" />
+                </div>
               </div>
-              <div className="mt-2 text-center">
-                <p className="text-4xl font-bold">
-                  <AnimatedStatNumber value={summary.totalSkpDocuments} />
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
-                  Dokumen SKP
-                </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 w-fit px-2.5 py-1 rounded-full">
+                <FiTrendingUp className="w-3.5 h-3.5" />
+                <span>Kinerja termonitor</span>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white p-4 shadow-md shadow-blue-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-blue-500/30">
-              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
-              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
-              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
-              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
-              <div className="flex items-center justify-end">
-                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M16 11c1.657 0 3-1.567 3-3.5S17.657 4 16 4s-3 1.567-3 3.5S14.343 11 16 11zM8 11c1.657 0 3-1.567 3-3.5S9.657 4 8 4 5 5.567 5 7.5 6.343 11 8 11zM16 14c-2.761 0-5 1.79-5 4v2h10v-2c0-2.21-2.239-4-5-4zM8 14c-2.761 0-5 1.79-5 4v2h6v-2c0-1.33.402-2.57 1.09-3.62C9.479 14.134 8.76 14 8 14z"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+
+            {/* Card 3: Total Pengguna */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-500/10 to-blue-500/5 dark:from-sky-500/10 dark:to-transparent rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150"></div>
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
+                    Total Pengguna
+                  </p>
+                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                    <AnimatedStatNumber value={summary.totalUsers} />
+                  </h3>
+                </div>
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <FiUsers className="w-6 h-6" />
+                </div>
               </div>
-              <div className="mt-2 text-center">
-                <p className="text-4xl font-bold">
-                  <AnimatedStatNumber value={summary.totalUsers} />
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
-                  Total Pengguna
-                </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-500/10 w-fit px-2.5 py-1 rounded-full">
+                <FiUsers className="w-3.5 h-3.5" />
+                <span>Akses aktif</span>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-4 shadow-md shadow-emerald-500/20 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-lg hover:shadow-emerald-500/30">
-              <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-10 top-8 h-16 w-16 rounded-full bg-white/20 animate-float-subtle-reverse"></div>
-              <div className="absolute -left-8 -bottom-8 h-32 w-32 rounded-full bg-white/5 animate-float-subtle"></div>
-              <div className="absolute left-16 bottom-4 h-12 w-12 rounded-full bg-white/10 animate-float-subtle-reverse"></div>
-              <div className="absolute left-[35%] top-2 h-10 w-10 rounded-full bg-white/10 animate-float-subtle"></div>
-              <div className="absolute right-[25%] bottom-2 h-14 w-14 rounded-full bg-white/5 animate-float-subtle-reverse"></div>
-              <div className="flex items-center justify-end">
-                <span className="h-9 w-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 5v10m0 0l-4-4m4 4l4-4M5 19h14"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+
+            {/* Card 4: Unggah Hari Ini */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/5 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 dark:from-emerald-500/10 dark:to-transparent rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150"></div>
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
+                    Unggah Hari Ini
+                  </p>
+                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                    <AnimatedStatNumber value={summary.todayUploadCount} />
+                  </h3>
+                </div>
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <FiUploadCloud className="w-6 h-6" />
+                </div>
               </div>
-              <div className="mt-2 text-center">
-                <p className="text-4xl font-bold">
-                  <AnimatedStatNumber value={summary.todayUploadCount} />
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/85 mt-2">
-                  Unggah Hari Ini
-                </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 w-fit px-2.5 py-1 rounded-full">
+                <FiUploadCloud className="w-3.5 h-3.5" />
+                <span>Data terbaru</span>
               </div>
             </div>
           </div>
