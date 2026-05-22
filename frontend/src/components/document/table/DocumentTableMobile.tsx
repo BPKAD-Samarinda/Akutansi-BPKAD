@@ -2,6 +2,7 @@ import { Document } from "../../../types";
 import AppTooltip from "../../ui/app-tooltip";
 import { formatIndonesianDate } from "../../../utils/localDate";
 import { getUser } from "../../../utils/auth";
+import { FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
 
 type DocumentTableMobileProps = {
   documents: Document[];
@@ -107,26 +108,32 @@ export default function DocumentTableMobile({
               </div>
 
               <div className="flex gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <button
-                  onClick={() => onView?.(doc.id)}
-                  className="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-sky-50 text-blue-600 text-xs font-semibold dark:bg-slate-800 dark:text-blue-300"
-                >
-                  Lihat
-                </button>
+                <AppTooltip content="Lihat Dokumen">
+                  <button
+                    onClick={() => onView?.(doc.id)}
+                    className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-blue-50/50 hover:bg-blue-100 text-blue-600 transition-colors dark:bg-blue-500/10 dark:hover:bg-blue-500/20 dark:text-blue-400"
+                  >
+                    <FiEye className="w-4 h-4" />
+                  </button>
+                </AppTooltip>
                 {canManageDocument && (
                   <>
-                    <button
-                      onClick={() => onEdit?.(doc.id)}
-                      className="flex-1 py-2 rounded-lg bg-gradient-to-r from-yellow-50 to-amber-50 text-amber-700 text-xs font-semibold dark:bg-slate-800 dark:text-amber-300"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => onDelete?.(doc.id)}
-                      className="flex-1 py-2 rounded-lg bg-gradient-to-r from-red-50 to-rose-50 text-red-600 text-xs font-semibold dark:bg-slate-800 dark:text-rose-300"
-                    >
-                      Hapus
-                    </button>
+                    <AppTooltip content="Edit Dokumen">
+                      <button
+                        onClick={() => onEdit?.(doc.id)}
+                        className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-amber-50/50 hover:bg-amber-100 text-amber-600 transition-colors dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400"
+                      >
+                        <FiEdit className="w-4 h-4" />
+                      </button>
+                    </AppTooltip>
+                    <AppTooltip content="Hapus Dokumen">
+                      <button
+                        onClick={() => onDelete?.(doc.id)}
+                        className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-rose-50/50 hover:bg-rose-100 text-rose-600 transition-colors dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </button>
+                    </AppTooltip>
                   </>
                 )}
               </div>

@@ -81,19 +81,21 @@ export default function DocumentTable({
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
       {/* Section Header */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-3 shrink-0">
           <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
             Daftar Dokumen
           </h2>
         </div>
-        <DocumentTableToolbar
-          sortOrder={sortOrder}
-          onSortClick={handleSortClick}
-          onUploadClick={onUploadClick || (() => {})}
-          onRefresh={onRefresh}
-        />
+        <div className="flex justify-end overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          <DocumentTableToolbar
+            sortOrder={sortOrder}
+            onSortClick={handleSortClick}
+            onUploadClick={onUploadClick || (() => {})}
+            onRefresh={onRefresh}
+          />
+        </div>
       </div>
 
       <div ref={documentsContentRef}>
