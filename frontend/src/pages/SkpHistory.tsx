@@ -156,7 +156,6 @@ export default function SkpHistoryPage() {
                   </tbody>
                 </table>
               </div>
-            </div>
             <div className="px-5 py-4 border-t border-gray-100 dark:border-slate-800">
               <DocumentTablePagination totalDocuments={items.length} currentPage={safeCurrentPage} totalPages={totalPages} rowsPerPage={rowsPerPage} onPageChange={setCurrentPage} onRowsPerPageChange={setRowsPerPage} colorTheme="teal" />
             </div>
