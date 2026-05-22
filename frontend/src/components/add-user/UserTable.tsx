@@ -24,7 +24,7 @@ export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserT
       {/* Section Header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
+          <div className="w-1 h-6 bg-[#eab308] rounded-full" />
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
             Pengguna & Staff
           </h3>
@@ -39,7 +39,7 @@ export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserT
         </button>
       </div>
 
-      <div className="grid grid-cols-[0.5fr_1.4fr_1.2fr_1.1fr_0.8fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white bg-[#eab308] rounded-t-xl">
+      <div className="grid grid-cols-[0.5fr_1.4fr_1.2fr_1.1fr_0.8fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white bg-[#eab308]">
         <span className="text-center">No</span>
         <span>Profil / Nama</span>
         <span>Akses / Role</span>

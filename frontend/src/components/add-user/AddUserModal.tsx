@@ -34,14 +34,14 @@ export default function AddUserModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
       <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
-        <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
+        <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-amber-600 px-6 py-5 text-white">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-orange-100">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-yellow-100">
                 Pengguna & Staff
               </p>
               <h2 className="mt-2 text-2xl font-bold">Tambah Pengguna</h2>
-              <p className="mt-2 text-sm text-orange-100">
+              <p className="mt-2 text-sm text-yellow-100">
                 Lengkapi data pengguna baru untuk memberikan akses ke sistem.
               </p>
             </div>
@@ -67,7 +67,7 @@ export default function AddUserModal({
                 value={form.username}
                 onChange={onChange}
                 placeholder="Masukkan NIP atau username"
-                className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                 required
               />
             </div>
@@ -83,13 +83,13 @@ export default function AddUserModal({
                   value={form.password}
                   onChange={onChange}
                   placeholder="Masukkan kata sandi"
-                  className="h-12 w-full rounded-2xl border border-slate-200 px-4 pr-11 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                  className="h-12 w-full rounded-2xl border border-slate-200 px-4 pr-11 text-sm text-slate-700 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 dark:text-slate-400 transition-colors hover:text-orange-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 dark:text-slate-400 transition-colors hover:text-amber-600"
                   aria-label={showPassword ? "Sembunyikan kata sandi" : "Lihat kata sandi"}
                 >
                   {showPassword ? (

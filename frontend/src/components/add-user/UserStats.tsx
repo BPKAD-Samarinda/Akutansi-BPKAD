@@ -55,7 +55,7 @@ export default function UserStats({
     {
       label: "Total Pengguna",
       value: total,
-      gradient: "from-orange-500 to-orange-700",
+      gradient: "from-amber-400 to-amber-600",
       icon: FaUsers,
       delay: "0ms",
     },
@@ -76,7 +76,7 @@ export default function UserStats({
     {
       label: "Anak Magang",
       value: magangCount,
-      gradient: "from-amber-500 to-orange-600",
+      gradient: "from-yellow-400 to-yellow-600",
       icon: FaUserGraduate,
       delay: "210ms",
     },
