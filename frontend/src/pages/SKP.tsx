@@ -97,7 +97,7 @@ const initialUploadForm = (): UploadForm => ({
 });
 
 const skpSelectTriggerClass =
-  "h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-left text-xs font-medium text-gray-700 shadow-sm transition focus:border-orange-400 focus:ring-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 lg:text-sm";
+  "h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-left text-xs font-medium text-gray-700 shadow-sm transition focus:border-indigo-400 focus:ring-0 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 lg:text-sm";
 
 const getFileNameFromPath = (value: string) => {
   if (!value) return "";
@@ -420,7 +420,7 @@ export default function SkpPage() {
                 <label className="mb-2 block text-xs font-semibold text-gray-600 dark:text-slate-300 lg:text-sm">
                   Pencarian
                 </label>
-                <label className="flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 shadow-sm transition focus-within:border-orange-400 dark:border-slate-700 dark:bg-slate-900">
+                <label className="flex h-12 items-center rounded-xl border border-gray-200 bg-gray-50 px-4 shadow-sm transition focus-within:border-indigo-400 dark:border-slate-700 dark:bg-slate-900">
                   <img
                     src={searchIcon}
                     className="mr-3 h-4 w-4 opacity-50 lg:h-5 lg:w-5"
@@ -509,14 +509,14 @@ export default function SkpPage() {
           </div>
 
           {selectedIds.size > 0 && (
-            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between animate-[slideDown_0.3s_ease-out] dark:border-orange-500/30 dark:bg-orange-500/10">
-              <p className="text-sm font-semibold text-orange-700">
+            <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between animate-[slideDown_0.3s_ease-out] dark:border-indigo-500/30 dark:bg-indigo-500/10">
+              <p className="text-sm font-semibold text-indigo-700">
                 {selectedIds.size} dokumen SKP dipilih
               </p>
               <button
                 type="button"
                 onClick={handleDownloadSelected}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600"
               >
                 <FiDownload className="h-4 w-4" />
                 Unduh Terpilih
@@ -528,7 +528,7 @@ export default function SkpPage() {
             {/* Section Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
-                <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
+                <div className="w-1 h-6 bg-[#4f46e5] rounded-full" />
                 <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
                   Daftar SKP
                 </h2>
@@ -541,8 +541,8 @@ export default function SkpPage() {
                     onClick={() => setSortOrder("newest")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       sortOrder === "newest"
-                        ? "bg-[#FF7A00] text-white shadow-sm"
-                        : "border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00]"
+                        ? "bg-[#4f46e5] text-white shadow-sm"
+                        : "border border-gray-200 text-slate-500 hover:border-indigo-300 hover:text-[#4f46e5]"
                     }`}
                   >
                     TERBARU
@@ -552,8 +552,8 @@ export default function SkpPage() {
                     onClick={() => setSortOrder("oldest")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       sortOrder === "oldest"
-                        ? "bg-[#FF7A00] text-white shadow-sm"
-                        : "border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00]"
+                        ? "bg-[#4f46e5] text-white shadow-sm"
+                        : "border border-gray-200 text-slate-500 hover:border-indigo-300 hover:text-[#4f46e5]"
                     }`}
                   >
                     TERLAMA
@@ -563,7 +563,7 @@ export default function SkpPage() {
                 <button
                   type="button"
                   onClick={handleOpenUploadModal}
-                  className="bg-[#FF7A00] text-white px-4 py-1.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-bold transition-all hover:bg-orange-600 active:scale-95"
+                  className="bg-[#4f46e5] text-white px-4 py-1.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-bold transition-all hover:bg-indigo-600 active:scale-95"
                 >
                   <FiUploadCloud className="h-3.5 w-3.5" />
                   Unggah
@@ -572,7 +572,7 @@ export default function SkpPage() {
                   <button
                     type="button"
                     onClick={handleRefresh}
-                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00] transition-all active:scale-95 disabled:opacity-60"
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-gray-200 text-slate-500 hover:border-indigo-300 hover:text-[#4f46e5] transition-all active:scale-95 disabled:opacity-60"
                   >
                     <FiRefreshCw
                       className={`h-3.5 w-3.5 ${isRefreshing ? "animate-[spin-clean_0.8s_linear_infinite]" : ""}`}
@@ -585,7 +585,7 @@ export default function SkpPage() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-full table-fixed border-collapse text-sm">
                 <thead>
-                  <tr style={{ backgroundColor: '#FF7A00', color: 'white' }}>
+                  <tr className="bg-indigo-600 text-white">
                     <th className="py-3.5 px-3 text-center w-12 align-middle">
                         <AppTooltip content="Pilih Semua">
                           <input
@@ -595,7 +595,7 @@ export default function SkpPage() {
                               if (input) input.indeterminate = someSelected;
                             }}
                             onChange={(event) => handleToggleSelectAll(event.target.checked)}
-                            className="block mx-auto h-4 w-4 rounded border-white/60 bg-transparent accent-orange-400"
+                            className="block mx-auto h-4 w-4 rounded border-white/60 bg-transparent accent-indigo-400"
                             aria-label="Pilih semua dokumen SKP"
                           />
                         </AppTooltip>
@@ -638,7 +638,7 @@ export default function SkpPage() {
                         <tr
                           key={item.id}
                           className={`border-b border-slate-100 transition-colors hover:bg-slate-50/70 dark:border-slate-800 dark:hover:bg-slate-800/70 ${
-                            selectedIds.has(item.id) ? "bg-orange-50/70 dark:bg-orange-500/10" : ""
+                            selectedIds.has(item.id) ? "bg-indigo-50/70 dark:bg-indigo-500/10" : ""
                           }`}
                         >
                           <td className="py-4 px-3 text-center">
@@ -667,7 +667,7 @@ export default function SkpPage() {
                           </td>
                           <td className="py-3.5 px-3 text-center">
                             <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
-                              <span className="text-[#FF7A00]">🏷</span>
+                              <span className="text-[#4f46e5]">🏷</span>
                               Triwulan {item.triwulan}
                             </span>
                           </td>
@@ -751,7 +751,7 @@ export default function SkpPage() {
                                 {item.nama_skp}
                               </p>
                             </div>
-                            <span className="rounded-full bg-orange-50 px-3 py-1 text-[11px] font-semibold text-orange-600">
+                            <span className="rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-semibold text-indigo-600">
                               TW {item.triwulan}
                             </span>
                           </div>
@@ -807,6 +807,7 @@ export default function SkpPage() {
               rowsPerPage={rowsPerPage}
               onPageChange={setCurrentPage}
               onRowsPerPageChange={setRowsPerPage}
+              colorTheme="indigo"
             />
           </div>
         </main>
@@ -818,11 +819,11 @@ export default function SkpPage() {
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-orange-100">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-indigo-100">
                     Dokumen Kinerja
                   </p>
                   <h2 className="mt-2 text-2xl font-bold">Unggah SKP</h2>
-                  <p className="mt-2 text-sm text-orange-100">
+                  <p className="mt-2 text-sm text-indigo-100">
                     Isi data triwulan dan pilih file SKP yang ingin ditambahkan ke sistem.
                   </p>
                 </div>
@@ -878,7 +879,7 @@ export default function SkpPage() {
                       setUploadForm((prev) => ({ ...prev, nama_skp: event.target.value }))
                     }
                     placeholder="Contoh: SKP Triwulan 1 Staff Akuntansi"
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
 
@@ -929,15 +930,15 @@ export default function SkpPage() {
 	                </div>
 		              </div>
 	
-		              <label className="block rounded-[24px] border border-dashed border-orange-200 bg-orange-50/50 p-5 transition hover:border-orange-300 hover:bg-orange-50 dark:border-orange-500/30 dark:bg-orange-500/10 dark:hover:bg-orange-500/15">
+		              <label className="block rounded-[24px] border border-dashed border-orange-200 bg-indigo-50/50 p-5 transition hover:border-indigo-300 hover:bg-indigo-50 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15">
 	                <div className="flex flex-col items-center justify-center text-center">
-	                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-orange-600 shadow-sm">
+	                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm">
                     <FiFileText className="h-6 w-6" />
                   </div>
 	                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
 	                    {uploadForm.file ? uploadForm.file.name : "Pilih dokumen SKP"}
 	                  </p>
-	                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white">
+	                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-indigo-500 px-4 py-2 text-xs font-semibold text-white">
                     <FiUploadCloud className="h-4 w-4" />
                     Pilih File
                   </span>
@@ -981,11 +982,11 @@ export default function SkpPage() {
             <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-orange-100">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-indigo-100">
                     Pembaruan Dokumen
                   </p>
                   <h2 className="mt-2 text-2xl font-bold">Edit SKP</h2>
-                  <p className="mt-2 text-sm text-orange-100">
+                  <p className="mt-2 text-sm text-indigo-100">
                     Kamu bisa mengganti metadata SKP sekaligus mengganti file dokumennya.
                   </p>
                 </div>
@@ -1011,7 +1012,7 @@ export default function SkpPage() {
                     onChange={(event) =>
                       setEditing((prev) => (prev ? { ...prev, nama_skp: event.target.value } : prev))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
                 <div>
@@ -1078,13 +1079,13 @@ export default function SkpPage() {
                       </span>
                     </p>
                     {editing.file && (
-                      <p className="mt-1 text-xs font-medium text-orange-600 dark:text-orange-400">
+                      <p className="mt-1 text-xs font-medium text-indigo-600 dark:text-orange-400">
                         File baru: {editing.file.name}
                       </p>
                     )}
                   </div>
 
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-600">
                     <FiUploadCloud className="h-4 w-4" />
                     Pilih File Baru
                     <input

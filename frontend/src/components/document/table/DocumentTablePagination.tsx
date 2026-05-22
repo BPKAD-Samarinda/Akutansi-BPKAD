@@ -22,6 +22,7 @@ type DocumentTablePaginationProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  colorTheme?: "orange" | "indigo";
 };
 
 export default function DocumentTablePagination({
@@ -31,9 +32,15 @@ export default function DocumentTablePagination({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  colorTheme = "orange",
 }: DocumentTablePaginationProps) {
   const isPrevDisabled = currentPage <= 1;
   const isNextDisabled = currentPage >= totalPages;
+
+  const hoverClass =
+    colorTheme === "indigo"
+      ? "hover:bg-indigo-50 hover:text-indigo-600 dark:hover:text-indigo-300"
+      : "hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-300";
 
   return (
     <div className="flex flex-col gap-4 mt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -92,7 +99,7 @@ export default function DocumentTablePagination({
                 className={
                   isPrevDisabled
                     ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-slate-800 dark:hover:text-orange-300"
+                    : `cursor-pointer dark:hover:bg-slate-800 ${hoverClass}`
                 }
                 onClick={(event) => {
                   event.preventDefault();
@@ -109,7 +116,7 @@ export default function DocumentTablePagination({
                 className={
                   isNextDisabled
                     ? "cursor-not-allowed opacity-50"
-                    : "cursor-pointer hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-slate-800 dark:hover:text-orange-300"
+                    : `cursor-pointer dark:hover:bg-slate-800 ${hoverClass}`
                 }
                 onClick={(event) => {
                   event.preventDefault();
