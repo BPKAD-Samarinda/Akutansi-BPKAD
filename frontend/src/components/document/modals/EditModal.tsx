@@ -1,3 +1,4 @@
+import { FiX } from "react-icons/fi";
 import EditModalFormFields from "./EditModalFormFields";
 import { EditModalProps } from "./editModalTypes";
 import { useEditModal } from "./useEditModal";
@@ -48,53 +49,38 @@ export default function EditModal({
   if (!shouldRender) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/55 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black/55 backdrop-blur-sm pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
       />
       <div
         ref={modalRef}
-        className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-indigo-100/50 dark:border-slate-800"
+        className="relative w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800"
       >
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M4 20h4l10-10-4-4L4 16v4z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M14 6l4 4"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+        <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Edit Dokumen</h2>
-              <p className="text-sm text-gray-500 dark:text-slate-400">
-                Perbarui informasi dokumen sebelum disimpan.
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-orange-100">
+                Pembaruan Dokumen
+              </p>
+              <h2 className="mt-2 text-2xl font-bold">Edit Dokumen</h2>
+              <p className="mt-2 text-sm text-orange-100">
+                Perbarui informasi nama, kategori, atau file dokumen.
               </p>
             </div>
+            <button
+              type="button"
+              onClick={handleCloseWithAnimation}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-white transition hover:bg-white/20"
+              aria-label="Tutup"
+            >
+              <FiX className="h-5 w-5" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleCloseWithAnimation}
-            className="h-9 w-9 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-500 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-slate-100 transition-colors"
-            aria-label="Tutup"
-          >
-            &#10005;
-          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
           <EditModalFormFields
             formData={formData}
             isSaving={isSaving}
