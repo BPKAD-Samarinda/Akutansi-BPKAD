@@ -7,8 +7,9 @@ import { apiClient } from "../../services/api";
 
 export function useFileUpload(
   showToast: (message: string, type: ToastState["type"]) => void,
+  onSuccess?: () => void,
+  onClose?: () => void,
 ) {
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -177,6 +178,7 @@ export function useFileUpload(
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+        if (onSuccess) onSuccess();
       }, 500);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -194,10 +196,9 @@ export function useFileUpload(
   };
 
   const handleCancel = () => {
-    if (formData.name || formData.date || formData.category || selectedFile) {
-      showToast("Pengunggahan dibatalkan", "info");
-    }
-    navigate("/dashboarddokumen");
+    setFormData({ name: "", date: "", category: "" });
+    setSelectedFile(null);
+    if (onClose) onClose();
   };
 
   const handleClickUploadArea = () => {

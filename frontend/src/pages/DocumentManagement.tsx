@@ -7,11 +7,13 @@ import SelectedActionsBar from "../components/document/table/SelectedActionsBar"
 import EditModal from "../components/document/modals/EditModal";
 import { Toast } from "../components/snackbar";
 import ConfirmDialog from "../components/layout/ui/ConfirmDialog";
+import UploadModal from "../components/document/modals/UploadModal";
 import { useDocumentManagement } from "../hooks/document/useDocumentManagement";
 
 export default function DocumentManagement() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterResetKey, setFilterResetKey] = useState(0);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const {
     loading,
     documents,
@@ -84,6 +86,7 @@ export default function DocumentManagement() {
                 onRefresh={handleRefreshClick}
                 onSelectDocument={handleSelectDocument}
                 onSelectAll={handleSelectAll}
+                onUploadClick={() => setIsUploadOpen(true)}
               />
             )}
           </div>
@@ -116,6 +119,16 @@ export default function DocumentManagement() {
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
         type="danger"
+      />
+
+      <UploadModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+        onSuccess={() => {
+          handleRefreshClick();
+          setIsUploadOpen(false);
+        }}
+        showToast={(msg, type) => setToast({ show: true, message: msg, type })}
       />
     </div>
   );

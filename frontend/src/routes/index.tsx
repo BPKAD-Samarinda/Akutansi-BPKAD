@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import DocumentManagement from "../pages/DocumentManagement";
-import UploadDocument from "../pages/UploadDocument";
+
 import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
 import AddUser from "../pages/AddUser";
@@ -135,16 +135,7 @@ export default function AppRoutes() {
         path="/skp-history"
         element={<Navigate to="/riwayat" replace />}
       />
-      <Route
-        path="/upload"
-        element={
-          <ProtectedRoute>
-            <MagangOrPklOrAdminRoute>
-              <UploadDocument />
-            </MagangOrPklOrAdminRoute>
-          </ProtectedRoute>
-        }
-      />
+
       <Route
         path="/riwayat"
         element={

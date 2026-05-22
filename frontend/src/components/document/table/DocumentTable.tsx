@@ -18,6 +18,7 @@ interface DocumentTableProps {
   onRefresh?: () => void;
   onSelectDocument: (id: number | string) => void;
   onSelectAll: (checked: boolean) => void;
+  onUploadClick?: () => void;
 }
 
 export default function DocumentTable({
@@ -30,8 +31,8 @@ export default function DocumentTable({
   onRefresh,
   onSelectDocument,
   onSelectAll,
+  onUploadClick,
 }: DocumentTableProps) {
-  const navigate = useNavigate();
   const documentsContentRef = useRef<HTMLDivElement | null>(null);
   const {
     sortOrder,
@@ -43,10 +44,6 @@ export default function DocumentTable({
     setRowsPerPage,
     handleSortClick,
   } = useDocumentTableState(documents);
-
-  const handleUploadClick = () => {
-    navigate("/upload");
-  };
 
   const allSelected =
     currentDocuments.length > 0 &&
@@ -94,7 +91,7 @@ export default function DocumentTable({
         <DocumentTableToolbar
           sortOrder={sortOrder}
           onSortClick={handleSortClick}
-          onUploadClick={handleUploadClick}
+          onUploadClick={onUploadClick || (() => {})}
           onRefresh={onRefresh}
         />
       </div>

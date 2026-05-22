@@ -48,7 +48,7 @@ export default function UploadFileSection({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 animate-bounce animate-delay-400">
+        <div className="w-12 h-12 bg-[#FF7A00] rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-400">
           <FiFileText className="w-6 h-6 text-white" />
         </div>
         <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Berkas Dokumen</h2>
@@ -67,8 +67,8 @@ export default function UploadFileSection({
           relative overflow-hidden group shadow-sm
           ${
             isDragging
-              ? "border-indigo-500 bg-gradient-to-br from-indigo-50/50 to-blue-50/50 dark:from-indigo-950/20 dark:to-blue-950/20 scale-[1.01] shadow-lg shadow-indigo-500/5"
-              : "border-slate-300 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-800 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-gradient-to-br hover:from-indigo-50/25 hover:to-transparent"
+              ? "border-orange-500 bg-orange-50/50 dark:bg-orange-500/10 scale-[1.01] shadow-lg shadow-orange-500/5"
+              : "border-slate-300 dark:border-slate-800 hover:border-orange-400 dark:hover:border-orange-800 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-orange-50/50 dark:hover:bg-slate-800/50"
           }
           ${selectedFile ? "border-emerald-500 dark:border-emerald-800 bg-gradient-to-br from-emerald-50/20 via-transparent to-transparent dark:from-emerald-950/10" : ""}
         `}
@@ -113,7 +113,7 @@ export default function UploadFileSection({
           </div>
         ) : (
           <div className="text-center p-8 relative z-10">
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-350">
+            <div className="w-16 h-16 bg-[#FF7A00] rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-350">
               <FiUploadCloud className="w-8 h-8 text-white animate-pulse" />
             </div>
             <p className="text-base font-bold text-gray-800 dark:text-slate-100 mb-2">
@@ -122,13 +122,13 @@ export default function UploadFileSection({
             <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 mb-1">
               PDF, Word, Excel, JPG, PNG
             </p>
-            <p className="text-xs font-bold text-indigo-500 dark:text-indigo-400">Maks. 30MB</p>
+            <p className="text-xs font-bold text-orange-500 dark:text-orange-400">Maks. 30MB</p>
           </div>
         )}
 
         <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute top-0 left-0 w-32 h-32 bg-indigo-400 rounded-full filter blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-blue-600 rounded-full filter blur-3xl animate-pulse upload-file-glow-delay"></div>
+          <div className="absolute top-0 left-0 w-32 h-32 bg-orange-400 rounded-full filter blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-amber-500 rounded-full filter blur-3xl animate-pulse upload-file-glow-delay"></div>
         </div>
       </div>
     </div>

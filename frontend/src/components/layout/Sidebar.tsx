@@ -40,8 +40,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         return <FiFileText className={className} />;
       case "/skp":
         return <FiClipboard className={className} />;
-      case "/upload":
-        return <FiUploadCloud className={className} />;
       case "/add-user":
         return <FiUserPlus className={className} />;
       case "/riwayat":
@@ -54,9 +52,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const getIcon = (path: string, active: boolean) => {
     const baseClass = "w-[18px] h-[18px] transition-colors duration-200";
     if (active) {
-      if (path === "/upload") {
-        return <FiUploadCloud className={`${baseClass} text-indigo-600 dark:text-indigo-400`} />;
-      }
       return getReactIcon(path, `${baseClass} text-orange-650 dark:text-orange-400`);
     } else {
       return getReactIcon(path, `${baseClass} text-slate-400 dark:text-slate-500 group-hover:text-slate-650 dark:group-hover:text-slate-350`);
@@ -74,11 +69,10 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       { path: "/dashboard", label: "Dashboard", visible: true },
       { path: "/dokumen-management", label: "Manajemen Dokumen", visible: true },
       { path: "/skp", label: "Sasaran Kinerja Pegawai", visible: true },
-      { path: "/upload", label: "Unggah Dokumen", visible: isAdmin || isMagang || isPkl },
       { path: "/add-user", label: "Tambah Pengguna", visible: isAdmin },
       { path: "/riwayat", label: "Riwayat", visible: canViewUploadHistory },
     ].filter(item => item.visible);
-  }, [isAdmin, isMagang, isPkl, canViewUploadHistory]);
+  }, [isAdmin, canViewUploadHistory]);
 
   const currentIndex = menuItems.findIndex(item => isActive(item.path));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,11 +123,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           <div className="h-px bg-gray-200 dark:bg-slate-800 mb-4"></div>
           <nav className="relative flex flex-col gap-1">
             <div
-              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-custom-bounce ${
-                location.pathname === "/upload"
-                  ? "bg-indigo-50/70 border-indigo-200 dark:bg-indigo-950/30 dark:border-indigo-900/60"
-                  : "bg-orange-50 border-orange-200 dark:bg-slate-800 dark:border-slate-700"
-              }`}
+              className={`absolute left-0 w-full rounded-xl border transition-all duration-500 ease-custom-bounce bg-orange-50 border-orange-200 dark:bg-slate-800 dark:border-slate-700`}
               style={{
                 height: '46px',
                 top: animatedIndex >= 0 ? `${animatedIndex * 50}px` : '0px',
@@ -144,9 +134,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               const active = isActive(item.path);
               
               let activeTextClass = "text-orange-650 dark:text-slate-100";
-              if (item.path === "/upload") {
-                activeTextClass = "text-indigo-650 dark:text-indigo-400 font-bold";
-              }
               
               return (
                 <button
