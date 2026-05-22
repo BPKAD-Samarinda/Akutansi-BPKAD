@@ -3,7 +3,7 @@ import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
-    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-[#F6F6F6] dark:bg-slate-950">
+    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-transparent">
       {/* area gambar di sisi kanan */}
       <div className="absolute inset-y-0 right-0 w-[84%] overflow-hidden">
         <img

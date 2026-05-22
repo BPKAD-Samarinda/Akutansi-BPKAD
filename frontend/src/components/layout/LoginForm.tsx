@@ -3,7 +3,6 @@ import { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import userIcon from "../../assets/icons/profile.svg";
 import lockIcon from "../../assets/icons/kunci.svg";
-import bpkadBuildingPutih from "../../assets/images/bpkad-building-putih.png";
 import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.png";
 
 type LoginFormProps = {
@@ -29,19 +28,14 @@ export default function LoginForm({
 
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
-      <div className="w-full max-w-[460px] bg-white dark:bg-slate-900/95 rounded-3xl shadow-2xl shadow-black/5 px-6 sm:px-12 py-10 sm:py-14 border border-gray-200/80 dark:border-slate-700/70 backdrop-blur-sm animate-[fadeIn_0.8s_ease-out_0.2s_both]">
+      <div className="w-full max-w-[460px] bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-8 sm:px-12 py-10 sm:py-12 border border-slate-100 animate-[fadeIn_0.8s_ease-out_0.2s_both]">
         <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
-          <div className="relative mb-4">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-2xl opacity-20 animate-pulse"></div>
+          <div className="relative mb-4 group cursor-default">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
             <img
               src={bpkadBuildingHitam}
               alt="BPKAD Logo"
-              className="relative h-20 sm:h-24 object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300 dark:hidden"
-            />
-            <img
-              src={bpkadBuildingPutih}
-              alt="BPKAD Logo"
-              className="relative h-20 sm:h-24 object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300 hidden dark:block"
+              className="relative h-20 sm:h-24 object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-500 ease-out"
             />
           </div>
         </div>
@@ -49,7 +43,7 @@ export default function LoginForm({
         <form onSubmit={onSubmit} className="space-y-6">
           {error && (
             <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative text-sm"
+              className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl relative text-sm font-medium animate-[fadeIn_0.3s_ease-in-out]"
               role="alert"
             >
               <span className="block sm:inline">{error}</span>
@@ -57,43 +51,43 @@ export default function LoginForm({
           )}
 
           <div className="animate-[slideUp_0.5s_ease-out_0.5s_both]">
-            <label className="block text-xs font-bold text-gray-700 dark:text-slate-200 mb-2.5 tracking-wide uppercase">
-              NAMA PENGGUNA
+            <label className="block text-xs font-bold text-slate-700 mb-2.5 tracking-wider uppercase">
+              Nama Pengguna
             </label>
-            <div className="relative flex items-center bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20">
-              <img src={userIcon} className="w-5 h-5 mr-3 opacity-40 dark:opacity-70" alt="User" />
+            <div className="relative flex items-center bg-slate-50/50 hover:bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:bg-white focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-500/10">
+              <img src={userIcon} className="w-5 h-5 mr-3 opacity-40" alt="User" />
               <input
                 type="text"
                 placeholder="Masukkan NIP atau username"
                 value={username}
                 onChange={(e) => onUsernameChange(e.target.value)}
                 maxLength={50}
-                className="w-full bg-transparent outline-none text-sm text-gray-700 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium"
+                className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400 font-medium"
                 required
               />
             </div>
           </div>
 
           <div className="animate-[slideUp_0.5s_ease-out_0.6s_both]">
-            <label className="block text-xs font-bold text-gray-700 dark:text-slate-200 mb-2.5 tracking-wide uppercase">
-              KATA SANDI
+            <label className="block text-xs font-bold text-slate-700 mb-2.5 tracking-wider uppercase">
+              Kata Sandi
             </label>
-            <div className="relative flex items-center bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20">
-              <img src={lockIcon} className="w-5 h-5 mr-3 opacity-40 dark:opacity-70" alt="Lock" />
+            <div className="relative flex items-center bg-slate-50/50 hover:bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 transition-all duration-300 focus-within:bg-white focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-500/10">
+              <img src={lockIcon} className="w-5 h-5 mr-3 opacity-40" alt="Lock" />
               <input
                 type={isPasswordVisible ? "text" : "password"}
                 placeholder="Masukkan kata sandi"
                 value={password}
                 onChange={(e) => onPasswordChange(e.target.value)}
                 maxLength={100}
-                className="w-full bg-transparent outline-none text-sm text-gray-700 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 font-medium pr-10"
+                className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400 font-medium pr-10"
                 required
               />
               <button
                 type="button"
                 onClick={() => setIsPasswordVisible((prev) => !prev)}
                 aria-label={isPasswordVisible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-                className="absolute right-4 inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 dark:text-slate-300 transition-colors hover:text-orange-600"
+                className="absolute right-3 inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 transition-colors hover:text-orange-600"
               >
                 {isPasswordVisible ? (
                   <IoMdEyeOff className="h-5 w-5" />
@@ -107,7 +101,7 @@ export default function LoginForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-300 shadow-lg shadow-orange-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white font-bold text-sm tracking-wider py-4 rounded-xl transition-all duration-300 hover:shadow-[0_8px_20px_rgba(249,115,22,0.25)] hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none mt-4 animate-[slideUp_0.5s_ease-out_0.7s_both]"
           >
             {isLoading ? "Sedang masuk..." : "MASUK"}
           </button>

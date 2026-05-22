@@ -42,7 +42,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen w-full flex bg-slate-50 font-['Plus_Jakarta_Sans',sans-serif]">
       <LoginForm
         username={username}
         password={password}
