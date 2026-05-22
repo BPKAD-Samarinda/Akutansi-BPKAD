@@ -221,22 +221,6 @@ export default function AddUser() {
         <Header title="Tambah Pengguna" onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 lg:p-6">
-          <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between animate-[slideUp_0.6s_ease-out_0.05s_both]">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Pengguna & Staff</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                Manajemen sumber daya pengguna dan admin.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsAddOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF7A00] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 active:scale-95 shadow-sm"
-            >
-              <span className="text-lg leading-none">+</span>
-              Tambah Pengguna
-            </button>
-          </div>
           <div className="space-y-6">
             <UserStats
               total={summary.total}
@@ -263,6 +247,7 @@ export default function AddUser() {
                     setDeleteTarget(user);
                     setIsDeleteOpen(true);
                   }}
+                  onAddClick={() => setIsAddOpen(true)}
                 />
               )}
             </div>

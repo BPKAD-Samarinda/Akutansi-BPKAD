@@ -1,13 +1,14 @@
 import type { UserItem } from "../../hooks/add-user/types";
-import { FiEdit3, FiTrash2 } from "react-icons/fi";
+import { FiEdit3, FiTrash2, FiUser, FiShield, FiPieChart, FiUserPlus } from "react-icons/fi";
 
 type UserTableProps = {
   users: UserItem[];
   onEdit: (user: UserItem) => void;
   onDelete: (user: UserItem) => void;
+  onAddClick: () => void;
 };
 
-export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
+export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserTableProps) {
   const formatRole = (role: UserItem["role"]) => {
     const normalized = (role ?? "").toString().trim();
     if (!normalized) return "Belum diisi";
@@ -28,11 +29,20 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
             Pengguna & Staff
           </h3>
         </div>
+        <button
+          type="button"
+          onClick={onAddClick}
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-amber-600 active:scale-95 shadow-sm"
+        >
+          <FiUserPlus className="h-4 w-4" />
+          Tambah Pengguna
+        </button>
       </div>
 
-      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white" style={{ backgroundColor: '#FF7A00' }}>
-        <span>Profil</span>
-        <span>Identitas</span>
+      <div className="grid grid-cols-[0.5fr_1.4fr_1.2fr_1.1fr_0.8fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white bg-[#eab308] rounded-t-xl">
+        <span className="text-center">No</span>
+        <span>Profil / Nama</span>
+        <span>Akses / Role</span>
         <span>Bidang</span>
         <span className="text-center">Aksi</span>
       </div>
@@ -43,40 +53,34 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
         </div>
       ) : (
         <div className="max-h-[620px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
-          {users.map((user) => {
-            const initials = user.username
-              .split(" ")
-              .map((part) => part[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase();
+          {users.map((user, index) => {
             return (
-              <div key={user.id} className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-5 items-center hover:bg-slate-50/60 dark:hover:bg-slate-900/60 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-orange-100 text-orange-600 font-bold flex items-center justify-center">
-                    {initials || "U"}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 dark:text-slate-100">{user.username}</p>
-                  </div>
+              <div key={user.id} className="grid grid-cols-[0.5fr_1.4fr_1.2fr_1.1fr_0.8fr] gap-4 px-6 py-4 items-center hover:bg-yellow-50 dark:hover:bg-amber-500/10 transition-colors">
+                <div className="text-center text-sm font-semibold text-slate-500">
+                  {index + 1}
+                </div>
+                <div className="flex items-center gap-3">
+                  <FiUser className="h-4 w-4 text-slate-400 shrink-0" />
+                  <p className="font-semibold text-gray-800 dark:text-slate-100">{user.username}</p>
                 </div>
 
-                <div>
-                  <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
-                    <span className="text-[#FF7A00]">🏷</span>
+                <div className="flex items-center gap-2">
+                  <FiShield className="h-4 w-4 text-amber-500 shrink-0" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
                     {formatRole(user.role)}
                   </span>
                 </div>
 
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Akuntansi</p>
+                <div className="flex items-center gap-2">
+                  <FiPieChart className="h-4 w-4 text-slate-400 shrink-0" />
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Akuntansi</p>
                 </div>
 
                 <div className="flex justify-center gap-2">
                   <button
                     type="button"
                     onClick={() => onEdit(user)}
-                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
                     aria-label="Edit pengguna"
                   >
                     <FiEdit3 className="h-4 w-4" />
