@@ -169,7 +169,7 @@ export default function HistoryTable({
                         {item.fileSize}
                       </p>
                     )}
-                    <p className="mt-1 text-[11px] font-medium text-indigo-500 dark:text-indigo-300">
+                    <p className="mt-1 text-[11px] font-medium text-orange-500 dark:text-orange-300">
                       {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </p>
                   {editChanges.length > 0 && (
@@ -240,7 +240,7 @@ export default function HistoryTable({
             <col style={{ width: "20%" }} />
             <col style={{ width: "16%" }} />
           </colgroup>
-          <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
+          <thead style={{ backgroundColor: '#FF7A00', color: 'white' }}>
             <tr>
               <th className="px-3 py-3 text-center">
                 <input
@@ -300,7 +300,7 @@ export default function HistoryTable({
                         {item.fileSize}
                       </div>
                     )}
-                    <div className="mt-1 text-[11px] font-medium text-indigo-500 dark:text-indigo-300">
+                    <div className="mt-1 text-[11px] font-medium text-orange-500 dark:text-orange-300">
                       {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </div>
                   </td>

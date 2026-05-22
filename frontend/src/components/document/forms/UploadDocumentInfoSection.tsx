@@ -127,7 +127,7 @@ export default function UploadDocumentInfoSection({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 animate-bounce animate-delay-300">
+        <div className="w-12 h-12 bg-[#FF7A00] rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30 animate-bounce animate-delay-300">
           <FiFileText className="w-6 h-6 text-white" />
         </div>
         <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Informasi Dokumen</h2>
@@ -138,7 +138,7 @@ export default function UploadDocumentInfoSection({
           htmlFor="name"
           className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5"
         >
-          <FiFileText className="text-indigo-500 w-4 h-4" />
+          <FiFileText className="text-[#FF7A00] w-4 h-4" />
           Nama Dokumen
         </label>
         <input
@@ -148,14 +148,14 @@ export default function UploadDocumentInfoSection({
           value={formData.name}
           onChange={onInputChange}
           placeholder="Nama akan otomatis terisi dari file..."
-          className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 shadow-sm"
+          className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 shadow-sm"
           required
         />
       </div>
 
       <div>
         <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5">
-          <FiCalendar className="text-indigo-500 w-4 h-4" />
+          <FiCalendar className="text-[#FF7A00] w-4 h-4" />
           Tanggal Dokumen
         </label>
         <div ref={calendarWrapperRef} className="relative">
@@ -174,7 +174,7 @@ export default function UploadDocumentInfoSection({
               });
               setIsCategoryOpen(false);
             }}
-            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
           >
             <span
               className={
@@ -259,7 +259,7 @@ export default function UploadDocumentInfoSection({
 
       <div>
         <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-300 mb-2.5">
-          <FiLayers className="text-indigo-500 w-4 h-4" />
+          <FiLayers className="text-[#FF7A00] w-4 h-4" />
           Kategori
         </label>
         <div ref={categoryWrapperRef} className="relative">
@@ -269,7 +269,7 @@ export default function UploadDocumentInfoSection({
               setIsCategoryOpen((prev) => !prev);
               setIsCalendarOpen(false);
             }}
-            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
+            className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium text-left focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 flex items-center justify-between shadow-sm"
           >
             <span
               className={
@@ -299,7 +299,7 @@ export default function UploadDocumentInfoSection({
                   }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     formData.category === option
-                      ? "bg-indigo-50 text-indigo-650 font-bold border-l-4 border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-400"
+                      ? "bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-500 dark:bg-orange-950/40 dark:text-orange-400"
                       : "hover:bg-slate-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200"
                   }`}
                 >

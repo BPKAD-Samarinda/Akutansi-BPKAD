@@ -28,13 +28,11 @@ export default function DocumentTableDesktop({
   pageStartIndex,
 }: DocumentTableDesktopProps) {
   return (
-    <div className="hidden md:block overflow-x-auto bg-white dark:bg-slate-900">
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-14 rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600" />
-        <table className="relative z-10 w-full min-w-full table-fixed border-collapse border-spacing-0 text-sm">
-          <thead className="rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
-            <tr>
-            <th className="text-center align-middle py-4 px-3 font-semibold w-12 uppercase tracking-[0.2em] text-xs text-white">
+    <div className="hidden md:block overflow-x-auto">
+      <table className="w-full min-w-full table-fixed border-collapse text-sm">
+        <thead>
+          <tr style={{ backgroundColor: '#FF7A00', color: 'white' }}>
+            <th className="text-center align-middle py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs">
               <AppTooltip content="Pilih Semua">
                 <input
                   type="checkbox"
@@ -47,55 +45,54 @@ export default function DocumentTableDesktop({
                     }
                   }}
                   onChange={(e) => onSelectAll(e.target.checked)}
-                  className="block mx-auto w-4 h-4 rounded border-white/60 bg-transparent accent-orange-400"
+                  className="block mx-auto w-4 h-4 rounded border-white/60 bg-transparent accent-white cursor-pointer"
                 />
               </AppTooltip>
             </th>
-            <th className="text-center align-middle py-4 px-3 font-semibold w-12 uppercase tracking-[0.2em] text-xs text-white">
-              No
+            <th className="text-center align-middle py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs">
+              NO
             </th>
-            <th className="text-left py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[28%] text-white">
-              Nama
+            <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[30%]">
+              JUDUL / NAMA DOKUMEN
             </th>
-            <th className="text-center py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[16%] text-white">
-              Kategori
+            <th className="text-center py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[16%]">
+              KATEGORI
             </th>
-            <th className="text-center py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[12%] text-white">
-              Format
+            <th className="text-center py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[11%]">
+              FORMAT
             </th>
-            <th className="text-center py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[16%] text-white">
-              Tanggal
+            <th className="text-center py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[16%]">
+              TANGGAL
             </th>
-            <th className="text-center py-4 px-3 font-semibold uppercase tracking-[0.2em] text-xs w-[16%] text-white">
-              Aksi
+            <th className="text-center py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[14%]">
+              AKSI
             </th>
-            </tr>
-          </thead>
+          </tr>
+        </thead>
 
-          <tbody className="bg-white dark:bg-slate-900">
-            {documents.length > 0 ? (
-              documents.map((doc, index) => (
-                <DocumentRow
-                  key={doc.id}
-                  doc={doc}
-                  isSelected={selectedDocuments.has(doc.id)}
-                  onSelect={onSelectDocument}
-                  onView={onView}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  rowNumber={pageStartIndex + index}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={8} className="py-12 text-center text-gray-400">
-                  Dokumen kosong.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+        <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800">
+          {documents.length > 0 ? (
+            documents.map((doc, index) => (
+              <DocumentRow
+                key={doc.id}
+                doc={doc}
+                isSelected={selectedDocuments.has(doc.id)}
+                onSelect={onSelectDocument}
+                onView={onView}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                rowNumber={pageStartIndex + index}
+              />
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
+                Belum ada dokumen.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

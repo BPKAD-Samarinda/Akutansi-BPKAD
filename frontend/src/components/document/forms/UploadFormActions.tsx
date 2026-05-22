@@ -23,7 +23,7 @@ export default function UploadFormActions({
       <button
         type="submit"
         disabled={isUploading}
-        className="relative px-8 py-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-[length:200%_auto] hover:bg-[position:100%] text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-indigo-600/20 hover:shadow-xl hover:shadow-indigo-600/35 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group min-w-[190px] flex items-center justify-center"
+        className="relative px-8 py-3.5 bg-[#FF7A00] hover:bg-orange-600 text-white rounded-xl font-bold transition-all duration-500 shadow-lg shadow-orange-600/20 hover:shadow-xl hover:shadow-orange-600/35 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed order-1 sm:order-2 overflow-hidden group min-w-[190px] flex items-center justify-center"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
         <span className="relative flex items-center gap-2 leading-none">

@@ -7,7 +7,19 @@ export default {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["'Plus Jakarta Sans'", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+  		},
   		colors: {
+  			bpkad: {
+  				orange: '#FF7A00',
+  				blue: 'oklch(68.5% 0.169 237.323)',
+  				purple: 'oklch(54.1% 0.281 293.009)',
+  				teal: 'oklch(84.5% 0.143 164.978)',
+  				green: 'oklch(72.3% 0.219 149.579)',
+  				red: 'oklch(63.7% 0.237 25.331)',
+  				yellow: 'oklch(70.5% 0.213 47.604)',
+  			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'

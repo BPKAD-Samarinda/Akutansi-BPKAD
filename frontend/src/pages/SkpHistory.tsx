@@ -87,7 +87,7 @@ export default function SkpHistoryPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-gray-100 dark:bg-slate-950 font-sans">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Riwayat SKP" onMenuClick={() => setSidebarOpen(true)} />
@@ -108,14 +108,14 @@ export default function SkpHistoryPage() {
             <div className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 dark:bg-slate-900">
-                    <tr className="text-slate-600 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800">
-                      <th className="text-left px-4 py-3">No</th>
-                      <th className="text-left px-4 py-3">Aksi</th>
-                      <th className="text-left px-4 py-3">Actor</th>
-                      <th className="text-left px-4 py-3">Target Staff</th>
-                      <th className="text-left px-4 py-3">Waktu</th>
-                      <th className="text-left px-4 py-3">Perubahan</th>
+                  <thead style={{ backgroundColor: '#FF7A00', color: 'white' }}>
+                    <tr className="text-white border-b border-orange-600">
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">No</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">Aksi</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">Actor</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">Target Staff</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">Waktu</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider">Perubahan</th>
                     </tr>
                   </thead>
                   <tbody>

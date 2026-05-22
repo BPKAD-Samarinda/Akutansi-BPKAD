@@ -56,9 +56,7 @@ export default function DocumentTable({
     !allSelected;
 
   useEffect(() => {
-    if (!documentsContentRef.current) {
-      return;
-    }
+    if (!documentsContentRef.current) return;
 
     const paginatedItems = documentsContentRef.current.querySelectorAll(
       "[data-paginated-item]",
@@ -71,12 +69,7 @@ export default function DocumentTable({
       gsap.fromTo(
         paginatedItems,
         { autoAlpha: 0 },
-        {
-          autoAlpha: 1,
-          duration: 1,
-          ease: "power2.out",
-          stagger: 0.025,
-        },
+        { autoAlpha: 1, duration: 1, ease: "power2.out", stagger: 0.025 },
       );
       return;
     }
@@ -89,18 +82,24 @@ export default function DocumentTable({
   }, [currentPage]);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-4 lg:p-6">
-      <DocumentTableToolbar
-        sortOrder={sortOrder}
-        onSortClick={handleSortClick}
-        onUploadClick={handleUploadClick}
-        onRefresh={onRefresh}
-      />
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      {/* Section Header */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
+            Daftar Dokumen
+          </h2>
+        </div>
+        <DocumentTableToolbar
+          sortOrder={sortOrder}
+          onSortClick={handleSortClick}
+          onUploadClick={handleUploadClick}
+          onRefresh={onRefresh}
+        />
+      </div>
 
-      <div
-        ref={documentsContentRef}
-        className="overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900"
-      >
+      <div ref={documentsContentRef}>
         <DocumentTableDesktop
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}
@@ -124,14 +123,16 @@ export default function DocumentTable({
         />
       </div>
 
-      <DocumentTablePagination
-        totalDocuments={totalDocuments}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        rowsPerPage={rowsPerPage}
-        onPageChange={goToPage}
-        onRowsPerPageChange={setRowsPerPage}
-      />
+      <div className="px-5 py-4 border-t border-gray-100 dark:border-slate-800">
+        <DocumentTablePagination
+          totalDocuments={totalDocuments}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          rowsPerPage={rowsPerPage}
+          onPageChange={goToPage}
+          onRowsPerPageChange={setRowsPerPage}
+        />
+      </div>
     </div>
   );
 }

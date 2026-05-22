@@ -85,7 +85,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-gray-100 dark:bg-slate-950 font-sans">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="ml-0 lg:ml-64 flex-1 flex flex-col">
         <Header title="Dashboard" onMenuClick={() => setSidebarOpen(true)} />

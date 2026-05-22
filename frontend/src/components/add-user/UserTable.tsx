@@ -19,14 +19,18 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 dark:text-slate-100">Pengguna & Staff</h3>
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden dark:border-slate-800 dark:bg-slate-900">
+      {/* Section Header */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
+          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
+            Pengguna & Staff
+          </h3>
         </div>
       </div>
 
-      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-white bg-gradient-to-r from-orange-500 to-orange-600">
+      <div className="grid grid-cols-[1.4fr_1.2fr_1.1fr_0.6fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white" style={{ backgroundColor: '#FF7A00' }}>
         <span>Profil</span>
         <span>Identitas</span>
         <span>Bidang</span>
@@ -58,7 +62,8 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
                 </div>
 
                 <div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-xs font-semibold px-3 py-1">
+                  <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                    <span className="text-[#FF7A00]">🏷</span>
                     {formatRole(user.role)}
                   </span>
                 </div>
@@ -71,7 +76,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
                   <button
                     type="button"
                     onClick={() => onEdit(user)}
-                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-600 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-700 transition-colors"
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
                     aria-label="Edit pengguna"
                   >
                     <FiEdit3 className="h-4 w-4" />
@@ -79,7 +84,7 @@ export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
                   <button
                     type="button"
                     onClick={() => onDelete(user)}
-                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 bg-red-50/70 hover:bg-red-100 hover:text-red-700 transition-colors"
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                     aria-label="Hapus pengguna"
                   >
                     <FiTrash2 className="h-4 w-4" />

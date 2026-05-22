@@ -214,24 +214,24 @@ export default function AddUser() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-gray-100 dark:bg-slate-950 font-sans">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Tambah Pengguna" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 p-4 lg:p-8">
-          <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between animate-[slideUp_0.6s_ease-out_0.05s_both]">
+        <main className="flex-1 p-4 lg:p-6">
+          <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between animate-[slideUp_0.6s_ease-out_0.05s_both]">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Pengguna & Staff</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Pengguna & Staff</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Manajemen sumber daya pengguna dan admin.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setIsAddOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/30 hover:shadow-lg hover:shadow-orange-500/40 transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF7A00] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 active:scale-95 shadow-sm"
             >
               <span className="text-lg leading-none">+</span>
               Tambah Pengguna

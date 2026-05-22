@@ -408,12 +408,12 @@ export default function SkpPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-950 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex bg-gray-100 dark:bg-slate-950 font-sans">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="ml-0 lg:ml-64 flex-1 flex flex-col animate-[fadeIn_0.5s_ease-out]">
         <Header title="Sasaran Kinerja Pegawai" onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 p-4 lg:p-8">
+        <main className="flex-1 p-4 lg:p-6">
           <div className="mb-4 flex flex-col lg:flex-row gap-3 lg:gap-4 lg:items-start animate-[slideUp_0.6s_ease-out_0.1s_both]">
             <div className={`flex-1 grid grid-cols-1 gap-3 lg:gap-4 w-full ${isAdmin ? 'lg:grid-cols-[minmax(0,1.3fr)_160px_160px_160px]' : 'lg:grid-cols-[minmax(0,1.3fr)_220px_220px]'}`}>
               <div>
@@ -524,62 +524,69 @@ export default function SkpPage() {
             </div>
           )}
 
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-4 lg:p-6 animate-[slideUp_0.6s_ease-out_0.2s_both] dark:border-slate-800 dark:bg-slate-900">
-            <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setSortOrder("newest")}
-                  className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
-                    sortOrder === "newest"
-                      ? "bg-orange-500 text-white shadow-md shadow-blue-500/30"
-                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
-                  }`}
-                >
-                  TERBARU
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSortOrder("oldest")}
-                  className={`px-4 lg:px-5 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all ${
-                    sortOrder === "oldest"
-                      ? "bg-orange-500 text-white shadow-md shadow-blue-500/30"
-                      : "border border-slate-200 text-slate-500 hover:border-orange-300 hover:text-orange-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-orange-400"
-                  }`}
-                >
-                  TERLAMA
-                </button>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden animate-[slideUp_0.6s_ease-out_0.2s_both] dark:border-slate-800 dark:bg-slate-900">
+            {/* Section Header */}
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-6 bg-[#FF7A00] rounded-full" />
+                <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
+                  Daftar SKP
+                </h2>
               </div>
-
-              <div className="flex items-center justify-end gap-2">
+              
+              <div className="flex items-center gap-2 flex-wrap justify-end">
+                <div className="flex gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setSortOrder("newest")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      sortOrder === "newest"
+                        ? "bg-[#FF7A00] text-white shadow-sm"
+                        : "border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00]"
+                    }`}
+                  >
+                    TERBARU
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSortOrder("oldest")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      sortOrder === "oldest"
+                        ? "bg-[#FF7A00] text-white shadow-sm"
+                        : "border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00]"
+                    }`}
+                  >
+                    TERLAMA
+                  </button>
+                </div>
+                <div className="w-px h-5 bg-gray-200 mx-1 hidden sm:block" />
                 <button
                   type="button"
                   onClick={handleOpenUploadModal}
-                  className="bg-blue-600 text-white px-4 lg:px-5 py-2.5 lg:py-3 rounded-full inline-flex items-center gap-2 text-sm font-semibold transition-all duration-200 shadow-md shadow-blue-500/30 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 justify-center"
+                  className="bg-[#FF7A00] text-white px-4 py-1.5 rounded-lg inline-flex items-center gap-1.5 text-xs font-bold transition-all hover:bg-orange-600 active:scale-95"
                 >
-                  <FiUploadCloud className="h-4 w-4 lg:h-5 lg:w-5" />
-                  Unggah Baru
+                  <FiUploadCloud className="h-3.5 w-3.5" />
+                  Unggah
                 </button>
-                <AppTooltip content="Refresh">
+                <AppTooltip content="Refresh data">
                   <button
                     type="button"
                     onClick={handleRefresh}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white transition-all duration-200 shadow-md shadow-blue-500/30 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 shrink-0 lg:h-[48px] lg:w-[48px]"
+                    className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-gray-200 text-slate-500 hover:border-orange-300 hover:text-[#FF7A00] transition-all active:scale-95 disabled:opacity-60"
                   >
                     <FiRefreshCw
-                      className={`h-[18px] w-[18px] text-white ${isRefreshing ? "animate-[spin-clean_0.8s_linear_infinite]" : ""}`}
+                      className={`h-3.5 w-3.5 ${isRefreshing ? "animate-[spin-clean_0.8s_linear_infinite]" : ""}`}
                     />
                   </button>
                 </AppTooltip>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div className="hidden overflow-x-auto md:block">
-                <table className="relative z-10 w-full min-w-full table-fixed border-collapse border-spacing-0 text-sm">
-                  <thead className="rounded-t-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white border-b border-orange-600">
-                    <tr>
-                      <th className="py-4 px-3 text-center w-12">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-full table-fixed border-collapse text-sm">
+                <thead>
+                  <tr style={{ backgroundColor: '#FF7A00', color: 'white' }}>
+                    <th className="py-3.5 px-3 text-center w-12 align-middle">
                         <AppTooltip content="Pilih Semua">
                           <input
                             type="checkbox"
@@ -593,23 +600,23 @@ export default function SkpPage() {
                           />
                         </AppTooltip>
                       </th>
-                      <th className="py-4 px-3 text-center w-12 text-xs font-semibold uppercase tracking-[0.2em]">
-                        No
+                      <th className="py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs text-center align-middle">
+                        NO
                       </th>
-                      <th className="py-4 px-3 text-left text-xs font-semibold uppercase tracking-[0.2em] w-[32%]">
-                        Nama SKP
+                      <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-left w-[32%]">
+                        NAMA SKP
                       </th>
-                      <th className="py-4 px-3 text-center text-xs font-semibold uppercase tracking-[0.2em] w-[14%]">
-                        Triwulan
+                      <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[14%]">
+                        TRIWULAN
                       </th>
-                      <th className="py-4 px-3 text-center text-xs font-semibold uppercase tracking-[0.2em] w-[12%]">
-                        Tahun
+                      <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[12%]">
+                        TAHUN
                       </th>
-                      <th className="py-4 px-3 text-center text-xs font-semibold uppercase tracking-[0.2em] w-[18%]">
-                        Tanggal Unggah
+                      <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[18%]">
+                        TANGGAL UNGGAH
                       </th>
-                      <th className="py-4 px-3 text-center text-xs font-semibold uppercase tracking-[0.2em] w-[16%]">
-                        Aksi
+                      <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[16%]">
+                        AKSI
                       </th>
                     </tr>
                   </thead>
@@ -643,24 +650,39 @@ export default function SkpPage() {
                               aria-label={`Pilih dokumen SKP ${item.nama_skp}`}
                             />
                           </td>
-                          <td className="py-4 px-3 text-center text-xs font-semibold text-amber-600">
+                          <td className="py-3.5 px-3 text-center text-sm font-semibold text-slate-500">
                             {(safeCurrentPage - 1) * rowsPerPage + index + 1}
                           </td>
-                          <td className="py-4 px-3">
-                            <AppTooltip content={item.nama_skp}>
-                              <div className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                {item.nama_skp}
-                              </div>
-                            </AppTooltip>
+                          <td className="py-3.5 px-3">
+                            <div className="flex items-center gap-2">
+                              <svg className="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              <AppTooltip content={item.nama_skp}>
+                                <span className="block truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                                  {item.nama_skp}
+                                </span>
+                              </AppTooltip>
+                            </div>
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-700 dark:text-slate-200">
-                            Triwulan {item.triwulan}
+                          <td className="py-3.5 px-3 text-center">
+                            <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                              <span className="text-[#FF7A00]">🏷</span>
+                              Triwulan {item.triwulan}
+                            </span>
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-700 dark:text-slate-200">
-                            {item.tahun}
+                          <td className="py-3.5 px-3 text-center">
+                            <span className="inline-flex justify-center px-2.5 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200">
+                              {item.tahun}
+                            </span>
                           </td>
-                          <td className="py-4 px-3 text-center text-slate-600 dark:text-slate-300">
-                            {formatIndonesianDate(item.created_at || "")}
+                          <td className="py-3.5 px-3 text-center">
+                            <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                              <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              {formatIndonesianDate(item.created_at || "")}
+                            </div>
                           </td>
                           <td className="py-4 px-3">
                             <div className="flex justify-center gap-1.5">
@@ -668,7 +690,7 @@ export default function SkpPage() {
                                 <button
                                   type="button"
                                   onClick={() => openFileInNewTab(item.file_path)}
-                                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-700"
+                                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
                                 >
                                   <FiEye className="h-4 w-4" />
                                 </button>
@@ -677,7 +699,7 @@ export default function SkpPage() {
                                     <button
                                       type="button"
                                       onClick={() => handleOpenEdit(item)}
-                                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition hover:bg-amber-100 hover:text-amber-700"
+                                      className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
                                     >
                                       <FiEdit3 className="h-4 w-4" />
                                     </button>
@@ -686,7 +708,7 @@ export default function SkpPage() {
                                     <button
                                       type="button"
                                       onClick={() => setDeleteTarget(item)}
-                                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-700"
+                                      className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                                     >
                                       <FiTrash2 className="h-4 w-4" />
                                     </button>
@@ -777,7 +799,6 @@ export default function SkpPage() {
                   ))
                 )}
               </div>
-            </div>
 
             <DocumentTablePagination
               totalDocuments={sortedDocuments.length}

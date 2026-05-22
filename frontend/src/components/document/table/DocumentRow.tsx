@@ -31,21 +31,20 @@ export default function DocumentRow({
 
   const getFormatStyle = (filePath: string) => {
     const format = getFileFormat(filePath);
-
     switch (format) {
       case "pdf":
-        return "bg-red-100 text-red-600";
+        return "bg-red-100 text-red-600 border border-red-200";
       case "xlsx":
       case "xls":
-        return "bg-green-100 text-green-600";
+        return "bg-green-100 text-green-600 border border-green-200";
       case "docx":
       case "doc":
-        return "bg-blue-100 text-blue-600";
+        return "bg-blue-100 text-blue-600 border border-blue-200";
       case "pptx":
       case "ppt":
-        return "bg-orange-100 text-orange-600";
+        return "bg-orange-100 text-orange-600 border border-orange-200";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-gray-100 text-gray-600 border border-gray-200";
     }
   };
 
@@ -54,55 +53,73 @@ export default function DocumentRow({
   return (
     <tr
       data-paginated-item
-      className={`border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors ${
-        isSelected ? "bg-amber-50/60 dark:bg-amber-500/10" : ""
+      className={`transition-colors duration-150 ${
+        isSelected
+          ? "bg-orange-50 dark:bg-orange-500/10"
+          : "hover:bg-amber-50/60 dark:hover:bg-slate-800/60"
       }`}
     >
-      <td className="py-4 px-3 w-12 text-center align-middle">
+      {/* Checkbox */}
+      <td className="py-3.5 px-3 w-12 text-center align-middle">
         <input
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(doc.id)}
           aria-label={`Select document ${doc.nama_sppd}`}
-        className="block mx-auto w-4 h-4 text-orange-600 border-gray-300 dark:border-slate-600 rounded cursor-pointer"
-      />
+          className="block mx-auto w-4 h-4 accent-orange-500 border-gray-300 dark:border-slate-600 rounded cursor-pointer"
+        />
       </td>
 
-      <td className="py-4 px-3 w-12 text-center align-middle text-xs font-semibold text-amber-600">
+      {/* No */}
+      <td className="py-3.5 px-3 w-12 text-center align-middle text-sm font-semibold text-slate-500 dark:text-slate-400">
         {rowNumber}
       </td>
 
-      <td className="py-4 px-3 text-sm font-medium text-gray-800 dark:text-slate-100 max-w-0">
-        <AppTooltip content={doc.nama_sppd}>
-          <span className="block truncate">{doc.nama_sppd}</span>
-        </AppTooltip>
+      {/* Nama */}
+      <td className="py-3.5 px-3 text-sm font-medium text-slate-800 dark:text-slate-100 max-w-0">
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-gray-300 dark:text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <AppTooltip content={doc.nama_sppd}>
+            <span className="block truncate">{doc.nama_sppd}</span>
+          </AppTooltip>
+        </div>
       </td>
 
-      <td className="py-4 px-3 text-sm text-center text-gray-700 dark:text-slate-200">
-        {doc.kategori}
+      {/* Kategori */}
+      <td className="py-3.5 px-3 text-center">
+        <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+          <span className="text-[#FF7A00]">🏷</span>
+          {doc.kategori}
+        </span>
       </td>
 
-      <td className="py-4 px-3 text-center">
-        <span
-          className={`inline-flex min-w-[52px] justify-center px-3 py-1 ${getFormatStyle(
-            doc.file_path,
-          )} rounded-full text-xs font-semibold ring-1 ring-amber-100`}
-        >
+      {/* Format */}
+      <td className="py-3.5 px-3 text-center">
+        <span className={`inline-flex min-w-[48px] justify-center px-2.5 py-0.5 rounded text-xs font-bold ${getFormatStyle(doc.file_path)}`}>
           {format.toUpperCase()}
         </span>
       </td>
 
-      <td className="py-4 px-3 text-center text-sm text-gray-600 dark:text-slate-300">
-        {formatIndonesianDate(doc.tanggal_sppd)}
+      {/* Tanggal */}
+      <td className="py-3.5 px-3 text-center">
+        <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+          <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          {formatIndonesianDate(doc.tanggal_sppd)}
+        </div>
       </td>
 
-      <td className="py-4 px-3">
-        <div className="flex gap-1.5 justify-center">
+      {/* Aksi */}
+      <td className="py-3.5 px-3">
+        <div className="flex gap-2 justify-center">
           <AppTooltip content="Lihat dokumen">
             <button
               onClick={() => onView?.(doc.id)}
               aria-label="View document"
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-blue-600 bg-blue-50/60 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
             >
               <FiEye className="h-4 w-4" />
             </button>
@@ -113,7 +130,7 @@ export default function DocumentRow({
                 <button
                   onClick={() => onEdit?.(doc.id)}
                   aria-label="Edit document"
-                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-600 bg-amber-50/70 hover:bg-amber-100 hover:text-amber-700 transition-colors"
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors"
                 >
                   <FiEdit3 className="h-4 w-4" />
                 </button>
@@ -122,7 +139,7 @@ export default function DocumentRow({
                 <button
                   onClick={() => onDelete?.(doc.id)}
                   aria-label="Delete document"
-                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-600 bg-red-50/70 hover:bg-red-100 hover:text-red-700 transition-colors"
+                  className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                 >
                   <FiTrash2 className="h-4 w-4" />
                 </button>

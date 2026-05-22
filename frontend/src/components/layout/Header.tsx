@@ -60,8 +60,11 @@ export default function Header({ title, onMenuClick }: HeaderProps) {
             </div>
           </button>
         )}
-        <div className="text-xl md:text-3xl font-extrabold text-gray-800 tracking-tight dark:text-slate-100">
-          {title}
+        <div>
+          <div className="text-xl md:text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
+            {title}
+          </div>
+          <div className="h-0.5 w-10 bg-[#FF7A00] rounded-full mt-1" />
         </div>
       </div>
 
