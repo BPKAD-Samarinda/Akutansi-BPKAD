@@ -22,7 +22,7 @@ type DocumentTablePaginationProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
-  colorTheme?: "orange" | "indigo";
+  colorTheme?: "orange" | "indigo" | "teal";
 };
 
 export default function DocumentTablePagination({
@@ -40,7 +40,16 @@ export default function DocumentTablePagination({
   const hoverClass =
     colorTheme === "indigo"
       ? "hover:bg-indigo-50 hover:text-indigo-600 dark:hover:text-indigo-300"
+      : colorTheme === "teal"
+      ? "hover:bg-teal-50 hover:text-teal-600 dark:hover:text-teal-300"
       : "hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-300";
+
+  const selectItemClass =
+    colorTheme === "indigo"
+      ? "focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100"
+      : colorTheme === "teal"
+      ? "focus:bg-teal-50 focus:text-teal-600 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-600 data-[state=checked]:bg-teal-50 data-[state=checked]:text-teal-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100"
+      : ""; // Orange is the default in select.tsx
 
   return (
     <div className="flex flex-col gap-4 mt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -69,16 +78,16 @@ export default function DocumentTablePagination({
               side="right"
             >
               <SelectGroup>
-                <SelectItem value="10" className="font-semibold">
+                <SelectItem value="10" className={`font-semibold ${selectItemClass}`}>
                   10
                 </SelectItem>
-                <SelectItem value="25" className="font-semibold">
+                <SelectItem value="25" className={`font-semibold ${selectItemClass}`}>
                   25
                 </SelectItem>
-                <SelectItem value="50" className="font-semibold">
+                <SelectItem value="50" className={`font-semibold ${selectItemClass}`}>
                   50
                 </SelectItem>
-                <SelectItem value="100" className="font-semibold">
+                <SelectItem value="100" className={`font-semibold ${selectItemClass}`}>
                   100
                 </SelectItem>
               </SelectGroup>

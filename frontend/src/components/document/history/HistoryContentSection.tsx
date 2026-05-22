@@ -126,8 +126,14 @@ export default function HistoryContentSection({
   }, [statusValue]);
 
   return (
-    <section className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 md:p-6 shadow-sm">
-      <div className="mb-4">
+    <section className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between px-5 py-3.5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-1 h-6 bg-teal-500 rounded-full" />
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
+            Riwayat Dokumen
+          </h2>
+        </div>
         <HistoryToolbar
           searchValue={searchValue}
           statusValue={statusValue}
@@ -141,9 +147,9 @@ export default function HistoryContentSection({
       {selectedRestorableCount > 0 && (
         <div
           ref={selectedToolbarRef}
-          className="mb-4 flex flex-col gap-3 rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 md:flex-row md:items-center md:justify-between"
+          className="m-4 flex flex-col gap-3 rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 md:flex-row md:items-center md:justify-between"
         >
-          <p className="text-sm font-semibold text-orange-700">
+          <p className="text-sm font-semibold text-teal-700">
             {selectedRestorableCount} dokumen dipilih
           </p>
           <div className="flex flex-wrap items-center gap-2">
@@ -151,7 +157,7 @@ export default function HistoryContentSection({
               type="button"
               onClick={onRestoreSelected}
               disabled={isRestoringSelected || isPermanentlyDeletingSelected}
-              className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center justify-center rounded-lg bg-teal-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-teal-600 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isRestoringSelected ? "Memproses..." : "Restorasi File Ini"}
             </button>
@@ -185,14 +191,16 @@ export default function HistoryContentSection({
               onToggleSelectAll={onToggleSelectAll}
               onToggleSelect={onToggleSelect}
             />
-            <HistoryPagination
-              page={page}
-              totalPages={totalPages}
-              totalItems={totalItems}
-              pageSize={pageSize}
-              onPageChange={onPageChange}
-              onPageSizeChange={onPageSizeChange}
-            />
+            <div className="px-5 py-4 border-t border-gray-100 dark:border-slate-800">
+              <HistoryPagination
+                page={page}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                pageSize={pageSize}
+                onPageChange={onPageChange}
+                onPageSizeChange={onPageSizeChange}
+              />
+            </div>
           </>
         )}
       </div>

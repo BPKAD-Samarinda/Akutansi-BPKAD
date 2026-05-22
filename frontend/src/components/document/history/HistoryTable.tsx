@@ -129,7 +129,7 @@ export default function HistoryTable({
   onToggleSelect,
 }: HistoryTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-100 dark:border-slate-800">
+    <div>
       <div className="md:hidden divide-y divide-gray-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
         {items.map((item) => {
           const status = getHistoryStatus(item);
@@ -146,7 +146,7 @@ export default function HistoryTable({
                   onChange={(event) =>
                     onToggleSelect(item.id, event.target.checked)
                   }
-                  className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-orange-600 disabled:opacity-40"
+                  className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-teal-600 disabled:opacity-40"
                   aria-label={`Pilih dokumen ${item.documentName}`}
                 />
                 <div className="min-w-0 flex-1">
@@ -169,7 +169,7 @@ export default function HistoryTable({
                         {item.fileSize}
                       </p>
                     )}
-                    <p className="mt-1 text-[11px] font-medium text-orange-500 dark:text-orange-300">
+                    <p className="mt-1 text-[11px] font-medium text-teal-500 dark:text-teal-300">
                       {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </p>
                   {editChanges.length > 0 && (
@@ -232,40 +232,33 @@ export default function HistoryTable({
       </div>
 
       <div className="hidden md:block overflow-x-auto">
-        <table className="w-full table-fixed divide-y divide-gray-100 dark:divide-slate-800">
-          <colgroup>
-            <col style={{ width: "6%" }} />
-            <col style={{ width: "40%" }} />
-            <col style={{ width: "18%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "16%" }} />
-          </colgroup>
-          <thead style={{ backgroundColor: '#FF7A00', color: 'white' }}>
+        <table className="w-full min-w-full table-fixed border-collapse text-sm">
+          <thead className="bg-teal-600 text-white">
             <tr>
-              <th className="px-3 py-3 text-center">
+              <th className="text-center align-middle py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs">
                 <input
                   type="checkbox"
                   checked={allRestorableSelected}
                   onChange={(event) => onToggleSelectAll(event.target.checked)}
-                  className="h-4 w-4 rounded border-white/60 bg-transparent accent-orange-400"
+                  className="block mx-auto h-4 w-4 rounded border-white/60 bg-transparent accent-teal-400"
                   aria-label="Pilih semua dokumen terhapus"
                 />
               </th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[35%]">
                 Nama Dokumen
               </th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[18%]">
                 Tanggal
               </th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[20%]">
                 Informasi
               </th>
-              <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[16%]">
                 Status
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+          <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800">
             {items.map((item) => {
               const status = getHistoryStatus(item);
               const editChanges = status === "Diedit" ? getEditChanges(item) : [];
@@ -277,7 +270,7 @@ export default function HistoryTable({
                   key={item.id}
                   className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors odd:bg-white dark:odd:bg-slate-900 even:bg-slate-50/40 dark:even:bg-slate-900/40"
                 >
-                  <td className="px-3 py-4 text-center align-top">
+                  <td className="text-center align-middle py-3.5 px-3">
                     <input
                       type="checkbox"
                       checked={selectedIds.has(String(item.id))}
@@ -285,11 +278,11 @@ export default function HistoryTable({
                       onChange={(event) =>
                         onToggleSelect(item.id, event.target.checked)
                       }
-                      className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-orange-500 disabled:opacity-40"
+                      className="block mx-auto h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-teal-500 disabled:opacity-40"
                       aria-label={`Pilih dokumen ${item.documentName}`}
                     />
                   </td>
-                  <td className="max-w-0 px-4 py-4 align-top">
+                  <td className="py-3.5 px-3 align-top max-w-0">
                     <AppTooltip content={item.documentName}>
                       <div className="block w-full truncate text-sm font-medium text-gray-900 dark:text-slate-100">
                         {item.documentName}
@@ -300,14 +293,14 @@ export default function HistoryTable({
                         {item.fileSize}
                       </div>
                     )}
-                    <div className="mt-1 text-[11px] font-medium text-orange-500 dark:text-orange-300">
+                    <div className="mt-1 text-[11px] font-medium text-teal-500 dark:text-teal-300">
                       {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-700 dark:text-slate-200 align-top">
+                  <td className="py-3.5 px-3 text-sm text-gray-700 dark:text-slate-200 align-top">
                     {formatDate(item.uploadedAt)}
                   </td>
-                  <td className="px-4 py-4 align-top text-sm text-gray-600 dark:text-slate-300">
+                  <td className="py-3.5 px-3 align-top text-sm text-gray-600 dark:text-slate-300">
                     {editChanges.length > 0 ? (
                       <div className="grid gap-2 text-xs text-gray-500 dark:text-slate-400">
                         <div>
@@ -346,7 +339,7 @@ export default function HistoryTable({
                       </AppTooltip>
                     )}
                   </td>
-                  <td className="px-4 py-4 align-top">
+                  <td className="py-3.5 px-3 align-top">
                     <span
                       className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getStatusStyles(status)}`}
                     >

@@ -452,7 +452,7 @@ export default function SkpPage() {
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                     {triwulanFilterOptions.map((option) => (
-                      <SelectItem key={option.value} value={String(option.value)}>
+                      <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={option.value} value={String(option.value)}>
                         {option.label}
                       </SelectItem>
                     ))}
@@ -472,9 +472,9 @@ export default function SkpPage() {
                     <SelectValue placeholder="Semua Tahun" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-                    <SelectItem value="0">Semua Tahun</SelectItem>
+                    <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" value="0">Semua Tahun</SelectItem>
                     {yearOptions.map((year) => (
-                      <SelectItem key={year} value={String(year)}>
+                      <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={year} value={String(year)}>
                         {year}
                       </SelectItem>
                     ))}
@@ -495,9 +495,9 @@ export default function SkpPage() {
                       <SelectValue placeholder="Semua User" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60 rounded-xl border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-                      <SelectItem value="all">Semua User</SelectItem>
+                      <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" value="all">Semua User</SelectItem>
                       {usersList.map((u) => (
-                        <SelectItem key={u.id} value={u.username}>
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={u.id} value={u.username}>
                           {u.username}
                         </SelectItem>
                       ))}
@@ -646,7 +646,7 @@ export default function SkpPage() {
                               type="checkbox"
                               checked={selectedIds.has(item.id)}
                               onChange={() => handleToggleSelect(item.id)}
-                              className="block mx-auto h-4 w-4 rounded border-gray-300 accent-orange-500"
+                              className="block mx-auto h-4 w-4 rounded border-gray-300 accent-indigo-500"
                               aria-label={`Pilih dokumen SKP ${item.nama_skp}`}
                             />
                           </td>
@@ -739,7 +739,7 @@ export default function SkpPage() {
                           type="checkbox"
                           checked={selectedIds.has(item.id)}
                           onChange={() => handleToggleSelect(item.id)}
-                          className="mt-1 h-4 w-4 rounded border-gray-300 accent-orange-500"
+                          className="mt-1 h-4 w-4 rounded border-gray-300 accent-indigo-500"
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-3">
@@ -800,15 +800,17 @@ export default function SkpPage() {
                 )}
               </div>
 
-            <DocumentTablePagination
-              totalDocuments={sortedDocuments.length}
-              currentPage={safeCurrentPage}
-              totalPages={totalPages}
-              rowsPerPage={rowsPerPage}
-              onPageChange={setCurrentPage}
-              onRowsPerPageChange={setRowsPerPage}
-              colorTheme="indigo"
-            />
+            <div className="px-5 py-4 border-t border-gray-100 dark:border-slate-800">
+              <DocumentTablePagination
+                totalDocuments={sortedDocuments.length}
+                currentPage={safeCurrentPage}
+                totalPages={totalPages}
+                rowsPerPage={rowsPerPage}
+                onPageChange={setCurrentPage}
+                onRowsPerPageChange={setRowsPerPage}
+                colorTheme="indigo"
+              />
+            </div>
           </div>
         </main>
       </div>
@@ -816,7 +818,7 @@ export default function SkpPage() {
       {isUploadOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
           <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
-            <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
+            <div className="bg-gradient-to-r from-indigo-600 via-indigo-600 to-blue-600 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-indigo-100">
@@ -857,9 +859,9 @@ export default function SkpPage() {
                           <SelectValue placeholder="Pilih User" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-                          <SelectItem value="self">Diri Sendiri (Anda)</SelectItem>
+                          <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" value="self">Diri Sendiri (Anda)</SelectItem>
                           {usersList.map((u) => (
-                            <SelectItem key={u.id} value={String(u.id)}>
+                            <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={u.id} value={String(u.id)}>
                               {u.username}
                             </SelectItem>
                           ))}
@@ -879,7 +881,7 @@ export default function SkpPage() {
                       setUploadForm((prev) => ({ ...prev, nama_skp: event.target.value }))
                     }
                     placeholder="Contoh: SKP Triwulan 1 Staff Akuntansi"
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
 
@@ -898,7 +900,7 @@ export default function SkpPage() {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                       {triwulanFormOptions.map((option) => (
-                        <SelectItem key={option.value} value={String(option.value)}>
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={option.value} value={String(option.value)}>
                           {option.label}
                         </SelectItem>
                       ))}
@@ -921,7 +923,7 @@ export default function SkpPage() {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                       {yearOptions.map((year) => (
-                        <SelectItem key={year} value={String(year)}>
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={year} value={String(year)}>
                           {year}
                         </SelectItem>
                       ))}
@@ -930,7 +932,7 @@ export default function SkpPage() {
 	                </div>
 		              </div>
 	
-		              <label className="block rounded-[24px] border border-dashed border-orange-200 bg-indigo-50/50 p-5 transition hover:border-indigo-300 hover:bg-indigo-50 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15">
+		              <label className="block rounded-[24px] border border-dashed border-indigo-200 bg-indigo-50/50 p-5 transition hover:border-indigo-300 hover:bg-indigo-50 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15">
 	                <div className="flex flex-col items-center justify-center text-center">
 	                  <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm">
                     <FiFileText className="h-6 w-6" />
@@ -979,7 +981,7 @@ export default function SkpPage() {
       {editing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
           <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
-            <div className="bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-5 text-white">
+            <div className="bg-gradient-to-r from-indigo-600 via-indigo-600 to-blue-600 px-6 py-5 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-indigo-100">
@@ -1012,7 +1014,7 @@ export default function SkpPage() {
                     onChange={(event) =>
                       setEditing((prev) => (prev ? { ...prev, nama_skp: event.target.value } : prev))
                     }
-                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                    className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                   />
                 </div>
                 <div>
@@ -1032,7 +1034,7 @@ export default function SkpPage() {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                       {triwulanFormOptions.map((option) => (
-                        <SelectItem key={option.value} value={String(option.value)}>
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={option.value} value={String(option.value)}>
                           {option.label}
                         </SelectItem>
                       ))}
@@ -1056,7 +1058,7 @@ export default function SkpPage() {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                       {yearOptions.map((year) => (
-                        <SelectItem key={year} value={String(year)}>
+                        <SelectItem className="focus:bg-indigo-50 focus:text-indigo-600 data-[highlighted]:bg-indigo-50 data-[highlighted]:text-indigo-600 data-[state=checked]:bg-indigo-50 data-[state=checked]:text-indigo-600 dark:focus:bg-slate-800 dark:focus:text-slate-100 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-slate-100 dark:data-[state=checked]:bg-slate-800 dark:data-[state=checked]:text-slate-100" key={year} value={String(year)}>
                           {year}
                         </SelectItem>
                       ))}
@@ -1079,7 +1081,7 @@ export default function SkpPage() {
                       </span>
                     </p>
                     {editing.file && (
-                      <p className="mt-1 text-xs font-medium text-indigo-600 dark:text-orange-400">
+                      <p className="mt-1 text-xs font-medium text-indigo-600 dark:text-indigo-400">
                         File baru: {editing.file.name}
                       </p>
                     )}

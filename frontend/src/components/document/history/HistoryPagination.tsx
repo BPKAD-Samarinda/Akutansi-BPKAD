@@ -59,38 +59,38 @@ export default function HistoryPagination({
             >
               <SelectTrigger
                 aria-label="Pilih jumlah data per halaman"
-                className="h-8 w-[76px] min-w-[76px] rounded-lg border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 shadow-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-orange-400 dark:focus:ring-orange-500/20"
+                className="h-8 w-[76px] min-w-[76px] rounded-lg border-gray-200 bg-white px-2 py-1 text-xs text-gray-600 shadow-none transition focus:border-teal-300 focus:ring-2 focus:ring-teal-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-teal-400 dark:focus:ring-teal-500/20"
               >
                 <SelectValue placeholder="Pilih halaman" />
               </SelectTrigger>
               <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif] !w-[var(--radix-select-trigger-width)] !min-w-[var(--radix-select-trigger-width)] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 [&_[data-radix-select-viewport]]:w-full [&_[data-radix-select-viewport]]:min-w-0">
                 <SelectItem
                   value="5"
-                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700 dark:hover:bg-slate-800 dark:hover:text-orange-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-orange-300"
+                  className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"
                 >
                   5
                 </SelectItem>
                 <SelectItem
                   value="10"
-                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700 dark:hover:bg-slate-800 dark:hover:text-orange-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-orange-300"
+                  className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"
                 >
                   10
                 </SelectItem>
                 <SelectItem
                   value="20"
-                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700 dark:hover:bg-slate-800 dark:hover:text-orange-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-orange-300"
+                  className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"
                 >
                   20
                 </SelectItem>
                 <SelectItem
                   value="50"
-                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700 dark:hover:bg-slate-800 dark:hover:text-orange-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-orange-300"
+                  className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"
                 >
                   50
                 </SelectItem>
                 <SelectItem
                   value="100"
-                  className="hover:bg-orange-50 hover:text-orange-700 data-[highlighted]:bg-orange-50 data-[highlighted]:text-orange-700 dark:hover:bg-slate-800 dark:hover:text-orange-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-orange-300"
+                  className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"
                 >
                   100
                 </SelectItem>
