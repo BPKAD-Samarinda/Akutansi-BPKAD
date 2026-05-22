@@ -93,18 +93,18 @@ export default function SkpHistoryPage() {
         <Header title="Riwayat SKP" onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 p-4 lg:p-8">
           <div className="mb-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
-            <select value={action} onChange={(e) => setAction(e.target.value as (typeof actionOptions)[number]["value"])} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm">
+            <select value={action} onChange={(e) => setAction(e.target.value as (typeof actionOptions)[number]["value"])} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100">
               {actionOptions.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
-            <input type="text" value={staff} onChange={(e) => setStaff(e.target.value)} placeholder="Filter staff target..." className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm" />
-            <div className="flex items-center bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2 focus-within:border-teal-400 transition w-full">
+            <input type="text" value={staff} onChange={(e) => setStaff(e.target.value)} placeholder="Filter staff target..." className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100" />
+            <div className="flex items-center bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2 focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-400 transition w-full">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-3 opacity-50 text-gray-500 dark:text-slate-400 shrink-0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
               <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari actor/staff/aksi..." className="bg-transparent outline-none w-full text-sm font-medium text-gray-700 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500" />
             </div>
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm" />
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm" />
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 dark:[color-scheme:dark]" />
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 dark:[color-scheme:dark]" />
           </div>
 
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
@@ -117,7 +117,57 @@ export default function SkpHistoryPage() {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* --- MOBILE VIEW --- */}
+            <div className="md:hidden divide-y divide-gray-100 dark:divide-slate-800">
+              {loading ? (
+                <div className="px-4 py-10 text-center text-slate-500">Memuat riwayat SKP...</div>
+              ) : pageRows.length === 0 ? (
+                <div className="px-4 py-10 text-center text-slate-500">Riwayat SKP belum ada.</div>
+              ) : (
+                pageRows.map((item, index) => {
+                  const before = safeJsonText(item.before_data);
+                  const after = safeJsonText(item.after_data);
+                  return (
+                    <div key={item.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700 font-bold text-xs dark:bg-teal-500/20 dark:text-teal-300">
+                            {(safeCurrentPage - 1) * rowsPerPage + index + 1}
+                          </div>
+                          <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${actionBadgeClass(item.action_type)}`}>
+                            {item.action_type}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-gray-500 dark:text-slate-400 text-right">
+                          {formatDateTime(item.created_at)}
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">Actor</p>
+                          <p className="font-bold text-slate-800 dark:text-slate-100 text-sm mt-0.5">{item.actor_username || "-"}</p>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400">{item.actor_role || "-"}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">Target Staff</p>
+                          <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-0.5">{item.target_uploaded_by || "-"}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-[11px] text-gray-600 dark:text-slate-300 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-800 p-2.5 rounded-lg">
+                        <p className="font-semibold text-gray-500 dark:text-slate-400 mb-1">Perubahan:</p>
+                        <div className="truncate"><span className="text-gray-400 dark:text-slate-500">Before:</span> {before}</div>
+                        <div className="mt-1 truncate"><span className="text-gray-400 dark:text-slate-500">After:</span> {after}</div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* --- DESKTOP VIEW --- */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full min-w-full table-fixed border-collapse text-sm">
                   <thead className="bg-teal-600 text-white">
                     <tr>

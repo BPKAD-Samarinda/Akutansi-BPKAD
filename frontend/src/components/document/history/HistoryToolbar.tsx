@@ -66,7 +66,7 @@ export default function HistoryToolbar({
           }
         >
           <SelectTrigger
-            className="h-11 w-full rounded-xl border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-gray-700 dark:text-slate-100 transition focus:border-teal-300 focus:ring-2 focus:ring-teal-100 md:w-52"
+            className="h-11 w-full rounded-xl border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-gray-700 dark:text-slate-100 transition focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 md:w-52"
             aria-label="Filter status riwayat"
           >
             <SelectValue placeholder="Semua Status" />
