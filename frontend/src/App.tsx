@@ -13,11 +13,12 @@ function App() {
     setShowSplash(false);
   };
 
-  if (showSplash) {
-    return <SplashScreen onFinish={handleSplashFinish} />;
-  }
-
-  return <AppRoutes />;
+  return (
+    <>
+      <AppRoutes />
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+    </>
+  );
 }
 
 export default App;
