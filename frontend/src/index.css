@@ -393,3 +393,10 @@ input[type="password"]::-ms-clear {
     --chart-5: 340 75% 55%;
   }
 }
+
+/* Prevent iOS auto-zoom on input focus */
+@media (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
