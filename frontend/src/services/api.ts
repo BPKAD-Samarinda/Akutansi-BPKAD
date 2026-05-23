@@ -123,7 +123,7 @@ const serverOrigin = resolvedBaseUrl.endsWith(apiSuffix)
   ? resolvedBaseUrl.slice(0, -apiSuffix.length)
   : resolvedBaseUrl;
 
-export const uploadsBaseUrl = `${serverOrigin}/uploads`;
+export const uploadsBaseUrl = `${serverOrigin}/backend/uploads`;
 export { apiClient };
 
 export const getDocuments = async (): Promise<Document[]> => {

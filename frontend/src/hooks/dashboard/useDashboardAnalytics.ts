@@ -270,54 +270,51 @@ export function useDashboardAnalytics() {
     return documentToday + skpToday;
   }, [uploads, skpUploads]);
 
+  const allUploadsMerged = useMemo(() => {
+    const docItems = uploads.map((r) => ({ ...r, uniqueId: `doc-${r.id}` }));
+    const skpItems = skpUploads.map((r) => ({ ...r, uniqueId: `skp-${r.id}` }));
+    return [...docItems, ...skpItems].sort((a, b) => {
+      const dateA = a.createdAt || a.uploadedAt;
+      const dateB = b.createdAt || b.uploadedAt;
+      return dateB.localeCompare(dateA);
+    });
+  }, [uploads, skpUploads]);
+
   const latestUploadedDocument = useMemo(() => {
-    if (!uploads.length) return null;
-    const latest = [...uploads].sort((a, b) => (a.uploadedAt < b.uploadedAt ? 1 : -1))[0];
+    if (!allUploadsMerged.length) return null;
+    const latest = allUploadsMerged[0];
     return {
       name: latest.name,
-      uploadedAt: `${latest.uploadedAt} 00:00`,
+      uploadedAt: `${latest.createdAt || latest.uploadedAt} 00:00`,
     };
-  }, [uploads]);
+  }, [allUploadsMerged]);
 
   const todayUploadRows = useMemo(() => {
     const todayIso = toIsoDate(new Date());
-    return uploads
+    return allUploadsMerged
       .filter((record) => record.createdAt === todayIso)
-      .sort((a, b) => (a.id < b.id ? 1 : -1))
       .map((record) => ({
-        id: record.id,
+        id: record.uniqueId,
         name: record.uploadedBy || "-",
         kategori: record.kategori,
         tanggalDokumen: formatDateLabel(record.uploadedAt),
         tanggalUnggah: formatDateLabel(record.createdAt),
         fileName: record.name,
       }));
-  }, [uploads]);
+  }, [allUploadsMerged]);
 
   const latestUploadRows = useMemo(() => {
-    const todayLocal = toIsoDate(new Date());
-    const toLocalMidnight = (isoDate: string) =>
-      new Date(`${isoDate}T00:00:00`);
-    const cutoff = new Date(`${todayLocal}T00:00:00`);
-    cutoff.setDate(cutoff.getDate() - 1); // hari ini + kemarin (2 hari)
-
-    return [...uploads]
-      .filter((record) => {
-        const dateOnly = record.createdAt || record.uploadedAt;
-        if (!dateOnly) return false;
-        const recordDate = toLocalMidnight(dateOnly);
-        return recordDate >= cutoff;
-      })
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+    return allUploadsMerged
+      .slice(0, 10)
       .map((record) => ({
-        id: record.id,
+        id: record.uniqueId,
         name: record.uploadedBy || "-",
         kategori: record.kategori,
         tanggalDokumen: formatDateLabel(record.uploadedAt),
         tanggalUnggah: formatDateLabel(record.createdAt),
         fileName: record.name,
       }));
-  }, [uploads]);
+  }, [allUploadsMerged]);
 
   return {
     selectedYear,

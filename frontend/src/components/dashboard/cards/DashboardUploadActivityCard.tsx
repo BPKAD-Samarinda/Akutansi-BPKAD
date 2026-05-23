@@ -1,6 +1,6 @@
 type Props = {
   todayRows: Array<{
-    id: number;
+    id: number | string;
     name: string;
     kategori: string;
     tanggalDokumen: string;
@@ -8,7 +8,7 @@ type Props = {
     fileName?: string;
   }>;
   latestRows: Array<{
-    id: number;
+    id: number | string;
     name: string;
     kategori: string;
     tanggalDokumen: string;

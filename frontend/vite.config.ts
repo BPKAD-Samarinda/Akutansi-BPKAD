@@ -10,11 +10,16 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       "/api": {
-        target: "http://localhost:3001",
+        target: "http://localhost/Akutansi-BPKAD/backend",
+        rewrite: (path) => path.replace(/^\/api/, ""),
+        changeOrigin: true,
+      },
+      "/backend/uploads": {
+        target: "http://localhost/Akutansi-BPKAD",
         changeOrigin: true,
       },
       "/uploads": {
-        target: "http://localhost:3001",
+        target: "http://localhost/Akutansi-BPKAD",
         changeOrigin: true,
       },
     },
