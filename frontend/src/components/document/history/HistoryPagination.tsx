@@ -63,7 +63,7 @@ export default function HistoryPagination({
               >
                 <SelectValue placeholder="Pilih halaman" />
               </SelectTrigger>
-              <SelectContent className="font-['Plus_Jakarta_Sans',sans-serif] !w-[var(--radix-select-trigger-width)] !min-w-[var(--radix-select-trigger-width)] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 [&_[data-radix-select-viewport]]:w-full [&_[data-radix-select-viewport]]:min-w-0">
+              <SelectContent className="!w-[var(--radix-select-trigger-width)] !min-w-[var(--radix-select-trigger-width)] bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-100 [&_[data-radix-select-viewport]]:w-full [&_[data-radix-select-viewport]]:min-w-0">
                 <SelectItem
                   value="5"
                   className="hover:bg-teal-50 hover:text-teal-700 data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-700 dark:hover:bg-slate-800 dark:hover:text-teal-300 dark:data-[highlighted]:bg-slate-800 dark:data-[highlighted]:text-teal-300"

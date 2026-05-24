@@ -124,7 +124,7 @@ export default function CategoryFilterSelect({
           width: dropdownPos.width,
           zIndex: 99999,
         }}
-        className="border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-lg p-1 font-['Plus_Jakarta_Sans',sans-serif]"
+        className="border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-lg p-1"
       >
         {categoryOptions.map((option) => (
           <button
@@ -148,7 +148,7 @@ export default function CategoryFilterSelect({
     );
 
   return (
-    <div className="font-['Plus_Jakarta_Sans',sans-serif]">
+    <div>
       <label className="text-xs lg:text-sm font-semibold text-gray-600 dark:text-slate-300 mb-2 block">
         Kategori
       </label>
@@ -157,7 +157,7 @@ export default function CategoryFilterSelect({
           <button
             type="button"
             onClick={toggleDropdown}
-            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 dark:text-slate-100 hover:border-orange-400 text-left transition flex items-center justify-between font-['Plus_Jakarta_Sans',sans-serif]"
+            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 dark:text-slate-100 hover:border-orange-400 text-left transition flex items-center justify-between"
           >
             <span>{selectedLabel}</span>
             <span ref={chevronRef} className="inline-block text-gray-400 dark:text-slate-400">
