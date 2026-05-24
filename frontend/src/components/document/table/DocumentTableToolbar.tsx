@@ -34,7 +34,7 @@ export default function DocumentTableToolbar({
   };
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex items-center gap-2 flex-nowrap">
       {/* Sort buttons */}
       <div className="flex gap-1.5">
         <button

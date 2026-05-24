@@ -537,7 +537,7 @@ export default function SkpPage() {
                 </h2>
               </div>
               
-              <div className="flex justify-end overflow-x-auto w-full md:w-auto pb-1 md:pb-0 gap-2 flex-wrap md:flex-nowrap">
+              <div className="flex justify-end items-center overflow-x-auto w-full md:w-auto pb-1 md:pb-0 gap-2 flex-nowrap">
                 <div className="flex gap-1.5">
                   <button
                     type="button"
@@ -1103,41 +1103,52 @@ export default function SkpPage() {
                 </div>
               </div>
 
-              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-950">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Ganti file SKP</p>
-                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      Opsional. Jika tidak dipilih, file lama tetap digunakan.
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  Ganti Dokumen (opsional)
+                </label>
+                <label className="block rounded-[24px] border border-dashed border-indigo-200 bg-indigo-50/50 p-5 transition hover:border-indigo-300 hover:bg-indigo-50 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15 cursor-pointer">
+                  <div className="flex flex-col items-center justify-center text-center relative">
+                    <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm">
+                      <FiFileText className="h-6 w-6" />
+                    </div>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 px-2 truncate w-full">
+                      {editing.file
+                        ? editing.file.name
+                        : (editing.file_path ? getFileNameFromPath(editing.file_path) : "Pilih dokumen SKP")}
                     </p>
-                    <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
-                      File saat ini:{" "}
-                      <span className="font-medium text-slate-800 dark:text-slate-100">
-                        {getFileNameFromPath(editing.file_path)}
-                      </span>
-                    </p>
-                    {editing.file && (
-                      <p className="mt-1 text-xs font-medium text-indigo-600 dark:text-indigo-400">
-                        File baru: {editing.file.name}
-                      </p>
-                    )}
+                    <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-indigo-500 px-4 py-2 text-xs font-semibold text-white">
+                      <FiUploadCloud className="h-4 w-4" />
+                      Ganti File
+                    </span>
                   </div>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.jfif,.heic,.heif"
+                    onChange={(event) =>
+                      setEditing((prev) =>
+                        prev ? { ...prev, file: event.target.files?.[0] || null } : prev,
+                      )
+                    }
+                    className="hidden"
+                  />
+                </label>
 
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-600">
-                    <FiUploadCloud className="h-4 w-4" />
-                    Pilih File Baru
-                    <input
-                      type="file"
-                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.jfif,.heic,.heif"
-                      onChange={(event) =>
+                {editing.file && (
+                  <div className="mt-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() =>
                         setEditing((prev) =>
-                          prev ? { ...prev, file: event.target.files?.[0] || null } : prev,
+                          prev ? { ...prev, file: null } : prev,
                         )
                       }
-                      className="hidden"
-                    />
-                  </label>
-                </div>
+                      className="text-xs font-semibold text-red-500 hover:text-red-650 transition"
+                    >
+                      Batal Ganti & Gunakan File Lama
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
