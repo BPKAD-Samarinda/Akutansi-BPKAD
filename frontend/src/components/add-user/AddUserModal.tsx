@@ -33,8 +33,8 @@ export default function AddUserModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out]">
-      <div className="w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
-        <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-amber-600 px-6 py-5 text-white">
+      <div className="w-full max-w-2xl max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden rounded-[28px] bg-white shadow-2xl animate-[scaleIn_0.25s_ease-out] dark:bg-slate-900 dark:ring-1 dark:ring-slate-800">
+        <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-amber-600 px-6 py-5 text-white shrink-0">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-yellow-100">
@@ -55,7 +55,7 @@ export default function AddUserModal({
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-5 px-6 py-6">
+        <form onSubmit={onSubmit} className="space-y-5 px-6 py-6 overflow-y-auto">
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
               <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
