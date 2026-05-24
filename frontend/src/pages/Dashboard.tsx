@@ -86,9 +86,9 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-slate-50/50 dark:bg-slate-950 font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen w-full flex bg-slate-50/50 dark:bg-slate-950 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="ml-0 lg:ml-[280px] flex-1 flex flex-col relative transition-all duration-300">
+      <div className="ml-0 lg:ml-[280px] flex-1 min-w-0 flex flex-col relative transition-all duration-300 overflow-x-hidden">
         <Header title="Dashboard" onMenuClick={() => setSidebarOpen(true)} />
 
         <main ref={pageRef} className="flex-1 p-4 lg:p-8 space-y-6 lg:space-y-8 relative z-10">
