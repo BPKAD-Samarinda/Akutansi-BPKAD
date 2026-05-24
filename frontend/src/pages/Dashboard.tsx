@@ -101,7 +101,7 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
                     Manajemen Dokumen
                   </p>
-                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                  <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
                     <AnimatedStatNumber value={summary.totalDocuments} />
                   </h3>
                 </div>
@@ -123,7 +123,7 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
                     Dokumen SKP
                   </p>
-                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                  <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
                     <AnimatedStatNumber value={summary.totalSkpDocuments} />
                   </h3>
                 </div>
@@ -145,7 +145,7 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
                     Total Pengguna
                   </p>
-                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                  <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
                     <AnimatedStatNumber value={summary.totalUsers} />
                   </h3>
                 </div>
@@ -167,7 +167,7 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
                     Unggah Hari Ini
                   </p>
-                  <h3 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+                  <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
                     <AnimatedStatNumber value={summary.todayUploadCount} />
                   </h3>
                 </div>

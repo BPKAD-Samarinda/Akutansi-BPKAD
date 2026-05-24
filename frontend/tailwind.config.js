@@ -8,7 +8,7 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Plus Jakarta Sans'", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
+  			sans: ["'Poppins'", "ui-sans-serif", "system-ui", "-apple-system", "sans-serif"],
   		},
   		colors: {
   			bpkad: {

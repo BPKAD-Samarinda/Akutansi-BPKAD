@@ -82,7 +82,7 @@ export default function DocumentTableMobile({
                   </AppTooltip>
 
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-800 dark:text-slate-100 text-sm">
+                    <h3 className="font-semibold text-slate-950 dark:text-slate-50 text-sm">
                       {doc.nama_sppd}
                     </h3>
 
