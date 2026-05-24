@@ -60,7 +60,7 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="Contoh: Dokumen Keuangan Bulan Maret"
+                placeholder="Contoh: Dokumen Akuntansi Bulan Maret"
                 className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
               />
             </div>

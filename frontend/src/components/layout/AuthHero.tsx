@@ -33,7 +33,7 @@ export default function AuthHero() {
             <h1 className="text-4xl font-bold leading-tight mb-4">
               Sistem Arsip
               <br />
-              Dokumen Keuangan
+              Dokumen Akuntansi
             </h1>
 
             <p className="text-base text-gray-200 leading-relaxed">
