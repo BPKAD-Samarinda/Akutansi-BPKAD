@@ -157,7 +157,7 @@ export default function CategoryFilterSelect({
           <button
             type="button"
             onClick={toggleDropdown}
-            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 dark:text-slate-100 hover:border-orange-400 text-left transition flex items-center justify-between"
+            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 lg:py-3 text-xs lg:text-sm text-gray-700 dark:text-slate-100 hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-400 text-left transition flex items-center justify-between"
           >
             <span>{selectedLabel}</span>
             <span ref={chevronRef} className="inline-block text-gray-400 dark:text-slate-400">

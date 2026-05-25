@@ -377,11 +377,26 @@ if ($route === '/documents') {
             ");
             
             // Fetch document history
-            $stmt = $pdo->query("SELECT id, document_id, document_name, uploaded_by, status, file_path, file_size, created_at, edit_before, edit_after FROM document_history ORDER BY created_at DESC, id DESC");
+            $stmt = $pdo->query("
+                SELECT h.id, h.document_id, h.document_name, h.uploaded_by, h.status, h.file_path, h.file_size, h.created_at, h.edit_before, h.edit_after, d.tanggal_sppd 
+                FROM document_history h
+                LEFT JOIN documents d ON h.document_id = d.id
+                ORDER BY h.created_at DESC, h.id DESC
+            ");
             $docHist = $stmt->fetchAll();
             
             $mappedDocHist = [];
             foreach ($docHist as $row) {
+                $docDate = $row['tanggal_sppd'] ?: null;
+                if (!$docDate && $row['edit_after']) {
+                    $after = json_decode($row['edit_after'], true);
+                    $docDate = isset($after['tanggal_sppd']) ? $after['tanggal_sppd'] : null;
+                }
+                if (!$docDate && $row['edit_before']) {
+                    $before = json_decode($row['edit_before'], true);
+                    $docDate = isset($before['tanggal_sppd']) ? $before['tanggal_sppd'] : null;
+                }
+
                 $mappedDocHist[] = [
                     "id" => $row['id'],
                     "document_name" => $row['document_name'],
@@ -394,7 +409,8 @@ if ($route === '/documents') {
                     "edit_after" => $row['edit_after'],
                     "isDeleted" => (strtolower($row['status']) === 'dihapus'),
                     "source" => "document",
-                    "canRestore" => (strtolower($row['status']) === 'dihapus')
+                    "canRestore" => (strtolower($row['status']) === 'dihapus'),
+                    "document_date" => $docDate
                 ];
             }
             
@@ -423,6 +439,9 @@ if ($route === '/documents') {
                 $skpName = isset($after['nama_skp']) ? $after['nama_skp'] : (isset($before['nama_skp']) ? $before['nama_skp'] : "Dokumen SKP #" . ($row['skp_document_id'] ?: $row['id']));
                 $filePath = isset($after['file_path']) ? $after['file_path'] : (isset($before['file_path']) ? $before['file_path'] : "");
                 
+                $triwulan = isset($after['triwulan']) ? $after['triwulan'] : (isset($before['triwulan']) ? $before['triwulan'] : null);
+                $docDate = $triwulan ? "Triwulan {$triwulan}" : null;
+
                 $mappedSkpHist[] = [
                     "id" => "skp-" . $row['id'],
                     "document_name" => $skpName,
@@ -435,7 +454,8 @@ if ($route === '/documents') {
                     "edit_after" => $row['after_data'],
                     "isDeleted" => ($statusValue === 'dihapus'),
                     "source" => "skp",
-                    "canRestore" => ($statusValue === 'dihapus')
+                    "canRestore" => ($statusValue === 'dihapus'),
+                    "document_date" => $docDate
                 ];
             }
             

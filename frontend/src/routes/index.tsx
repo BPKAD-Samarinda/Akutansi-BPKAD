@@ -44,7 +44,7 @@ function AdminOnlyRoute({ children }: { children: ReactElement }) {
   return children;
 }
 
-function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
+function PklOrAdminRoute({ children }: { children: ReactElement }) {
   const user = getUser();
   const allowedRoles = [
     "admin",

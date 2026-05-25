@@ -196,12 +196,20 @@ export default function HistoryTable({
                       </div>
                     </div>
                   )}
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-slate-300">
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-gray-600 dark:text-slate-300">
                     <div>
                       <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">
-                        Tanggal
+                        Tgl Dokumen
                       </p>
-                      <p className="font-medium text-gray-700 dark:text-slate-200">
+                      <p className="font-medium text-gray-750 dark:text-slate-255 truncate">
+                        {item.document_date ? formatDate(item.document_date) : "-"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                        Tgl Unggah
+                      </p>
+                      <p className="font-medium text-gray-700 dark:text-slate-200 truncate">
                         {formatDate(item.uploadedAt)}
                       </p>
                     </div>
@@ -210,8 +218,8 @@ export default function HistoryTable({
                         {editChanges.length > 0
                           ? "Perubahan"
                           : isDeleted
-                            ? "Dihapus oleh"
-                            : "Diunggah oleh"}
+                            ? "Dihapus"
+                            : "Diunggah"}
                       </p>
                       {editChanges.length > 0 ? (
                         <p className="font-medium text-gray-700 dark:text-slate-200 truncate">
@@ -244,16 +252,19 @@ export default function HistoryTable({
                   aria-label="Pilih semua dokumen terhapus"
                 />
               </th>
-              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[35%]">
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[32%]">
                 Nama Dokumen
               </th>
-              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[18%]">
-                Tanggal
-              </th>
-              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[20%]">
-                Informasi
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[16%]">
+                Tanggal Dokumen
               </th>
               <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[16%]">
+                Tanggal Unggah
+              </th>
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[17%]">
+                Informasi
+              </th>
+              <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[14%]">
                 Status
               </th>
             </tr>
@@ -296,6 +307,9 @@ export default function HistoryTable({
                     <div className="mt-1 text-[11px] font-medium text-teal-500 dark:text-teal-300">
                       {item.source === "skp" ? "Dokumen SKP" : "Manajemen Dokumen"}
                     </div>
+                  </td>
+                  <td className="py-3.5 px-3 text-sm text-gray-755 dark:text-slate-255 align-top">
+                    {item.document_date ? formatDate(item.document_date) : "-"}
                   </td>
                   <td className="py-3.5 px-3 text-sm text-gray-700 dark:text-slate-200 align-top">
                     {formatDate(item.uploadedAt)}

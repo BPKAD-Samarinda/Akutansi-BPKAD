@@ -36,6 +36,9 @@ function mapRoleOutput($role) {
 if ($route === '/users') {
     if ($method === 'GET') {
         try {
+            // Clean up old 'Anak Magang' entries in database to 'Staff'
+            $pdo->exec("UPDATE users SET role = 'Staff' WHERE LOWER(role) LIKE '%magang%'");
+
             $stmt = $pdo->query("SELECT id, username, role, created_at FROM users ORDER BY created_at DESC, id DESC");
             $users = $stmt->fetchAll();
             

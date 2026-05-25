@@ -1,7 +1,11 @@
+import { useState, useRef, useEffect } from "react";
 import { FiX, FiFileText, FiUploadCloud } from "react-icons/fi";
+import gsap from "gsap";
 import { ToastState } from "../../../types";
 import { useFileUpload } from "../../../hooks/document/useFileUpload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import { Calendar } from "../../layout/ui/calendar";
+import { toDateObject, fromDateToString, formatDisplayDate } from "./editModalDateUtils";
 
 type UploadModalProps = {
   isOpen: boolean;
@@ -22,6 +26,48 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
     handleSubmit,
     handleCancel,
   } = useFileUpload(showToast, onSuccess, onClose);
+
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const calendarPopoverRef = useRef<HTMLDivElement | null>(null);
+  const calendarWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const targetNode = event.target as Node;
+      if (
+        isCalendarOpen &&
+        calendarWrapperRef.current &&
+        !calendarWrapperRef.current.contains(targetNode)
+      ) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [isCalendarOpen]);
+
+  useEffect(() => {
+    if (!isCalendarOpen || !calendarPopoverRef.current) return;
+
+    gsap.fromTo(
+      calendarPopoverRef.current,
+      { autoAlpha: 0, y: -8, scale: 0.98 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.2,
+        ease: "power2.out",
+      },
+    );
+  }, [isCalendarOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCalendarOpen(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -65,17 +111,61 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
               />
             </div>
 
-            <div>
+            <div ref={calendarWrapperRef} className="relative">
               <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Tanggal Dokumen
               </label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
-              />
+              <button
+                type="button"
+                onClick={() => setIsCalendarOpen((prev) => !prev)}
+                className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-100 transition-all duration-300 flex items-center justify-between dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              >
+                <span className={formData.date ? "text-slate-700 dark:text-slate-100" : "text-slate-400 dark:text-slate-500"}>
+                  {formData.date
+                    ? formatDisplayDate(formData.date, new Date().toISOString().split("T")[0])
+                    : "Pilih Tanggal"}
+                </span>
+                <span className="text-slate-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+
+              {isCalendarOpen && (
+                <div
+                  ref={calendarPopoverRef}
+                  className="absolute top-full left-0 mt-2 z-20 rounded-xl border border-slate-200 bg-white shadow-xl p-3 dark:border-slate-700 dark:bg-slate-900"
+                >
+                  <Calendar
+                    mode="single"
+                    captionLayout="dropdown"
+                    fromYear={2000}
+                    toYear={new Date().getFullYear() + 10}
+                    selected={formData.date ? toDateObject(formData.date, new Date().toISOString().split("T")[0]) : undefined}
+                    onSelect={(date) => {
+                      if (date) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          date: fromDateToString(date),
+                        }));
+                        setIsCalendarOpen(false);
+                      }
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <div>
@@ -88,7 +178,7 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
                   setFormData((prev) => ({ ...prev, category: value as any }))
                 }
               >
-                <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:ring-0 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
                   <SelectValue placeholder="Pilih Kategori" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">

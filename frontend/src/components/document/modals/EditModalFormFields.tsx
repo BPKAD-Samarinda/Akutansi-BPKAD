@@ -122,7 +122,7 @@ export default function EditModalFormFields({
                       onClick={() => onSelectCategory(option)}
                       className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                         formData.kategori === option
-                          ? "bg-orange-50 text-orange-650 font-bold border-l-4 border-orange-500 dark:bg-orange-500/10 dark:text-orange-400"
+                          ? "bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-500 dark:bg-orange-500/10 dark:text-orange-400"
                           : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       }`}
                     >

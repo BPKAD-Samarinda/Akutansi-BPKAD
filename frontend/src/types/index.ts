@@ -28,6 +28,7 @@ export interface UploadHistory {
   source?: "document" | "skp";
   editBefore?: Record<string, string | null> | null;
   editAfter?: Record<string, string | null> | null;
+  document_date?: string | null;
 }
 
 export interface UploadHistoryQuery {
