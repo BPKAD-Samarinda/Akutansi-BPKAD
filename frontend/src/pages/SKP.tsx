@@ -130,6 +130,7 @@ const downloadFile = (filePath: string) => {
 export default function SkpPage() {
   const user = getUser();
   const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
+  const isMagangOrPkl = user?.role === "Anak Magang" || user?.role === "Anak PKL";
   const [usersList, setUsersList] = useState<UserApiItem[]>([]);
 
   useEffect(() => {
@@ -317,6 +318,7 @@ export default function SkpPage() {
   };
 
   const handleOpenEdit = (item: SkpDocument) => {
+    if (isMagangOrPkl) return;
     setEditing({
       id: item.id,
       nama_skp: item.nama_skp,
@@ -364,7 +366,7 @@ export default function SkpPage() {
 
   const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!editing) return;
+    if (!editing || isMagangOrPkl) return;
 
     const validationMessage = validateSkpInput(editing);
     if (validationMessage) {
@@ -393,7 +395,7 @@ export default function SkpPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || isMagangOrPkl) return;
     try {
       await deleteSkpDocument(deleteTarget.id);
       showToast("Dokumen SKP berhasil dihapus.", "success");
@@ -698,6 +700,8 @@ export default function SkpPage() {
                                   <FiEye className="h-4 w-4" />
                                 </button>
                               </AppTooltip>
+                              {!isMagangOrPkl && (
+                                <>
                                   <AppTooltip content="Edit dokumen SKP">
                                     <button
                                       type="button"
@@ -716,6 +720,8 @@ export default function SkpPage() {
                                       <FiTrash2 className="h-4 w-4" />
                                     </button>
                                   </AppTooltip>
+                                </>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -780,24 +786,28 @@ export default function SkpPage() {
                                 <FiEye className="w-4 h-4" />
                               </button>
                             </AppTooltip>
-                            <AppTooltip content="Edit dokumen SKP">
-                              <button
-                                type="button"
-                                onClick={() => handleOpenEdit(item)}
-                                className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-amber-50/50 hover:bg-amber-100 text-amber-600 transition-colors dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400"
-                              >
-                                <FiEdit3 className="w-4 h-4" />
-                              </button>
-                            </AppTooltip>
-                            <AppTooltip content="Hapus dokumen SKP">
-                              <button
-                                type="button"
-                                onClick={() => setDeleteTarget(item)}
-                                className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-rose-50/50 hover:bg-rose-100 text-rose-600 transition-colors dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400"
-                              >
-                                <FiTrash2 className="w-4 h-4" />
-                              </button>
-                            </AppTooltip>
+                            {!isMagangOrPkl && (
+                              <>
+                                <AppTooltip content="Edit dokumen SKP">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEdit(item)}
+                                    className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-amber-50/50 hover:bg-amber-100 text-amber-600 transition-colors dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400"
+                                  >
+                                    <FiEdit3 className="w-4 h-4" />
+                                  </button>
+                                </AppTooltip>
+                                <AppTooltip content="Hapus dokumen SKP">
+                                  <button
+                                    type="button"
+                                    onClick={() => setDeleteTarget(item)}
+                                    className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-rose-50/50 hover:bg-rose-100 text-rose-600 transition-colors dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400"
+                                  >
+                                    <FiTrash2 className="w-4 h-4" />
+                                  </button>
+                                </AppTooltip>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
