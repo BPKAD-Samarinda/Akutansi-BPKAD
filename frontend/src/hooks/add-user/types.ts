@@ -1,7 +1,6 @@
 export type UserRole =
   | "Admin"
   | "Staff"
-  | "Anak Magang"
   | "Anak PKL";
 
 export type AddUserFormValues = {

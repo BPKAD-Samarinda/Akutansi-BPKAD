@@ -5,7 +5,6 @@ type UserStatsProps = {
   total: number;
   adminCount: number;
   staffCount: number;
-  magangCount: number;
   pklCount: number;
 };
 
@@ -42,7 +41,6 @@ export default function UserStats({
   total,
   adminCount,
   staffCount,
-  magangCount,
   pklCount,
 }: UserStatsProps) {
   const cardBase =
@@ -74,23 +72,16 @@ export default function UserStats({
       delay: "140ms",
     },
     {
-      label: "Anak Magang",
-      value: magangCount,
-      gradient: "from-yellow-400 to-yellow-600",
-      icon: FaUserGraduate,
-      delay: "210ms",
-    },
-    {
       label: "Anak PKL",
       value: pklCount,
       gradient: "from-violet-500 to-purple-700",
       icon: FaUserGraduate,
-      delay: "280ms",
+      delay: "210ms",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       {cards.map((card) => {
         const Icon = card.icon;
         return (

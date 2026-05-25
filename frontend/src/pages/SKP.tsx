@@ -130,7 +130,7 @@ const downloadFile = (filePath: string) => {
 export default function SkpPage() {
   const user = getUser();
   const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
-  const isMagangOrPkl = user?.role === "Anak Magang" || user?.role === "Anak PKL";
+  const isPkl = user?.role === "Anak PKL";
   const [usersList, setUsersList] = useState<UserApiItem[]>([]);
 
   useEffect(() => {
@@ -318,7 +318,7 @@ export default function SkpPage() {
   };
 
   const handleOpenEdit = (item: SkpDocument) => {
-    if (isMagangOrPkl) return;
+    if (isPkl) return;
     setEditing({
       id: item.id,
       nama_skp: item.nama_skp,
@@ -366,7 +366,7 @@ export default function SkpPage() {
 
   const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!editing || isMagangOrPkl) return;
+    if (!editing || isPkl) return;
 
     const validationMessage = validateSkpInput(editing);
     if (validationMessage) {
@@ -395,7 +395,7 @@ export default function SkpPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget || isMagangOrPkl) return;
+    if (!deleteTarget || isPkl) return;
     try {
       await deleteSkpDocument(deleteTarget.id);
       showToast("Dokumen SKP berhasil dihapus.", "success");
@@ -700,7 +700,7 @@ export default function SkpPage() {
                                   <FiEye className="h-4 w-4" />
                                 </button>
                               </AppTooltip>
-                              {!isMagangOrPkl && (
+                              {!isPkl && (
                                 <>
                                   <AppTooltip content="Edit dokumen SKP">
                                     <button
@@ -786,7 +786,7 @@ export default function SkpPage() {
                                 <FiEye className="w-4 h-4" />
                               </button>
                             </AppTooltip>
-                            {!isMagangOrPkl && (
+                            {!isPkl && (
                               <>
                                 <AppTooltip content="Edit dokumen SKP">
                                   <button

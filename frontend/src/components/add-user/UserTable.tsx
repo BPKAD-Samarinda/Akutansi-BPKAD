@@ -14,7 +14,6 @@ export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserT
     if (!normalized) return "Belum diisi";
     if (normalized === "Admin Akuntansi" || normalized === "Admin") return "Admin";
     if (normalized === "Staff Akuntansi" || normalized === "Staff") return "Staff";
-    if (normalized === "Anak Magang") return "Magang";
     if (normalized === "Anak PKL") return "PKL";
     return normalized;
   };

@@ -135,8 +135,8 @@ if ($route === '/documents') {
             echo json_encode(["message" => "Terjadi kesalahan pada server: " . $e->getMessage()]);
         }
     } elseif ($method === 'POST') {
-        // Only Admin, Staff, Anak Magang, Anak PKL, Admin Akuntansi, Staff Akuntansi
-        authorizeRoles($currentUser, "Admin", "Staff", "Anak Magang", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
+        // Only Admin, Staff, Anak PKL, Admin Akuntansi, Staff Akuntansi
+        authorizeRoles($currentUser, "Admin", "Staff", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
         
         $nama_sppd = isset($_POST['nama_sppd']) ? trim($_POST['nama_sppd']) : '';
         $tanggal_sppd = isset($_POST['tanggal_sppd']) ? trim($_POST['tanggal_sppd']) : '';

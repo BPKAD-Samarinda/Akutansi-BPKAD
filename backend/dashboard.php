@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit();
 }
 
-authorizeRoles($currentUser, "Admin", "Staff", "Anak Magang", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
+authorizeRoles($currentUser, "Admin", "Staff", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
 
 try {
     // 1. Get documents where is_deleted = 0

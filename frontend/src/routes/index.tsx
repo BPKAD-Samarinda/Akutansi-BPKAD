@@ -18,7 +18,6 @@ const normalizeRole = (role?: string): string => {
   if (raw.includes("staff akuntansi")) return "staff akuntansi";
   if (raw.includes("admin")) return "admin";
   if (raw.includes("staff")) return "staff";
-  if (raw.includes("magang")) return "anak magang";
   if (raw.includes("pkl")) return "anak pkl";
   return raw;
 };
@@ -50,7 +49,6 @@ function MagangOrPklOrAdminRoute({ children }: { children: ReactElement }) {
   const allowedRoles = [
     "admin",
     "admin akuntansi",
-    "anak magang",
     "anak pkl",
   ];
 
@@ -68,7 +66,6 @@ function DashboardAccessRoute({ children }: { children: ReactElement }) {
     "admin akuntansi",
     "staff",
     "staff akuntansi",
-    "anak magang",
     "anak pkl",
   ];
 

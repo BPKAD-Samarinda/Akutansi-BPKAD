@@ -118,7 +118,7 @@ function handleSkpUpload($fileInput, $allowedMimeTypes) {
 // Router for SKP
 if ($route === '/skp') {
     if ($method === 'GET') {
-        authorizeRoles($currentUser, "Admin", "Staff", "Anak Magang", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Staff", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
         
         $triwulan = isset($_GET['triwulan']) ? intval($_GET['triwulan']) : null;
         $tahun = isset($_GET['tahun']) ? intval($_GET['tahun']) : null;
@@ -169,7 +169,7 @@ if ($route === '/skp') {
         }
         
     } elseif ($method === 'POST') {
-        authorizeRoles($currentUser, "Admin", "Staff", "Anak Magang", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Staff", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
         
         $nama_skp = isset($_POST['nama_skp']) ? trim($_POST['nama_skp']) : '';
         $triwulan = isset($_POST['triwulan']) ? intval($_POST['triwulan']) : 0;

@@ -17,7 +17,6 @@ function normalizeUserRole($value) {
     if (!$raw) return "";
     if (strpos($raw, "admin") !== false) return "Admin";
     if (strpos($raw, "staff") !== false) return "Staff";
-    if (strpos($raw, "magang") !== false) return "Anak Magang";
     if (strpos($raw, "pkl") !== false) return "Anak PKL";
     return "";
 }
@@ -28,7 +27,6 @@ function mapRoleOutput($role) {
     if ($role === 'Admin Akuntansi') return 'Admin';
     if ($role === 'Staff Akuntansi') return 'Staff';
     if (strpos($roleLower, 'pkl') !== false) return 'Anak PKL';
-    if (strpos($roleLower, 'magang') !== false) return 'Anak Magang';
     if (!$role) return 'Staff';
     return $role;
 }
@@ -66,7 +64,7 @@ if ($route === '/users') {
             exit();
         }
         
-        $allowedRoles = ["Admin", "Staff", "Anak Magang", "Anak PKL"];
+        $allowedRoles = ["Admin", "Staff", "Anak PKL"];
         if (!in_array($normalizedRole, $allowedRoles)) {
             http_response_code(400);
             echo json_encode(["message" => "Peran tidak valid"]);
@@ -118,7 +116,7 @@ if ($route === '/users') {
             exit();
         }
         
-        $allowedRoles = ["Admin", "Staff", "Anak Magang", "Anak PKL"];
+        $allowedRoles = ["Admin", "Staff", "Anak PKL"];
         if (!in_array($normalizedRole, $allowedRoles)) {
             http_response_code(400);
             echo json_encode(["message" => "Peran tidak valid"]);

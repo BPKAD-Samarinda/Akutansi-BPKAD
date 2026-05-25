@@ -40,20 +40,16 @@ export default function AddUser() {
     const staffCount = users.filter((user) =>
       ["Staff", "Staff Akuntansi"].includes(user.role),
     ).length;
-    const magangCount = users.filter((user) =>
-      user.role.toLowerCase().includes("magang"),
-    ).length;
     const pklCount = users.filter((user) =>
       user.role.toLowerCase().includes("pkl"),
     ).length;
-    return { total, adminCount, staffCount, magangCount, pklCount };
+    return { total, adminCount, staffCount, pklCount };
   }, [users]);
 
   const normalizeRole = (value: string): UserRole => {
     const raw = (value ?? "").toString().trim().toLowerCase();
     if (raw.includes("admin")) return "Admin";
     if (raw.includes("staff")) return "Staff";
-    if (raw.includes("magang")) return "Anak Magang";
     if (raw.includes("pkl")) return "Anak PKL";
     return "Staff";
   };
@@ -226,7 +222,6 @@ export default function AddUser() {
               total={summary.total}
               adminCount={summary.adminCount}
               staffCount={summary.staffCount}
-              magangCount={summary.magangCount}
               pklCount={summary.pklCount}
             />
 

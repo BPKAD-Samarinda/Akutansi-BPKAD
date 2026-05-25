@@ -18,7 +18,6 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
     return saved ? saved === "dark" : false;
   });
   const isAdmin = user?.role === "Admin" || user?.role === "Admin Akuntansi";
-  const isMagang = user?.role === "Anak Magang";
   const isPkl = user?.role === "Anak PKL";
   const canViewUploadHistory = isAdmin;
 

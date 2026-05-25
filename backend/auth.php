@@ -19,7 +19,6 @@ function normalizeRole($value) {
     if (strpos($roleLower, "staff akuntansi") !== false) return "Staff";
     if (strpos($roleLower, "admin") !== false) return "Admin";
     if (strpos($roleLower, "staff") !== false) return "Staff";
-    if (strpos($roleLower, "magang") !== false) return "Anak Magang";
     if (strpos($roleLower, "pkl") !== false) return "Anak PKL";
     
     return "Staff";

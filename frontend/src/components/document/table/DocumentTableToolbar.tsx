@@ -20,7 +20,6 @@ export default function DocumentTableToolbar({
   const user = getUser();
   const canUploadDocument = [
     "Admin",
-    "Anak Magang",
     "Anak PKL",
     "Admin Akuntansi",
   ].includes(user?.role ?? "");

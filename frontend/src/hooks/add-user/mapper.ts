@@ -5,7 +5,6 @@ const normalizeRole = (role: string | null | undefined): UserItem["role"] => {
   if (!raw) return "Staff";
   if (raw.includes("admin")) return "Admin";
   if (raw.includes("staff")) return "Staff";
-  if (raw.includes("magang")) return "Anak Magang";
   if (raw.includes("pkl")) return "Anak PKL";
   return "Staff";
 };

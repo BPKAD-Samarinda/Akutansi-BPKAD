@@ -117,7 +117,6 @@ export default function EditUserModal({
                 <SelectContent className="max-h-60 rounded-xl border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
                   <SelectItem value="Staff">Staff</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
-                  <SelectItem value="Anak Magang">Anak Magang</SelectItem>
                   <SelectItem value="Anak PKL">Anak PKL</SelectItem>
                 </SelectContent>
               </Select>
