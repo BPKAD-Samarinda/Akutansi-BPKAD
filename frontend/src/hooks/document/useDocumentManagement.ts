@@ -78,10 +78,10 @@ export function useDocumentManagement() {
     fetchDocuments();
   }, [fetchDocuments]);
 
-  const handleRefresh = () => {
-    baseHandleRefresh();
+  const handleRefresh = (options?: { silent?: boolean; silentToast?: boolean }) => {
+    baseHandleRefresh(options?.silentToast ?? options?.silent);
     setSelectedDocuments(new Set());
-    fetchDocuments({ silent: true });
+    fetchDocuments({ silent: options?.silent });
   };
 
   const handleSelectDocument = (id: number | string) => {

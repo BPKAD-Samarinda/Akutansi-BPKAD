@@ -109,13 +109,15 @@ export function useDocumentFilters(
     }
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = (silent?: boolean) => {
     setSearchQuery("");
     setStartDate("");
     setEndDate("");
     setCategory("");
     setFilteredDocuments(documents);
-    showToast("Filter telah direset", "info", 1200);
+    if (!silent) {
+      showToast("Filter telah direset", "info", 1200);
+    }
   };
 
   return {

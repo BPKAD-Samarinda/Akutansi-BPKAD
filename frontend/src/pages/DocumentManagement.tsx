@@ -40,8 +40,8 @@ export default function DocumentManagement() {
     cancelDelete,
   } = useDocumentManagement();
 
-  const handleRefreshClick = () => {
-    handleRefresh();
+  const handleRefreshClick = (options?: { silent?: boolean; silentToast?: boolean }) => {
+    handleRefresh(options);
     setFilterResetKey((prev) => prev + 1);
   };
 
@@ -125,8 +125,7 @@ export default function DocumentManagement() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onSuccess={() => {
-          handleRefreshClick();
-          setIsUploadOpen(false);
+          handleRefreshClick({ silentToast: true });
         }}
         showToast={(msg, type) => setToast({ show: true, message: msg, type })}
       />
