@@ -1,6 +1,4 @@
-import type { DashboardCategory } from "../../../data/mockDashboardStats";
-
-type CategoryFilter = "all" | DashboardCategory;
+import type { CategoryFilter } from "../../../hooks/dashboard/dashboardAnalytics.helpers";
 
 type Props = {
   selectedMonth: number;
