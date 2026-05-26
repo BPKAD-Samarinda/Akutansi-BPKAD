@@ -86,31 +86,42 @@ function handleFileUpload($fileInput, $allowedMimeTypes) {
         return ["error" => "Unggah berkas gagal. Silakan periksa apakah ukuran berkas di bawah 30MB."];
     }
     
-    // Check file extension just in case mime type is reported incorrectly by browser
-    $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
-    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
-    if (!in_array($ext, $allowedExts) && !in_array($fileInput['type'], $allowedMimeTypes)) {
-        return ["error" => "Tipe file tidak didukung."];
-    }
-    
+    // Validate size first
     if ($fileInput['size'] > 30 * 1024 * 1024) {
         return ["error" => "Ukuran file terlalu besar. Maksimal ukuran file adalah 30MB."];
+    }
+    
+    // Check extension
+    $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
+    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
+    if (!in_array($ext, $allowedExts)) {
+        return ["error" => "Tipe file tidak didukung. Hanya PDF, Word, Excel, PowerPoint, dan gambar yang diizinkan."];
+    }
+    
+    // Verify ACTUAL MIME type using finfo (reads file magic bytes, not client-reported type)
+    // This prevents attackers from renaming malicious files (e.g., script.php -> script.pdf)
+    if (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $realMime = finfo_file($finfo, $fileInput['tmp_name']);
+        finfo_close($finfo);
+        if (!in_array($realMime, $allowedMimeTypes)) {
+            return ["error" => "Tipe file tidak valid."];
+        }
     }
     
     // Create uploads directory if not exists
     $uploadDir = __DIR__ . '/uploads/documents';
     if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+        mkdir($uploadDir, 0755, true);
     }
     
-    // Generate unique name
+    // Generate unique name using random_bytes (more secure than rand())
     $ext = pathinfo($fileInput['name'], PATHINFO_EXTENSION);
-    $uniqueSuffix = time() . "-" . rand(100000000, 999999999);
+    $uniqueSuffix = time() . "-" . bin2hex(random_bytes(8));
     $filename = "file-" . $uniqueSuffix . "." . $ext;
     $targetPath = $uploadDir . '/' . $filename;
     
     // Move from temp
-    // If it's a PUT request, it's not is_uploaded_file, so use rename/copy instead of move_uploaded_file
     if (is_uploaded_file($fileInput['tmp_name'])) {
         if (!move_uploaded_file($fileInput['tmp_name'], $targetPath)) {
             return ["error" => "Gagal menyimpan berkas di server."];
@@ -131,8 +142,7 @@ if ($route === '/documents') {
             $stmt = $pdo->query("SELECT * FROM documents WHERE is_deleted = 0 ORDER BY created_at DESC");
             echo json_encode($stmt->fetchAll());
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Terjadi kesalahan pada server: " . $e->getMessage()]);
+            serverError($e);
         }
     } elseif ($method === 'POST') {
         // Only Admin, Staff, Anak PKL, Admin Akuntansi, Staff Akuntansi
@@ -197,8 +207,7 @@ if ($route === '/documents') {
             
         } catch (PDOException $e) {
             cleanupUploadedFile($file_path);
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengunggah dokumen: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif (preg_match('#^/documents/(\d+)$#', $route, $matches)) {
@@ -301,8 +310,7 @@ if ($route === '/documents') {
             if ($newFilePath) {
                 cleanupUploadedFile($newFilePath);
             }
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal memperbarui dokumen: " . $e->getMessage()]);
+            serverError($e);
         }
         
     } elseif ($method === 'DELETE') {
@@ -343,8 +351,7 @@ if ($route === '/documents') {
             echo json_encode(["message" => "Document moved to upload history"]);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal menghapus dokumen: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif ($route === '/documents/history') {
@@ -352,7 +359,7 @@ if ($route === '/documents') {
         authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
         
         $page = isset($_GET['page']) ? max(intval($_GET['page']), 1) : 1;
-        $limit = isset($_GET['limit']) ? max(intval($_GET['limit']), 1) : 10;
+        $limit = isset($_GET['limit']) ? min(max(intval($_GET['limit']), 1), 100) : 10; // max 100 per page
         $search = isset($_GET['search']) ? strtolower(trim($_GET['search'])) : '';
         $status = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : 'all';
         
@@ -501,8 +508,7 @@ if ($route === '/documents') {
             ]);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengambil riwayat: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif (preg_match('#^/documents/history/([^/]+)/restore$#', $route, $matches)) {
@@ -571,8 +577,7 @@ if ($route === '/documents') {
                 echo json_encode(["message" => "Document restored successfully"]);
             }
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal merestorasi dokumen: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif (preg_match('#^/documents/history/([^/]+)$#', $route, $matches)) {
@@ -667,8 +672,7 @@ if ($route === '/documents') {
                 echo json_encode(["message" => "Document permanently deleted successfully"]);
             }
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal menghapus permanen: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 }

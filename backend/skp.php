@@ -83,22 +83,34 @@ function handleSkpUpload($fileInput, $allowedMimeTypes) {
         return ["error" => "Unggah berkas gagal. Silakan periksa apakah ukuran berkas di bawah 30MB."];
     }
     
-    $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
-    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
-    if (!in_array($ext, $allowedExts) && !in_array($fileInput['type'], $allowedMimeTypes)) {
-        return ["error" => "Tipe file tidak didukung."];
-    }
-    
+    // Validate size first
     if ($fileInput['size'] > 30 * 1024 * 1024) {
         return ["error" => "Ukuran file terlalu besar. Maksimal ukuran file adalah 30MB."];
     }
     
-    $uploadDir = __DIR__ . '/uploads/skp';
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+    // Check extension
+    $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
+    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
+    if (!in_array($ext, $allowedExts)) {
+        return ["error" => "Tipe file tidak didukung. Hanya PDF, Word, Excel, PowerPoint, dan gambar yang diizinkan."];
     }
     
-    $uniqueSuffix = time() . "-" . rand(100000000, 999999999);
+    // Verify ACTUAL MIME type from file magic bytes (prevents malicious file rename attacks)
+    if (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $realMime = finfo_file($finfo, $fileInput['tmp_name']);
+        finfo_close($finfo);
+        if (!in_array($realMime, $allowedMimeTypes)) {
+            return ["error" => "Tipe file tidak valid."];
+        }
+    }
+    
+    $uploadDir = __DIR__ . '/uploads/skp';
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    
+    $uniqueSuffix = time() . "-" . bin2hex(random_bytes(8));
     $filename = "file-" . $uniqueSuffix . "." . $ext;
     $targetPath = $uploadDir . '/' . $filename;
     
@@ -164,8 +176,7 @@ if ($route === '/skp') {
             echo json_encode($stmt->fetchAll());
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengambil data SKP: " . $e->getMessage()]);
+            serverError($e);
         }
         
     } elseif ($method === 'POST') {
@@ -236,8 +247,7 @@ if ($route === '/skp') {
             
         } catch (PDOException $e) {
             cleanupSkpFile($file_path);
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengunggah SKP: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif ($route === '/skp/history') {
@@ -294,8 +304,7 @@ if ($route === '/skp') {
             echo json_encode($rows);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengambil riwayat SKP: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 } elseif (preg_match('#^/skp/(\d+)$#', $route, $matches)) {
@@ -398,8 +407,7 @@ if ($route === '/skp') {
             if ($newFilePath) {
                 cleanupSkpFile($newFilePath);
             }
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal memperbarui SKP: " . $e->getMessage()]);
+            serverError($e);
         }
         
     } elseif ($method === 'DELETE') {
@@ -437,8 +445,7 @@ if ($route === '/skp') {
             echo json_encode(["message" => "SKP Document deleted successfully"]);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal menghapus SKP: " . $e->getMessage()]);
+            serverError($e);
         }
     }
 }

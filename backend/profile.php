@@ -29,6 +29,21 @@ if (!$username) {
     exit();
 }
 
+// Validate input lengths
+if (strlen($username) < 3 || strlen($username) > 100) {
+    http_response_code(400);
+    echo json_encode(["message" => "Nama pengguna harus antara 3-100 karakter"]);
+    exit();
+}
+
+// Validate password if provided
+if ($password !== '' && strlen($password) < 6) {
+    http_response_code(400);
+    echo json_encode(["message" => "Kata sandi minimal 6 karakter"]);
+    exit();
+}
+
+
 try {
     // Check if username is already taken by another user
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND id <> ?");
@@ -68,6 +83,5 @@ try {
     ]);
 
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["message" => "Gagal memperbarui profil: " . $e->getMessage()]);
+    serverError($e);
 }

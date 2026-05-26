@@ -49,8 +49,7 @@ if ($route === '/users') {
             
             echo json_encode($users);
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal mengambil data pengguna: " . $e->getMessage()]);
+            serverError($e);
         }
         
     } elseif ($method === 'POST') {
@@ -67,12 +66,25 @@ if ($route === '/users') {
             exit();
         }
         
+        // Validate input lengths
+        if (strlen($username) < 3 || strlen($username) > 100) {
+            http_response_code(400);
+            echo json_encode(["message" => "Nama pengguna harus antara 3-100 karakter"]);
+            exit();
+        }
+        if (strlen($password) < 6) {
+            http_response_code(400);
+            echo json_encode(["message" => "Kata sandi minimal 6 karakter"]);
+            exit();
+        }
+        
         $allowedRoles = ["Admin", "Staff", "Anak PKL"];
         if (!in_array($normalizedRole, $allowedRoles)) {
             http_response_code(400);
             echo json_encode(["message" => "Peran tidak valid"]);
             exit();
         }
+
         
         try {
             // Check existing username
@@ -95,8 +107,7 @@ if ($route === '/users') {
             echo json_encode(["message" => "Pengguna berhasil ditambahkan"]);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal menambahkan pengguna: " . $e->getMessage()]);
+            serverError($e);
         }
     } else {
         http_response_code(405);
@@ -160,8 +171,7 @@ if ($route === '/users') {
             ]);
             
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal memperbarui pengguna: " . $e->getMessage()]);
+            serverError($e);
         }
         
     } elseif ($method === 'DELETE') {
@@ -170,8 +180,7 @@ if ($route === '/users') {
             $stmt->execute([$id]);
             echo json_encode(["message" => "Pengguna berhasil dihapus"]);
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["message" => "Gagal menghapus pengguna: " . $e->getMessage()]);
+            serverError($e);
         }
     } else {
         http_response_code(405);

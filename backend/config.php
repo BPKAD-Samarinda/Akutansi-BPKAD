@@ -1,16 +1,41 @@
 <?php
 // api/config.php
 
-// Enable error reporting for debugging (disable in production)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Disable error display in production (errors logged to file, not shown to users)
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+ini_set('log_errors', 1);
+// ini_set('error_log', __DIR__ . '/logs/php_errors.log'); // Uncomment after hosting to log errors
 
-// Set CORS Headers
-header("Access-Control-Allow-Origin: *");
+// Set CORS Headers - Restrict to known frontend origins only
+$allowedOrigins = [
+    'http://localhost:5173',     // Local dev
+    'http://localhost:3000',     // Local dev alt
+    'http://localhost',          // Local XAMPP/Laragon
+    // 'https://yourdomain.com', // <-- Tambahkan domain hosting Anda di sini sebelum deploy
+];
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+if (in_array($origin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    // Fallback for same-origin requests (e.g., directly via hosting)
+    header("Access-Control-Allow-Origin: " . (isset($_SERVER['HTTP_ORIGIN']) ? '' : '*'));
+}
+
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Authorization, Content-Type, Accept, Origin");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
+
+// HTTP Security Headers — prevent common web attacks
+header("X-Content-Type-Options: nosniff");           // Prevent MIME sniffing
+header("X-Frame-Options: DENY");                     // Prevent clickjacking
+header("X-XSS-Protection: 1; mode=block");           // Legacy XSS filter (browsers)
+header("Referrer-Policy: strict-origin-when-cross-origin");
+header("Permissions-Policy: geolocation=(), camera=(), microphone=()");
+
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -64,7 +89,13 @@ $db_host = getenv('DB_HOST') ?: 'localhost';
 $db_user = getenv('DB_USER') ?: 'root';
 $db_pass = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '';
 $db_name = getenv('DB_DATABASE') ?: 'akuntansi_bpkad';
-$jwt_secret = getenv('JWT_SECRET') ?: 'replace-with-strong-random-secret';
+$jwt_secret = getenv('JWT_SECRET') ?: '';
+if (empty($jwt_secret)) {
+    // CRITICAL: JWT_SECRET must be set in .env file before hosting!
+    // Generate a strong secret: php -r "echo bin2hex(random_bytes(32));"
+    error_log('SECURITY WARNING: JWT_SECRET is not set in .env file. Using insecure fallback.');
+    $jwt_secret = 'default-insecure-secret-change-before-hosting';
+}
 
 // Initialize Database Connection (PDO)
 try {
@@ -75,12 +106,23 @@ try {
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["message" => "Database connection failed: " . $e->getMessage()]);
+    // Never expose DB error details to client - log internally only
+    error_log('Database connection failed: ' . $e->getMessage());
+    echo json_encode(["message" => "Koneksi database gagal. Silakan hubungi administrator."]);
     exit();
 }
 
 // JWT Helper Class (HS256)
+// Centralized error handler - logs details internally, returns generic message to client
+function serverError($e, $genericMessage = 'Terjadi kesalahan pada server. Silakan coba lagi.') {
+    error_log('[BPKAD Error] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+    http_response_code(500);
+    echo json_encode(["message" => $genericMessage]);
+    exit();
+}
+
 class JWT {
+
     private static function base64UrlEncode($data) {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
     }

@@ -41,5 +41,5 @@ if ($route === '/auth/login') {
     require_once __DIR__ . '/dashboard.php';
 } else {
     http_response_code(404);
-    echo json_encode(["message" => "Endpoint tidak ditemukan: " . $route]);
+    echo json_encode(["message" => "Endpoint tidak ditemukan."]);
 }
