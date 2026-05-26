@@ -31,9 +31,9 @@ export default function AuthHero() {
             </div>
 
             <h1 className="text-4xl font-bold leading-tight mb-4">
-              Sistem Arsip
+              Sistem Manajemen
               <br />
-              Dokumen Akuntansi
+              Dokumen Arsip Akuntansi
             </h1>
 
             <p className="text-base text-gray-200 leading-relaxed">
