@@ -38,6 +38,7 @@ const toUploadHistory = (document: Document): UploadHistory => ({
   uploadedBy: document.uploaded_by || "-",
   fileSize: "-",
   filePath: document.file_path,
+  document_date: document.tanggal_sppd,
 });
 
 export const getLocalUploadHistoryItems = (): UploadHistory[] => {

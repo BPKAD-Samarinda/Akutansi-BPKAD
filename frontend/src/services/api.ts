@@ -245,6 +245,7 @@ export const getUploadHistories = async (
       source?: "document" | "skp";
       edit_before?: string | null;
       edit_after?: string | null;
+      document_date?: string | null;
     }>;
     total: number;
     page: number;
@@ -282,6 +283,7 @@ export const getUploadHistories = async (
     source: item.source || "document",
     editBefore: parseEditPayload(item.edit_before),
     editAfter: parseEditPayload(item.edit_after),
+    document_date: item.document_date,
   }));
 
   return {
