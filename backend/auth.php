@@ -99,6 +99,10 @@ try {
     $user = $stmt->fetch();
     
     if (!$user) {
+        // Mitigasi timing attack: Lakukan verifikasi hash buatan agar waktu respons server tetap sama
+        // (Mencegah peretas mendeteksi apakah username terdaftar atau tidak berdasarkan kecepatan respons)
+        password_verify('dummy_password', '$2y$10$nOUIs5kJ7naTuTFkC1UrZO74gOIWq3LyBiZ6g3aoIbD5643e1z6QG');
+        
         $recordFailedAttempt(); // Count as failed attempt
         http_response_code(401);
         echo json_encode(["message" => "Kombinasi nama pengguna dan kata sandi salah"]);

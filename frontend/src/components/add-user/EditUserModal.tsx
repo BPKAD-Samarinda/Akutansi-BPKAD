@@ -86,6 +86,7 @@ export default function EditUserModal({
                   value={password}
                   onChange={(event) => onChangePassword(event.target.value)}
                   placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
+                  autoComplete="new-password"
                   className="h-12 w-full rounded-2xl border border-slate-200 px-4 pr-11 text-sm text-slate-700 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
                 <button
