@@ -20,6 +20,15 @@ export function clearAuthToken(): void {
   authSyncChannel?.postMessage({ type: "clear-token" } satisfies AuthSyncMessage);
 }
 
+export function updateAuthToken(token: string): void {
+  if (localStorage.getItem("authToken")) {
+    localStorage.setItem("authToken", token);
+  } else {
+    sessionStorage.setItem("authToken", token);
+  }
+  authSyncChannel?.postMessage({ type: "share-token", token } satisfies AuthSyncMessage);
+}
+
 export function isAuthenticated(): boolean {
   const token = getAuthToken();
   if (!token || token.trim().length === 0) {

@@ -29,6 +29,8 @@ if ($route !== '/' && substr($route, -1) === '/') {
 // Route mapping
 if ($route === '/auth/login') {
     require_once __DIR__ . '/auth.php';
+} elseif ($route === '/auth/profile') {
+    require_once __DIR__ . '/profile.php';
 } elseif (strpos($route, '/users') === 0) {
     require_once __DIR__ . '/users.php';
 } elseif (strpos($route, '/documents') === 0) {

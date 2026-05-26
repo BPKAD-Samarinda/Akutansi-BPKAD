@@ -512,5 +512,16 @@ export const permanentlyDeleteSkpDocument = async (
   return response.data;
 };
 
+export const updateUserProfile = async (payload: {
+  username: string;
+  password?: string;
+}): Promise<{ message: string; token: string }> => {
+  const response = await apiClient.post<{ message: string; token: string }>(
+    "/auth/profile",
+    payload,
+  );
+  return response.data;
+};
+
 
 
