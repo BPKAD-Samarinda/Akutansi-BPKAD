@@ -2,17 +2,10 @@ import { useEffect, useState } from "react";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
+import { getCategoryColorPair } from "../../../hooks/dashboard/dashboardAnalytics.helpers";
 
 type Props = {
   data: { label: string; value: number }[];
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Lampiran: "#6366F1",
-  Keuangan: "#06B6D4",
-  BKU: "#14B8A6",
-  STS: "#8B5CF6",
-  "Rekening Koran": "#F43F5E",
 };
 
 const numberFormatter = new Intl.NumberFormat("id-ID");
@@ -83,7 +76,7 @@ export default function DashboardPieChart({ data }: Props) {
       {
         data: detailWithPercentage.map((d) => d.value),
         backgroundColor: detailWithPercentage.map(
-          (d) => CATEGORY_COLORS[d.label] ?? "#94A3B8",
+          (d) => getCategoryColorPair(d.label).dark,
         ),
         borderWidth: 0,
         hoverOffset: 14,
@@ -119,7 +112,7 @@ export default function DashboardPieChart({ data }: Props) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300 h-full flex flex-col">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
       <style>{`
         @keyframes slideInRightSoft {
           from {
@@ -142,11 +135,8 @@ export default function DashboardPieChart({ data }: Props) {
         }
       `}</style>
 
-      <div className="mb-6 border-b border-slate-100 dark:border-slate-800/60 pb-4">
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap flex items-center gap-2">
-          <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
-          Persentase Dokumen per Kategori
-        </h3>
+      <div className="mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-slate-100">Persentase Dokumen per Kategori</h3>
       </div>
 
       {!hasData ? (
@@ -212,7 +202,7 @@ export default function DashboardPieChart({ data }: Props) {
                     <div className="flex items-center gap-2 min-w-0">
                       <span
                         className="h-2.5 w-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: CATEGORY_COLORS[item.label] ?? "#94A3B8" }}
+                        style={{ backgroundColor: getCategoryColorPair(item.label).dark }}
                       />
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
                         {item.label}
@@ -229,7 +219,7 @@ export default function DashboardPieChart({ data }: Props) {
                       className="h-full rounded-full"
                       style={{
                         width: `${item.percentage}%`,
-                        backgroundColor: CATEGORY_COLORS[item.label] ?? "#94A3B8",
+                        backgroundColor: getCategoryColorPair(item.label).dark,
                         transformOrigin: "left center",
                         animation: "growRight 900ms ease-out both",
                         animationDelay: `${260 + idx * 100}ms`,

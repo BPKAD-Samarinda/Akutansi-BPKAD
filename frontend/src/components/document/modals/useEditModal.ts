@@ -295,14 +295,21 @@ export function useEditModal({
     setIsCategoryOpen(true);
   };
 
-  const selectCategory = (
-    kategori:
-      | "Lampiran"
-      | "Keuangan"
-      | "BKU"
-      | "STS"
-      | "Rekening Koran",
-  ) => {
+  const [isAddingNew, setIsAddingNew] = useState(false);
+
+  useEffect(() => {
+    if (editingDocument && isOpen) {
+      const defaultCategories = ["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"];
+      if (editingDocument.kategori && !defaultCategories.includes(editingDocument.kategori)) {
+        setIsAddingNew(true);
+      } else {
+        setIsAddingNew(false);
+      }
+    }
+  }, [editingDocument, isOpen]);
+
+  const selectCategory = (kategori: string) => {
+    setIsAddingNew(false);
     setFormData((prev) => ({
       ...prev,
       kategori,
@@ -372,6 +379,8 @@ export function useEditModal({
     toggleCalendar,
     selectDate,
     handleSubmit,
+    isAddingNew,
+    setIsAddingNew,
     formatDisplayDate: (dateValue: string) =>
       formatDisplayDate(dateValue, today),
     toDateObject: (dateValue: string) => toDateObject(dateValue, today),

@@ -9,14 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
+import { getCategoryColorPair } from "../../../hooks/dashboard/dashboardAnalytics.helpers";
 
-type CategoryValue =
-  | "all"
-  | "Lampiran"
-  | "Keuangan"
-  | "BKU"
-  | "STS"
-  | "Rekening Koran";
+type CategoryValue = string;
 
 type Props = {
   data: { label: string; value: number }[];
@@ -45,21 +40,7 @@ const DistributionCanvas = memo(
   (prev, next) => prev.chartKey === next.chartKey,
 );
 
-const CATEGORY_COLORS: Record<string, string> = {
-  Lampiran: "#E0E7FF",
-  Keuangan: "#CFFAFE",
-  BKU: "#CCFBF1",
-  STS: "#EDE9FE",
-  "Rekening Koran": "#FFE4E6",
-};
-
-const CATEGORY_DARK: Record<string, string> = {
-  Lampiran: "#6366F1",
-  Keuangan: "#06B6D4",
-  BKU: "#14B8A6",
-  STS: "#8B5CF6",
-  "Rekening Koran": "#F43F5E",
-};
+// Colors are dynamically resolved via getCategoryColorPair helper.
 
 function DashboardDistributionChart(props: Props) {
   const {
@@ -90,15 +71,14 @@ function DashboardDistributionChart(props: Props) {
             const label = data[index]?.label;
             const chart = ctx.chart;
             const area = chart.chartArea;
-            if (!area) return CATEGORY_COLORS[label] ?? "#94A3B8";
-            const start = CATEGORY_COLORS[label] ?? "#94A3B8";
-            const end = CATEGORY_DARK[label] ?? "#64748B";
+            const colors = getCategoryColorPair(label || "");
+            if (!area) return colors.light;
             const gradient = chart.ctx.createLinearGradient(0, area.bottom, 0, area.top);
-            gradient.addColorStop(0, start);
-            gradient.addColorStop(1, end);
+            gradient.addColorStop(0, colors.light);
+            gradient.addColorStop(1, colors.dark);
             return gradient;
           },
-          borderColor: data.map((d) => CATEGORY_DARK[d.label] ?? "#64748B"),
+          borderColor: data.map((d) => getCategoryColorPair(d.label).dark),
           borderWidth: 1,
           borderRadius: 12,
           borderSkipped: false,
@@ -152,18 +132,17 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-9 w-full sm:w-[135px] rounded-lg border border-slate-200/80 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/50 px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
-    "hover:bg-white dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none focus:ring-0 focus:border-indigo-400 dark:focus:border-indigo-500 focus-visible:ring-0 shadow-sm cursor-pointer";
+    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
+    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/5 transition-all duration-300 h-full">
-      <div className="mb-6 flex flex-wrap gap-4 items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-4">
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap flex items-center gap-2">
-          <div className="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
+    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+      <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
           Jumlah Dokumen
         </h3>
 
-        <div className="flex flex-wrap w-full sm:w-auto gap-2">
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}

@@ -21,19 +21,14 @@ type EditModalFormFieldsProps = {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: () => void;
   onToggleCategory: () => void;
-  onSelectCategory: (
-    kategori:
-      | "Lampiran"
-      | "Keuangan"
-      | "BKU"
-      | "STS"
-      | "Rekening Koran",
-  ) => void;
+  onSelectCategory: (kategori: string) => void;
   onToggleCalendar: () => void;
   onSelectDate: (date: Date | undefined) => void;
   onClose: () => void;
   formatDisplayDate: (dateValue: string) => string;
   toDateObject: (dateValue: string) => Date;
+  isAddingNew: boolean;
+  setIsAddingNew: (value: boolean) => void;
 };
 
 export default function EditModalFormFields({
@@ -59,6 +54,8 @@ export default function EditModalFormFields({
   onClose,
   formatDisplayDate,
   toDateObject,
+  isAddingNew,
+  setIsAddingNew,
 }: EditModalFormFieldsProps) {
   return (
     <>
@@ -98,7 +95,9 @@ export default function EditModalFormFields({
                       : "text-slate-400 dark:text-slate-500"
                   }
                 >
-                  {formData.kategori || "Pilih Kategori"}
+                  {isAddingNew
+                    ? `Kategori Baru: ${formData.kategori || "..."}`
+                    : (formData.kategori || "Pilih Kategori")}
                 </span>
                 <span
                   ref={categoryChevronRef}
@@ -121,7 +120,7 @@ export default function EditModalFormFields({
                       type="button"
                       onClick={() => onSelectCategory(option)}
                       className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                        formData.kategori === option
+                        formData.kategori === option && !isAddingNew
                           ? "bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-500 dark:bg-orange-500/10 dark:text-orange-400"
                           : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       }`}
@@ -130,9 +129,36 @@ export default function EditModalFormFields({
                     </button>
                   ),
                 )}
+
+                <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAddingNew(true);
+                    onSelectCategory("");
+                  }}
+                  className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-bold text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-slate-800 transition-all flex items-center gap-1"
+                >
+                  + Tambah Kategori Baru...
+                </button>
               </div>
             )}
           </div>
+
+          {isAddingNew && (
+            <div className="mt-3 animate-[slideDown_0.2s_ease-out]">
+              <input
+                type="text"
+                name="kategori"
+                value={formData.kategori}
+                onChange={onInputChange}
+                placeholder="Ketik nama kategori baru di sini..."
+                className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                required
+              />
+            </div>
+          )}
         </div>
 
         <div>

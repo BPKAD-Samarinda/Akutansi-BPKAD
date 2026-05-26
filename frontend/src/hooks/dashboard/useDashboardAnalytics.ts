@@ -180,13 +180,19 @@ export function useDashboardAnalytics() {
     });
   }, [uploads, selectedYear, selectedMonth, selectedCategory]);
 
+  const dynamicCategories = useMemo(() => {
+    const defaultCats = ["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"];
+    const foundCats = uploads.map((r) => r.kategori);
+    return Array.from(new Set([...defaultCats, ...foundCats]));
+  }, [uploads]);
+
   const distributionData = useMemo(() => {
-    const target = selectedCategory === "all" ? categories : [selectedCategory];
+    const target = selectedCategory === "all" ? dynamicCategories : [selectedCategory];
     return target.map((kategori) => ({
       label: kategori,
       value: filteredUploads.filter((r) => r.kategori === kategori).length,
     }));
-  }, [filteredUploads, selectedCategory]);
+  }, [filteredUploads, selectedCategory, dynamicCategories]);
 
   const trendData = useMemo(() => {
     if (selectedYear !== 0 && selectedMonth !== 0) {
@@ -261,7 +267,7 @@ export function useDashboardAnalytics() {
   const totalSkpDocuments = skpUploads.length;
   const totalUsers = usersCount;
   const totalLogins = filteredLogins.length;
-  const categoryOptions = useMemo(() => ["all", ...categories] as const, []);
+  const categoryOptions = useMemo(() => ["all", ...dynamicCategories], [dynamicCategories]);
 
   const todayUploadCount = useMemo(() => {
     const todayIso = toIsoDate(new Date());

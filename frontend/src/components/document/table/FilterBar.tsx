@@ -10,6 +10,7 @@ export default function FilterBar({
   onDateRangeChange,
   onCategoryChange,
   resetSignal,
+  availableCategories,
 }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
@@ -92,7 +93,11 @@ export default function FilterBar({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-3 lg:gap-4 items-center">
         <SearchFilterInput value={searchQuery} onChange={handleSearchChange} />
         <DateRangePicker onChange={handleDateChange} resetSignal={resetSignal} />
-        <CategoryFilterSelect value={category} onChange={handleCategoryChange} />
+        <CategoryFilterSelect
+          value={category}
+          onChange={handleCategoryChange}
+          availableCategories={availableCategories}
+        />
       </div>
 
       {isActive && <ActiveFilterIndicator items={activeItems} />}

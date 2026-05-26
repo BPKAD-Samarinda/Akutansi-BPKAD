@@ -7,21 +7,23 @@ import AppTooltip from "../../../ui/app-tooltip";
 type CategoryFilterSelectProps = {
   value: string;
   onChange: (value: string) => void;
+  availableCategories?: string[];
 };
 
-const categoryOptions = [
-  { value: "", label: "Semua Kategori" },
-  { value: "Lampiran", label: "Lampiran" },
-  { value: "Keuangan", label: "Keuangan" },
-  { value: "BKU", label: "BKU" },
-  { value: "STS", label: "STS" },
-  { value: "Rekening Koran", label: "Rekening Koran" },
-];
+const defaultCategories = ["Lampiran", "Keuangan", "BKU", "STS", "Rekening Koran"];
 
 export default function CategoryFilterSelect({
   value,
   onChange,
+  availableCategories,
 }: CategoryFilterSelectProps) {
+  const uniqueCats = Array.from(
+    new Set([...defaultCategories, ...(availableCategories || [])])
+  );
+  const categoryOptions = [
+    { value: "", label: "Semua Kategori" },
+    ...uniqueCats.map((cat) => ({ value: cat, label: cat })),
+  ];
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({
     top: 0,

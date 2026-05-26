@@ -15,13 +15,7 @@ export function useFileUpload(
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    category: "" as
-      | "Lampiran"
-      | "Keuangan"
-      | "BKU"
-      | "STS"
-      | "Rekening Koran"
-      | "",
+    category: "",
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

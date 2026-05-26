@@ -15,13 +15,7 @@ import {
 type UploadFormData = {
   name: string;
   date: string;
-  category:
-    | "Lampiran"
-    | "Keuangan"
-    | "BKU"
-    | "STS"
-    | "Rekening Koran"
-    | "";
+  category: string;
 };
 
 type UploadDocumentInfoSectionProps = {
@@ -41,6 +35,13 @@ export default function UploadDocumentInfoSection({
   const [isMonthSelectOpen, setIsMonthSelectOpen] = useState(false);
   const [isYearSelectOpen, setIsYearSelectOpen] = useState(false);
   const [viewMonth, setViewMonth] = useState<Date>(new Date());
+  const [isAddingNew, setIsAddingNew] = useState(false);
+
+  useEffect(() => {
+    if (formData.category === "") {
+      setIsAddingNew(false);
+    }
+  }, [formData.category]);
 
   const categoryWrapperRef = useRef<HTMLDivElement>(null);
   const calendarWrapperRef = useRef<HTMLDivElement>(null);
@@ -278,7 +279,9 @@ export default function UploadDocumentInfoSection({
                   : "text-gray-500 dark:text-slate-500"
               }
             >
-              {formData.category || "Pilih Kategori"}
+              {isAddingNew
+                ? `Kategori Baru: ${formData.category || "..."}`
+                : (formData.category || "Pilih Kategori")}
             </span>
             <FaChevronDown
               className={`text-xs text-gray-500 dark:text-slate-400 transition-transform duration-200 ${
@@ -294,11 +297,12 @@ export default function UploadDocumentInfoSection({
                   key={option}
                   type="button"
                   onClick={() => {
+                    setIsAddingNew(false);
                     emitFieldChange("category", option);
                     setIsCategoryOpen(false);
                   }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    formData.category === option
+                    formData.category === option && !isAddingNew
                       ? "bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-500 dark:bg-orange-950/40 dark:text-orange-400"
                       : "hover:bg-slate-50 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200"
                   }`}
@@ -306,12 +310,39 @@ export default function UploadDocumentInfoSection({
                   {option}
                 </button>
               ))}
+
+              <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAddingNew(true);
+                  emitFieldChange("category", "");
+                  setIsCategoryOpen(false);
+                }}
+                className="w-full text-left px-3.5 py-2.5 rounded-lg text-sm font-bold text-orange-600 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-slate-800 transition-all flex items-center gap-1"
+              >
+                + Tambah Kategori Baru...
+              </button>
             </div>
           )}
 
           <input type="hidden" name="category" value={formData.category} required />
           <input type="hidden" name="date" value={formData.date} required />
         </div>
+
+        {isAddingNew && (
+          <div className="mt-3 animate-[slideDown_0.2s_ease-out]">
+            <input
+              type="text"
+              placeholder="Ketik nama kategori baru di sini..."
+              value={formData.category}
+              onChange={(e) => emitFieldChange("category", e.target.value)}
+              className="w-full border border-gray-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm font-medium focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 shadow-sm"
+              required
+            />
+          </div>
+        )}
       </div>
     </div>
   );

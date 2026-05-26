@@ -1,10 +1,5 @@
-export type DashboardCategory =
-  | "Lampiran"
-  | "Keuangan"
-  | "BKU"
-  | "STS"
-  | "Rekening Koran";
-export type CategoryFilter = "all" | DashboardCategory;
+export type DashboardCategory = string;
+export type CategoryFilter = string;
 
 export type NormalizedUpload = {
   id: number;
@@ -165,12 +160,50 @@ export function formatDateLabel(dateText: string) {
   return `${day} ${monthNames[monthIndex]} ${year}`;
 }
 
-export function toDashboardCategory(category: string): DashboardCategory {
-  if (category === "Lampiran") return "Lampiran";
-  if (category === "Keuangan") return "Keuangan";
-  if (category === "BPKU" || category === "BKU") return "BKU";
-  if (category === "Rekening Koran") return "Rekening Koran";
-  return "STS";
+export function toDashboardCategory(category: string): string {
+  const trimmed = String(category || "").trim();
+  if (trimmed === "BPKU" || trimmed === "BKU") return "BKU";
+  if (trimmed === "Rekening Koran") return "Rekening Koran";
+  if (trimmed === "Keuangan") return "Keuangan";
+  if (trimmed === "Lampiran") return "Lampiran";
+  if (trimmed === "STS") return "STS";
+  return trimmed || "STS";
+}
+
+// Deterministic coloring helpers
+const CATEGORY_COLOR_PAIRS: Record<string, { light: string; dark: string }> = {
+  Lampiran: { light: "#E0E7FF", dark: "#6366F1" }, // indigo
+  Keuangan: { light: "#CFFAFE", dark: "#06B6D4" }, // cyan
+  BKU: { light: "#CCFBF1", dark: "#14B8A6" },      // teal
+  STS: { light: "#EDE9FE", dark: "#8B5CF6" },      // violet
+  "Rekening Koran": { light: "#FFE4E6", dark: "#F43F5E" }, // rose
+};
+
+const FALLBACK_PAIRS = [
+  { light: "#D1FAE5", dark: "#10B981" }, // Emerald
+  { light: "#FEF3C7", dark: "#F59E0B" }, // Amber
+  { light: "#FFEDD5", dark: "#F97316" }, // Orange
+  { light: "#FDF4FF", dark: "#D946EF" }, // Fuchsia
+  { light: "#DBEAFE", dark: "#3B82F6" }, // Blue
+  { light: "#FCE7F3", dark: "#EC4899" }, // Pink
+  { light: "#F3E8FF", dark: "#A855F7" }, // Purple
+];
+
+function getHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash);
+}
+
+export function getCategoryColorPair(category: string): { light: string; dark: string } {
+  if (CATEGORY_COLOR_PAIRS[category]) {
+    return CATEGORY_COLOR_PAIRS[category];
+  }
+  const hash = getHash(category);
+  const index = hash % FALLBACK_PAIRS.length;
+  return FALLBACK_PAIRS[index];
 }
 
 export function normalizeRole(

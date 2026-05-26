@@ -35,6 +35,8 @@ export default function EditModal({
     toDateObject,
     selectedFileName,
     fileError,
+    isAddingNew,
+    setIsAddingNew,
   } = useEditModal({
     isOpen,
     editingDocument,
@@ -104,6 +106,8 @@ export default function EditModal({
             onClose={handleCloseWithAnimation}
             formatDisplayDate={formatDisplayDate}
             toDateObject={toDateObject}
+            isAddingNew={isAddingNew}
+            setIsAddingNew={setIsAddingNew}
           />
         </form>
       </div>

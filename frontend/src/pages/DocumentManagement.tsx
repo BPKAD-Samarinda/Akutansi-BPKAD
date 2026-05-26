@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import FilterBar from "../components/document/table/FilterBar";
@@ -40,6 +40,11 @@ export default function DocumentManagement() {
     cancelDelete,
   } = useDocumentManagement();
 
+  const availableCategories = useMemo(() => {
+    const cats = documents.map((doc) => doc.kategori).filter(Boolean);
+    return Array.from(new Set(cats));
+  }, [documents]);
+
   const handleRefreshClick = (options?: { silent?: boolean; silentToast?: boolean }) => {
     handleRefresh(options);
     setFilterResetKey((prev) => prev + 1);
@@ -61,6 +66,7 @@ export default function DocumentManagement() {
               onCategoryChange={handleCategoryFilter}
               onRefresh={handleRefreshClick}
               resetSignal={filterResetKey}
+              availableCategories={availableCategories}
             />
           </div>
 

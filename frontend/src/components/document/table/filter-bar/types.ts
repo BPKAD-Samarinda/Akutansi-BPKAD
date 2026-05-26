@@ -4,4 +4,5 @@ export interface FilterBarProps {
   onCategoryChange?: (category: string) => void;
   onRefresh?: () => void;
   resetSignal?: number;
+  availableCategories?: string[];
 }

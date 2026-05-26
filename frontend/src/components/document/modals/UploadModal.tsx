@@ -28,8 +28,15 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
   } = useFileUpload(showToast, onSuccess, onClose);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isAddingNew, setIsAddingNew] = useState(false);
   const calendarPopoverRef = useRef<HTMLDivElement | null>(null);
   const calendarWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (formData.category === "") {
+      setIsAddingNew(false);
+    }
+  }, [formData.category]);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -173,10 +180,16 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
                 Kategori
               </label>
               <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value as any }))
-                }
+                value={isAddingNew ? "__NEW_CATEGORY__" : formData.category}
+                onValueChange={(value) => {
+                  if (value === "__NEW_CATEGORY__") {
+                    setIsAddingNew(true);
+                    setFormData((prev) => ({ ...prev, category: "" }));
+                  } else {
+                    setIsAddingNew(false);
+                    setFormData((prev) => ({ ...prev, category: value }));
+                  }
+                }}
               >
                 <SelectTrigger className="h-12 rounded-2xl border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
                   <SelectValue placeholder="Pilih Kategori" />
@@ -187,10 +200,30 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
                   <SelectItem value="BKU">BKU</SelectItem>
                   <SelectItem value="STS">STS</SelectItem>
                   <SelectItem value="Rekening Koran">Rekening Koran</SelectItem>
+                  <SelectItem value="__NEW_CATEGORY__" className="text-orange-600 font-bold dark:text-orange-400">
+                    + Tambah Kategori Baru...
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {isAddingNew && (
+            <div className="animate-[slideDown_0.2s_ease-out]">
+              <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Nama Kategori Baru
+              </label>
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                placeholder="Ketik nama kategori baru di sini..."
+                className="h-12 w-full rounded-2xl border border-slate-200 px-4 text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                required
+              />
+            </div>
+          )}
 
           <label className="block rounded-[24px] border border-dashed border-orange-200 bg-orange-50/50 p-5 transition hover:border-orange-300 hover:bg-orange-50 dark:border-orange-500/30 dark:bg-orange-500/10 dark:hover:bg-orange-500/15">
             <div className="flex flex-col items-center justify-center text-center">
