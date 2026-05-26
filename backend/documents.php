@@ -381,6 +381,7 @@ if ($route === '/documents') {
                 SELECT h.id, h.document_id, h.document_name, h.uploaded_by, h.status, h.file_path, h.file_size, h.created_at, h.edit_before, h.edit_after, d.tanggal_sppd 
                 FROM document_history h
                 LEFT JOIN documents d ON h.document_id = d.id
+                WHERE h.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00')
                 ORDER BY h.created_at DESC, h.id DESC
             ");
             $docHist = $stmt->fetchAll();
@@ -419,9 +420,9 @@ if ($route === '/documents') {
             $isAdminRole = ($currentUser['role'] === 'Admin' || $currentUser['role'] === 'Admin Akuntansi');
             
             if ($isAdminRole) {
-                $skpStmt = $pdo->query("SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at FROM skp_history ORDER BY created_at DESC, id DESC");
+                $skpStmt = $pdo->query("SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at FROM skp_history WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') ORDER BY created_at DESC, id DESC");
             } else {
-                $skpStmt = $pdo->prepare("SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at FROM skp_history WHERE target_uploaded_by = ? ORDER BY created_at DESC, id DESC");
+                $skpStmt = $pdo->prepare("SELECT id, skp_document_id, action_type, actor_username, target_uploaded_by, before_data, after_data, created_at FROM skp_history WHERE target_uploaded_by = ? AND created_at >= DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00') ORDER BY created_at DESC, id DESC");
                 $skpStmt->execute([$uploaderName]);
             }
             $skpHist = $skpStmt->fetchAll();
