@@ -206,11 +206,10 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
               </span>
             </div>
             <input
-              ref={fileInputRef}
               type="file"
-              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.jfif,.heic,.heif"
-              onChange={handleFileInputChange}
+              accept=".pdf"
               className="hidden"
+              onChange={handleFileInputChange}
             />
           </label>
 

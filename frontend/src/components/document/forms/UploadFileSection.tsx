@@ -80,7 +80,7 @@ export default function UploadFileSection({
           aria-label="File Input"
           onChange={onFileInputChange}
           className="hidden"
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.jfif,.heic,.heif"
+          accept=".pdf"
         />
 
         {selectedFile ? (

@@ -230,35 +230,10 @@ export function useEditModal({
 
     const allowedExtensions = [
       "pdf",
-      "doc",
-      "docx",
-      "xls",
-      "xlsx",
-      "ppt",
-      "pptx",
-      "jpg",
-      "jpeg",
-      "png",
-      "jfif",
-      "heic",
-      "heif",
     ];
 
     const allowedTypes = [
       "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/vnd.ms-excel",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-powerpoint",
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      "image/jpeg",
-      "image/jpg",
-      "image/pjpeg",
-      "image/jfif",
-      "image/png",
-      "image/heic",
-      "image/heif",
     ];
 
     const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";

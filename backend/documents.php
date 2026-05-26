@@ -93,9 +93,9 @@ function handleFileUpload($fileInput, $allowedMimeTypes) {
     
     // Check extension
     $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
-    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
+    $allowedExts = ["pdf"];
     if (!in_array($ext, $allowedExts)) {
-        return ["error" => "Tipe file tidak didukung. Hanya PDF, Word, Excel, PowerPoint, dan gambar yang diizinkan."];
+        return ["error" => "Tipe file tidak didukung. Hanya PDF yang diizinkan."];
     }
     
     // Verify ACTUAL MIME type using finfo (reads file magic bytes, not client-reported type)

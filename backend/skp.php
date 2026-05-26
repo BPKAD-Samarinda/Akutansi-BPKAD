@@ -90,9 +90,9 @@ function handleSkpUpload($fileInput, $allowedMimeTypes) {
     
     // Check extension
     $ext = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
-    $allowedExts = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "png", "jpg", "jpeg", "heic", "heif"];
+    $allowedExts = ["pdf"];
     if (!in_array($ext, $allowedExts)) {
-        return ["error" => "Tipe file tidak didukung. Hanya PDF, Word, Excel, PowerPoint, dan gambar yang diizinkan."];
+        return ["error" => "Tipe file tidak didukung. Hanya PDF yang diizinkan."];
     }
     
     // Verify ACTUAL MIME type from file magic bytes (prevents malicious file rename attacks)
@@ -183,7 +183,7 @@ if ($route === '/skp') {
         authorizeRoles($currentUser, "Admin", "Staff", "Anak PKL", "Admin Akuntansi", "Staff Akuntansi");
         
         $nama_skp = isset($_POST['nama_skp']) ? trim($_POST['nama_skp']) : '';
-        $triwulan = isset($_POST['triwulan']) ? intval($_POST['triwulan']) : 0;
+        $triwulan = isset($_POST['triwulan']) && $_POST['triwulan'] !== '' ? intval($_POST['triwulan']) : null;
         $tahun = isset($_POST['tahun']) ? intval($_POST['tahun']) : 0;
         $target_user = isset($_POST['target_user']) ? trim($_POST['target_user']) : '';
         
@@ -211,7 +211,7 @@ if ($route === '/skp') {
         
         $file_path = $uploadResult['file_path'];
         
-        if (!$nama_skp || !$triwulan || !$tahun) {
+        if (!$nama_skp || $triwulan === null || !$tahun) {
             cleanupSkpFile($file_path);
             http_response_code(400);
             echo json_encode(["message" => "Nama SKP, triwulan, dan tahun wajib diisi."]);
@@ -318,7 +318,7 @@ if ($route === '/skp') {
         $files = $putData['files'];
         
         $nama_skp = isset($post['nama_skp']) ? trim($post['nama_skp']) : '';
-        $triwulan = isset($post['triwulan']) ? intval($post['triwulan']) : 0;
+        $triwulan = isset($post['triwulan']) && $post['triwulan'] !== '' ? intval($post['triwulan']) : null;
         $tahun = isset($post['tahun']) ? intval($post['tahun']) : 0;
         $target_user = isset($post['target_user']) ? trim($post['target_user']) : '';
         
@@ -326,7 +326,7 @@ if ($route === '/skp') {
         $actorRole = isset($currentUser['role']) ? $currentUser['role'] : '';
         $isAdminRole = ($currentUser['role'] === 'Admin' || $currentUser['role'] === 'Admin Akuntansi');
         
-        if (!$nama_skp || !$triwulan || !$tahun) {
+        if (!$nama_skp || $triwulan === null || !$tahun) {
             http_response_code(400);
             echo json_encode(["message" => "Nama SKP, triwulan, dan tahun wajib diisi."]);
             exit();

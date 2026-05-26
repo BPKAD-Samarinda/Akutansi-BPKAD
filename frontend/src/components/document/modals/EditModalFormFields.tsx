@@ -187,7 +187,7 @@ export default function EditModalFormFields({
           </div>
           <input
             type="file"
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.jfif,.heic,.heif"
+            accept=".pdf"
             className="hidden"
             onChange={onFileChange}
             disabled={isSaving}
