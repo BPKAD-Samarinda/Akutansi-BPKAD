@@ -401,29 +401,35 @@ input[type="password"]::-ms-clear {
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar (Global & Class) */
+::-webkit-scrollbar,
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
+::-webkit-scrollbar-track,
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
+::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: theme('colors.slate.300');
   border-radius: 10px;
 }
 
+::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: theme('colors.slate.400');
 }
 
+.dark ::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: theme('colors.slate.700');
 }
 
+.dark ::-webkit-scrollbar-thumb:hover,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: theme('colors.slate.600');
 }
