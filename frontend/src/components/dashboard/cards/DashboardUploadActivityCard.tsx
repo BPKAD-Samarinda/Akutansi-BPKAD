@@ -61,14 +61,15 @@ export default function DashboardUploadActivityCard({
             </h4>
           </div>
 
-          <div className={`overflow-x-auto custom-scrollbar flex-1 ${todayShouldScroll ? "max-h-[380px] overflow-y-auto" : ""}`}>
+          <div className="overflow-y-auto custom-scrollbar flex-1 max-h-[320px]">
             <table className="w-full text-sm">
               <thead className="bg-slate-50/90 dark:bg-slate-800/90 sticky top-0 z-10 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Pengunggah</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Nama Dokumen</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Kategori</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Waktu</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Tanggal Dokumen</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Tanggal Unggah</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -84,13 +85,16 @@ export default function DashboardUploadActivityCard({
                       </span>
                     </td>
                     <td className="px-5 py-3 text-slate-500 dark:text-slate-400 text-xs">
+                      {row.tanggalDokumen}
+                    </td>
+                    <td className="px-5 py-3 text-slate-500 dark:text-slate-400 text-xs font-medium">
                       {row.tanggalUnggah}
                     </td>
                   </tr>
                 ))}
                 {todayRows.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-5 py-12 text-center">
+                    <td colSpan={5} className="px-5 py-12 text-center">
                       <div className="flex flex-col items-center justify-center text-slate-400">
                         <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-2">
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,14 +120,15 @@ export default function DashboardUploadActivityCard({
             </h4>
           </div>
 
-          <div className={`overflow-x-auto custom-scrollbar flex-1 ${latestShouldScroll ? "max-h-[380px] overflow-y-auto" : ""}`}>
+          <div className="overflow-y-auto custom-scrollbar flex-1 max-h-[320px]">
             <table className="w-full text-sm">
               <thead className="bg-slate-50/90 dark:bg-slate-800/90 sticky top-0 z-10 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
                 <tr className="text-slate-500 dark:text-slate-400">
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Pengunggah</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Nama Dokumen</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Kategori</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Waktu</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Tanggal Dokumen</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest">Tanggal Unggah</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -139,13 +144,16 @@ export default function DashboardUploadActivityCard({
                       </span>
                     </td>
                     <td className="px-5 py-3 text-slate-500 dark:text-slate-400 text-xs">
+                      {row.tanggalDokumen}
+                    </td>
+                    <td className="px-5 py-3 text-slate-500 dark:text-slate-400 text-xs font-medium">
                       {row.tanggalUnggah}
                     </td>
                   </tr>
                 ))}
                 {latestRows.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-5 py-12 text-center">
+                    <td colSpan={5} className="px-5 py-12 text-center">
                       <div className="flex flex-col items-center justify-center text-slate-400">
                         <div className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-2">
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
