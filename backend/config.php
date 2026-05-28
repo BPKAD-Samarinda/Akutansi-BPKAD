@@ -170,7 +170,7 @@ class JWT {
 
 // Token Authentication Middleware
 function authenticateToken() {
-    global $jwt_secret;
+    global $jwt_secret, $pdo;
     $headers = getallheaders();
     $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
     if (!$authHeader && isset($headers['authorization'])) {
@@ -186,10 +186,23 @@ function authenticateToken() {
     $token = substr($authHeader, 7);
     $decoded = JWT::verify($token, $jwt_secret);
     
-    if (!$decoded) {
+    if (!$decoded || !isset($decoded['id'])) {
         http_response_code(401);
         echo json_encode(["message" => "Token tidak valid atau kedaluwarsa."]);
         exit();
+    }
+    
+    // Verifikasi apakah user masih ada di database
+    try {
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE id = ?");
+        $stmt->execute([$decoded['id']]);
+        if (!$stmt->fetch()) {
+            http_response_code(401);
+            echo json_encode(["message" => "Akun pengguna tidak ditemukan atau telah dihapus. Silakan login kembali."]);
+            exit();
+        }
+    } catch (PDOException $e) {
+        serverError($e, "Gagal memverifikasi status akun.");
     }
     
     return $decoded; // payload: ['id', 'username', 'role']
