@@ -78,9 +78,11 @@ export default function DashboardPieChart({ data }: Props) {
         backgroundColor: detailWithPercentage.map(
           (d) => getCategoryColorPair(d.label).dark,
         ),
-        borderWidth: 0,
-        hoverOffset: 14,
-        offset: detailWithPercentage.map((_, idx) => (idx === 0 ? 10 : 4)),
+        borderWidth: 2,
+        borderColor: "transparent",
+        hoverBorderWidth: 0,
+        hoverOffset: 28, // Animasi pop-out yang jauh lebih besar dan jelas saat kursor diarahkan
+        offset: detailWithPercentage.map((_, idx) => (idx === 0 ? 8 : 0)), // Hanya juara 1 yang sedikit menonjol dari awal
       },
     ],
   };
@@ -89,6 +91,9 @@ export default function DashboardPieChart({ data }: Props) {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "65%",
+    layout: {
+      padding: 15, // Memberikan ruang agar saat hoverOffset (pop-out) grafiknya tidak terpotong tepi canvas
+    },
     animation: {
       animateRotate: true,
       animateScale: true,
@@ -97,14 +102,30 @@ export default function DashboardPieChart({ data }: Props) {
       delay: (ctx) =>
         ctx.type === "data" && ctx.mode === "default" ? ctx.dataIndex * 180 : 0,
     },
+    transitions: {
+      active: {
+        animation: {
+          duration: 400, // Animasi transisi hover yang mulus
+        },
+      },
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
+        backgroundColor: "rgba(15, 23, 42, 0.9)",
+        titleColor: "#fff",
+        bodyColor: "#cbd5e1",
+        borderColor: "rgba(255,255,255,0.1)",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 12,
+        displayColors: true,
+        usePointStyle: true,
         callbacks: {
           label: (ctx) => {
             const value = Number(ctx.raw ?? 0);
             const percentage = total > 0 ? (value / total) * 100 : 0;
-            return `${ctx.label}: ${numberFormatter.format(value)} dokumen (${percentage.toFixed(1)}%)`;
+            return ` ${numberFormatter.format(value)} dokumen (${percentage.toFixed(1)}%)`;
           },
         },
       },

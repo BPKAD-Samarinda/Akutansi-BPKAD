@@ -5,9 +5,6 @@ import {
   FiClipboard,
   FiUsers,
   FiUploadCloud,
-  FiTrendingUp,
-  FiTrendingDown,
-  FiMinus,
 } from "react-icons/fi";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
@@ -101,13 +98,13 @@ export default function Dashboard() {
           ═══════════════════════════════════════════════════════════════════ */}
           <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6">
 
-            {/* Total Dokumen */}
+            {/* Manajemen Dokumen */}
             <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-orange-500/10 dark:hover:shadow-orange-500/5 transition-all duration-300 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/10 to-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150" />
               <div className="flex items-center justify-between relative z-10">
                 <div>
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
-                    Total Dokumen
+                    Manajemen Dokumen
                   </p>
                   <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
                     <AnimatedStatNumber value={summary.totalDocuments} />
@@ -137,25 +134,23 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Total Pengguna (Hanya Admin) */}
-            {isAdmin && (
-              <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-500/10 to-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150" />
-                <div className="flex items-center justify-between relative z-10">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
-                      Total Pengguna
-                    </p>
-                    <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
-                      <AnimatedStatNumber value={summary.totalUsers} />
-                    </h3>
-                  </div>
-                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                    <FiUsers className="w-6 h-6" />
-                  </div>
+            {/* Total Pengguna */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-500/10 to-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-150" />
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 tracking-wide">
+                    Total Pengguna
+                  </p>
+                  <h3 className="text-3xl font-bold text-slate-950 dark:text-white">
+                    <AnimatedStatNumber value={summary.totalUsers} />
+                  </h3>
+                </div>
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-sky-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                  <FiUsers className="w-6 h-6" />
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Unggah Hari Ini */}
             <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/5 transition-all duration-300 hover:-translate-y-1">
@@ -207,27 +202,23 @@ export default function Dashboard() {
                 <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-sm h-[392px]" />
               )}
 
-              {/* Distribution Chart (Hanya Admin) */}
-              {isAdmin && (
-                <>
-                  {distribution.isLoaded ? (
-                    <DashboardDistributionChart
-                      data={distribution.distributionData}
-                      animationNonce={distributionFilter.animationNonce}
-                      selectedCategory={distribution.selectedCategory}
-                      selectedMonth={distribution.selectedMonth}
-                      selectedYear={distribution.selectedYear}
-                      onChangeCategory={distributionFilter.handleCategoryChange}
-                      onChangeMonth={distributionFilter.handleMonthChange}
-                      onChangeYear={distributionFilter.handleYearChange}
-                      categoryOptions={distribution.categoryOptions}
-                      monthOptions={distribution.monthOptions}
-                      yearOptions={distribution.yearOptions}
-                    />
-                  ) : (
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-sm h-[392px]" />
-                  )}
-                </>
+              {/* Distribution Chart */}
+              {distribution.isLoaded ? (
+                <DashboardDistributionChart
+                  data={distribution.distributionData}
+                  animationNonce={distributionFilter.animationNonce}
+                  selectedCategory={distribution.selectedCategory}
+                  selectedMonth={distribution.selectedMonth}
+                  selectedYear={distribution.selectedYear}
+                  onChangeCategory={distributionFilter.handleCategoryChange}
+                  onChangeMonth={distributionFilter.handleMonthChange}
+                  onChangeYear={distributionFilter.handleYearChange}
+                  categoryOptions={distribution.categoryOptions}
+                  monthOptions={distribution.monthOptions}
+                  yearOptions={distribution.yearOptions}
+                />
+              ) : (
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5 shadow-sm h-[392px]" />
               )}
             </div>
 
