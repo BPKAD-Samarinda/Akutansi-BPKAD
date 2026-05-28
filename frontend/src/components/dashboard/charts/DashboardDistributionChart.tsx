@@ -74,15 +74,14 @@ function DashboardDistributionChart(props: Props) {
             const colors = getCategoryColorPair(label || "");
             if (!area) return colors.light;
             const gradient = chart.ctx.createLinearGradient(0, area.bottom, 0, area.top);
-            gradient.addColorStop(0, colors.light);
-            gradient.addColorStop(1, colors.dark);
+            gradient.addColorStop(0, colors.dark + "80"); // semi transparent at bottom
+            gradient.addColorStop(1, colors.light);       // vibrant at top
             return gradient;
           },
-          borderColor: data.map((d) => getCategoryColorPair(d.label).dark),
-          borderWidth: 1,
-          borderRadius: 12,
+          borderWidth: 0,
+          borderRadius: 16, // Pill shape
           borderSkipped: false,
-          maxBarThickness: 56,
+          maxBarThickness: 32, // Thinner bars like mockup
         },
       ],
     }),
@@ -115,16 +114,39 @@ function DashboardDistributionChart(props: Props) {
         resize: { animation: { duration: 0 } },
         active: { animation: { duration: 0 } },
       },
-      plugins: { legend: { display: false } },
+      plugins: { 
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "rgba(15, 23, 42, 0.95)",
+          backdropFilter: "blur(4px)",
+          titleColor: "#94a3b8",
+          titleFont: { size: 11, weight: "bold" },
+          bodyFont: { size: 13, weight: "bold" },
+          bodyColor: "#f8fafc",
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: true,
+          boxPadding: 4,
+          callbacks: {
+            title: () => "Jumlah Dokumen",
+          }
+        }
+      },
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { precision: 0, color: "#64748B" },
-          grid: { color: "rgba(148,163,184,0.15)" },
+          ticks: { precision: 0, color: "#64748b", font: { size: 11 } },
+          grid: { 
+            color: "rgba(148,163,184,0.1)",
+            tickBorderDash: [4, 4],
+            lineWidth: 1
+          },
+          border: { dash: [4, 4], display: false }
         },
         x: {
           grid: { display: false },
-          ticks: { color: "#475569" },
+          ticks: { color: "#475569", font: { size: 11, weight: "bold" } },
+          border: { display: false }
         },
       },
     }),
@@ -132,17 +154,32 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
+    "h-9 w-full xl:w-[120px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-      <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
-          Jumlah Dokumen
-        </h3>
+    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
+      {/* Glow effect on hover */}
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
+      <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between relative z-10">
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-100 dark:border-emerald-500/20 text-emerald-500 shadow-sm">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+              Jumlah Dokumen
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Sebaran dokumen berdasarkan kategori
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}
@@ -152,8 +189,8 @@ function DashboardDistributionChart(props: Props) {
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
               {categoryOptions.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c === "all" ? "Kategori" : c}
+                <SelectItem key={c} value={c} className="text-xs">
+                  {c === "all" ? "Semua Kategori" : c}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -165,7 +202,7 @@ function DashboardDistributionChart(props: Props) {
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
               {monthOptions.map((m) => (
-                <SelectItem key={m.value} value={String(m.value)}>
+                <SelectItem key={m.value} value={String(m.value)} className="text-xs">
                   {m.label}
                 </SelectItem>
               ))}
@@ -177,9 +214,9 @@ function DashboardDistributionChart(props: Props) {
               <SelectValue placeholder="Tahun" />
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
-              <SelectItem value="0">Tahun</SelectItem>
+              <SelectItem value="0" className="text-xs">Semua Tahun</SelectItem>
               {yearOptions.map((y) => (
-                <SelectItem key={y} value={String(y)}>
+                <SelectItem key={y} value={String(y)} className="text-xs">
                   {y}
                 </SelectItem>
               ))}
@@ -188,8 +225,14 @@ function DashboardDistributionChart(props: Props) {
         </div>
       </div>
 
-      <div className="h-[300px]">
-        <DistributionCanvas chartKey={chartKey} chartData={chartData} options={options} />
+      <div className="h-[260px] sm:h-[300px] relative z-10">
+        {data.length === 0 ? (
+          <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-center text-sm text-slate-500 dark:text-slate-400">
+            Tidak ada dokumen yang ditemukan.
+          </div>
+        ) : (
+          <DistributionCanvas chartKey={chartKey} chartData={chartData} options={options} />
+        )}
       </div>
     </div>
   );

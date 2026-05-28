@@ -199,19 +199,34 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[112px] rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200 " +
-    "transition-none focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-600 focus-visible:ring-0";
+    "h-9 w-full xl:w-[120px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
 
   const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 via-white to-slate-100/60 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md">
-      <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100 whitespace-nowrap">
-          Perkembangan Upload
-        </h3>
+    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
+      {/* Glow effect on hover */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 xl:w-auto">
+      <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between relative z-10">
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-100 dark:border-indigo-500/20 text-indigo-500 shadow-sm">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+              Perkembangan Upload
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Tren aktivitas upload dokumen seiring waktu
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}
@@ -221,8 +236,8 @@ function DashboardTrendChart({
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
               {categoryOptions.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c === "all" ? "Kategori" : c}
+                <SelectItem key={c} value={c} className="text-xs">
+                  {c === "all" ? "Semua Kategori" : c}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -230,11 +245,11 @@ function DashboardTrendChart({
 
           <Select value={String(selectedMonth)} onValueChange={(v) => onChangeMonth(Number(v))}>
             <SelectTrigger className={selectClass}>
-              <SelectValue placeholder="Semua Bulan" />
+              <SelectValue placeholder="Bulan" />
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
               {monthOptions.map((m) => (
-                <SelectItem key={m.value} value={String(m.value)}>
+                <SelectItem key={m.value} value={String(m.value)} className="text-xs">
                   {m.label}
                 </SelectItem>
               ))}
@@ -246,9 +261,9 @@ function DashboardTrendChart({
               <SelectValue placeholder="Tahun" />
             </SelectTrigger>
             <SelectContent className="max-h-[12.5rem]">
-              <SelectItem value="0">Tahun</SelectItem>
+              <SelectItem value="0" className="text-xs">Semua Tahun</SelectItem>
               {yearOptions.map((y) => (
-                <SelectItem key={y} value={String(y)}>
+                <SelectItem key={y} value={String(y)} className="text-xs">
                   {y}
                 </SelectItem>
               ))}
@@ -258,17 +273,32 @@ function DashboardTrendChart({
       </div>
 
       {canRenderChart && trendMode === "daily" && (
-        <div className="mb-3 text-sm text-slate-600 dark:text-slate-300">
-          Hari upload: <span className="font-semibold text-slate-800">{trendUploadDays}</span>
-          {" | "}
-          Hari kosong: <span className="font-semibold text-slate-800 dark:text-slate-100">{trendEmptyDays}</span>
+        <div className="mb-4 flex gap-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Upload: <span className="font-bold text-slate-800 dark:text-slate-200">{trendUploadDays} hari</span>
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700" />
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Kosong: <span className="font-bold text-slate-800 dark:text-slate-200">{trendEmptyDays} hari</span>
+            </p>
+          </div>
         </div>
       )}
 
-      <div className="h-[260px] sm:h-[300px]">
+      <div className="h-[280px] sm:h-[320px] relative z-10">
         {!canRenderChart ? (
-          <div className="h-full rounded-xl border border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center text-sm text-slate-500 dark:text-slate-400">
-            Pilih tahun untuk menampilkan data bulan yang dipilih.
+          <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center p-6">
+            <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Pilih Tahun</p>
+            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-xs">Silakan pilih tahun terlebih dahulu untuk melihat data spesifik bulan.</p>
           </div>
         ) : (
           <TrendCanvas chartKey={chartKey} chartData={chartData} options={options} />

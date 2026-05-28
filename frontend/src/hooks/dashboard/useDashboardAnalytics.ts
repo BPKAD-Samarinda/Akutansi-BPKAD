@@ -210,8 +210,6 @@ export function useDashboardAnalytics() {
         if (yearValue !== selectedYear) return;
         if (monthValue !== selectedMonth) return;
         if (dayValue < 1 || dayValue > daysInMonth) return;
-        // Mode harian menampilkan status upload:
-        // 1 = ada upload di tanggal tersebut, 0 = tidak ada upload.
         daily[dayValue - 1].value = 1;
       });
 
@@ -255,13 +253,24 @@ export function useDashboardAnalytics() {
   ]);
 
   const filteredLogins = useMemo(() => {
-    return [...logins]
+    return logins
       .filter((item) => {
         if (LOGIN_RESET_MODE === "weekly") return isInCurrentLocalWeek(item.loginAt);
         return isSameLocalDay(item.loginAt, todayKey);
       })
       .sort((a, b) => (a.loginAt < b.loginAt ? 1 : -1));
   }, [logins, todayKey]);
+
+  const topLoginUsers = useMemo(() => {
+    const counts: Record<string, number> = {};
+    logins.forEach((login) => {
+      counts[login.username] = (counts[login.username] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .map(([username, count]) => ({ username, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }, [logins]);
 
   const totalDocuments = filteredUploads.length;
   const totalSkpDocuments = skpUploads.length;
@@ -275,6 +284,44 @@ export function useDashboardAnalytics() {
     const skpToday = skpUploads.filter((record) => record.createdAt === todayIso).length;
     return documentToday + skpToday;
   }, [uploads, skpUploads]);
+
+  // ── Delta bulan ini vs bulan lalu ──
+  const thisMonthDocCount = useMemo(() => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth() + 1;
+    return uploads.filter((r) => {
+      const [ry, rm] = r.createdAt.split("-").map(Number);
+      return ry === y && rm === m;
+    }).length;
+  }, [uploads]);
+
+  const lastMonthDocCount = useMemo(() => {
+    const now = new Date();
+    let y = now.getFullYear();
+    let m = now.getMonth();
+    if (m === 0) { m = 12; y -= 1; }
+    return uploads.filter((r) => {
+      const [ry, rm] = r.createdAt.split("-").map(Number);
+      return ry === y && rm === m;
+    }).length;
+  }, [uploads]);
+
+  const docDelta = thisMonthDocCount - lastMonthDocCount;
+
+  const yesterdayUploadCount = useMemo(() => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yIso = toIsoDate(yesterday);
+    return [...uploads, ...skpUploads].filter((r) => r.createdAt === yIso).length;
+  }, [uploads, skpUploads]);
+
+  const todayUploadCountRaw = useMemo(() => {
+    const todayIso = toIsoDate(new Date());
+    return [...uploads, ...skpUploads].filter((r) => r.createdAt === todayIso).length;
+  }, [uploads, skpUploads]);
+
+  const uploadDelta = todayUploadCountRaw - yesterdayUploadCount;
 
   const allUploadsMerged = useMemo(() => {
     const docItems = uploads.map((r) => ({ ...r, uniqueId: `doc-${r.id}` }));
@@ -337,6 +384,10 @@ export function useDashboardAnalytics() {
     totalUsers,
     totalLogins,
     todayUploadCount,
+    docDelta,
+    uploadDelta,
+    thisMonthDocCount,
+    lastMonthDocCount,
     latestUploadedDocument,
     todayUploadRows,
     latestUploadRows,
@@ -347,6 +398,7 @@ export function useDashboardAnalytics() {
     trendEmptyDays,
     trendUploadCount,
     filteredLogins,
+    topLoginUsers,
     isLoaded,
   };
 }
