@@ -157,6 +157,8 @@ function DashboardDistributionChart(props: Props) {
     "h-9 w-full xl:w-[120px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
 
+  const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);
+
   return (
     <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
       {/* Glow effect on hover */}
@@ -226,7 +228,17 @@ function DashboardDistributionChart(props: Props) {
       </div>
 
       <div className="h-[260px] sm:h-[300px] relative z-10">
-        {data.length === 0 ? (
+        {!canRenderChart ? (
+          <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center p-6">
+            <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Pilih Tahun</p>
+            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-xs">Silakan pilih tahun terlebih dahulu untuk melihat data spesifik kategori atau bulan.</p>
+          </div>
+        ) : data.length === 0 ? (
           <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-center text-sm text-slate-500 dark:text-slate-400">
             Tidak ada dokumen yang ditemukan.
           </div>

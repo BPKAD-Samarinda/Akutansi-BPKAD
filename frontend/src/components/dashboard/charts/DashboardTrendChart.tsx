@@ -202,7 +202,7 @@ function DashboardTrendChart({
     "h-9 w-full xl:w-[120px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
 
-  const canRenderChart = !(selectedMonth !== 0 && selectedYear === 0);
+  const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);
 
   return (
     <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
@@ -298,7 +298,7 @@ function DashboardTrendChart({
               </svg>
             </div>
             <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Pilih Tahun</p>
-            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-xs">Silakan pilih tahun terlebih dahulu untuk melihat data spesifik bulan.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 max-w-xs">Silakan pilih tahun terlebih dahulu untuk melihat data spesifik kategori atau bulan.</p>
           </div>
         ) : (
           <TrendCanvas chartKey={chartKey} chartData={chartData} options={options} />
