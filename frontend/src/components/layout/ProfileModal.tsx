@@ -94,7 +94,7 @@ export default function ProfileModal({ isOpen, onClose, showToast }: ProfileModa
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs animate-[fadeIn_0.2s_ease-out]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]">
       <div
         ref={overlayRef}
         onClick={handleClose}
@@ -102,112 +102,131 @@ export default function ProfileModal({ isOpen, onClose, showToast }: ProfileModa
       />
       <div
         ref={modalRef}
-        className="relative w-full max-w-md flex flex-col overflow-hidden rounded-[28px] bg-white shadow-2xl dark:bg-slate-900 dark:ring-1 dark:ring-slate-800"
+        className="relative w-full max-w-md flex flex-col overflow-hidden rounded-[32px] bg-white shadow-2xl dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800"
       >
+        {/* Decorative Background Glow */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/15 dark:bg-amber-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-500/15 dark:bg-orange-500/10 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
+
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-5 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold">Pengaturan Profil</h2>
-              <p className="text-xs text-orange-100 mt-1">Ubah nama pengguna atau kata sandi Anda</p>
+        <div className="relative px-8 pt-8 pb-4 text-slate-800 dark:text-white">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30">
+                <span className="text-xl font-bold uppercase">
+                  {user?.username?.charAt(0) || "U"}
+                </span>
+                <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500 dark:border-slate-900" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  Profil Saya
+                </h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
+                  Atur informasi akun Anda
+                </p>
+              </div>
             </div>
             <button
               onClick={handleClose}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-white hover:bg-white/20 transition-all"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
             >
-              <FiX className="h-4.5 w-4.5" />
+              <FiX className="h-5 w-5" />
             </button>
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="relative px-8 pb-8 space-y-5">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            <label className="block text-[13px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
               Nama Pengguna
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                <FiUser className="h-4 w-4" />
+            <div className="relative group">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-orange-500 transition-colors">
+                <FiUser className="h-4.5 w-4.5" />
               </span>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Nama pengguna baru"
-                className="h-11 w-full pl-10 pr-4 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                className="h-12 w-full pl-11 pr-4 rounded-xl border border-slate-200 bg-white/50 backdrop-blur-sm text-sm font-medium text-slate-800 outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100 dark:focus:border-orange-500 dark:focus:bg-slate-900"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-              Peran Anda
+            <label className="block text-[13px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
+              Peran Akun
             </label>
-            <div className="h-11 w-full flex items-center px-4 rounded-xl border border-slate-100 bg-slate-50/50 text-sm text-slate-400 select-none dark:border-slate-800 dark:bg-slate-950/50">
-              {user?.role ?? "-"}
+            <div className="inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700">
+              <div className="h-2 w-2 rounded-full bg-orange-500 mr-2 animate-pulse" />
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                {user?.role ?? "-"}
+              </span>
             </div>
           </div>
 
-          <div className="h-px bg-slate-100 dark:bg-slate-800 my-4" />
+          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent my-6" />
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-              Kata Sandi Baru (Opsional)
+            <label className="block text-[13px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
+              Kata Sandi Baru
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                <FiLock className="h-4 w-4" />
+            <div className="relative group">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-orange-500 transition-colors">
+                <FiLock className="h-4.5 w-4.5" />
               </span>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Kosongkan jika tidak ingin diubah"
-                className="h-11 w-full pl-10 pr-4 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                className="h-12 w-full pl-11 pr-4 rounded-xl border border-slate-200 bg-white/50 backdrop-blur-sm text-sm font-medium text-slate-800 outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100 dark:focus:border-orange-500 dark:focus:bg-slate-900"
               />
             </div>
           </div>
 
           {password && (
-            <div className="animate-[slideDown_0.2s_ease-out]">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-                Konfirmasi Kata Sandi Baru
+            <div className="animate-[slideDown_0.3s_ease-out_forwards] origin-top">
+              <label className="block text-[13px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
+                Konfirmasi Kata Sandi
               </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                  <FiLock className="h-4 w-4" />
+              <div className="relative group">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-orange-500 transition-colors">
+                  <FiLock className="h-4.5 w-4.5" />
                 </span>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Ulangi kata sandi baru"
-                  className="h-11 w-full pl-10 pr-4 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+                  className="h-12 w-full pl-11 pr-4 rounded-xl border border-slate-200 bg-white/50 backdrop-blur-sm text-sm font-medium text-slate-800 outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-4 focus:ring-orange-500/10 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100 dark:focus:border-orange-500 dark:focus:bg-slate-900"
                 />
               </div>
             </div>
           )}
 
           {/* Footer buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 mt-4">
+          <div className="flex justify-end gap-3 pt-6 mt-2">
             <button
               type="button"
               onClick={handleClose}
               disabled={isSaving}
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-350 dark:hover:bg-slate-800"
+              className="rounded-xl px-5 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2 text-sm font-bold text-white hover:bg-orange-600 transition disabled:opacity-50"
+              className="relative overflow-hidden inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {isSaving ? "Menyimpan..." : (
                 <>
-                  <FiCheck className="h-4 w-4" />
-                  Simpan Perubahan
+                  <FiCheck className="h-4.5 w-4.5" />
+                  Simpan Profil
                 </>
               )}
             </button>
