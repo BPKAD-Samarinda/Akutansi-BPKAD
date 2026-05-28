@@ -79,9 +79,9 @@ function DashboardDistributionChart(props: Props) {
             return gradient;
           },
           borderWidth: 0,
-          borderRadius: 16, // Pill shape
-          borderSkipped: false,
-          maxBarThickness: 32, // Thinner bars like mockup
+          borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+          borderSkipped: "bottom",
+          maxBarThickness: 40,
         },
       ],
     }),
