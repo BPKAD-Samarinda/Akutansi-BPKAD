@@ -11,6 +11,7 @@ type DocumentTableMobileProps = {
   onView?: (id: number | string) => void;
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
+  loading?: boolean;
 };
 
 export default function DocumentTableMobile({
@@ -20,6 +21,7 @@ export default function DocumentTableMobile({
   onView,
   onEdit,
   onDelete,
+  loading = false,
 }: DocumentTableMobileProps) {
   const user = getUser();
   const canManageDocument =
@@ -51,7 +53,11 @@ export default function DocumentTableMobile({
 
   return (
     <div className="md:hidden space-y-3">
-      {documents.length > 0 ? (
+      {loading ? (
+        <div className="py-12 text-center text-gray-400 dark:text-slate-500">
+          Mengambil data dari server...
+        </div>
+      ) : documents.length > 0 ? (
         documents.map((doc, index) => {
           const format = getFileFormat(doc.file_path);
 

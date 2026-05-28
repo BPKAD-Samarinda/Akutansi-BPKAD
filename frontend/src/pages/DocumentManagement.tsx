@@ -77,24 +77,19 @@ export default function DocumentManagement() {
           />
 
           <div className="animate-[slideUp_0.6s_ease-out_0.2s_both]">
-            {loading ? (
-              <div className="text-center py-20 text-gray-500">
-                <p>Mengambil data dari server...</p>
-              </div>
-            ) : (
-              <DocumentTable
-                documents={filteredDocuments}
-                totalDocuments={documents.length}
-                selectedDocuments={selectedDocuments}
-                onView={handleView}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onRefresh={handleRefreshClick}
-                onSelectDocument={handleSelectDocument}
-                onSelectAll={handleSelectAll}
-                onUploadClick={() => setIsUploadOpen(true)}
-              />
-            )}
+            <DocumentTable
+              loading={loading}
+              documents={filteredDocuments}
+              totalDocuments={documents.length}
+              selectedDocuments={selectedDocuments}
+              onView={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onRefresh={handleRefreshClick}
+              onSelectDocument={handleSelectDocument}
+              onSelectAll={handleSelectAll}
+              onUploadClick={() => setIsUploadOpen(true)}
+            />
           </div>
         </main>
       </div>

@@ -13,6 +13,7 @@ type DocumentTableDesktopProps = {
   onEdit?: (id: number | string) => void;
   onDelete?: (id: number | string) => void;
   pageStartIndex: number;
+  loading?: boolean;
 };
 
 export default function DocumentTableDesktop({
@@ -26,6 +27,7 @@ export default function DocumentTableDesktop({
   onEdit,
   onDelete,
   pageStartIndex,
+  loading = false,
 }: DocumentTableDesktopProps) {
   return (
     <div className="hidden md:block overflow-x-auto">
@@ -71,7 +73,13 @@ export default function DocumentTableDesktop({
         </thead>
 
         <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800">
-          {documents.length > 0 ? (
+          {loading ? (
+            <tr>
+              <td colSpan={7} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
+                Mengambil data dari server...
+              </td>
+            </tr>
+          ) : documents.length > 0 ? (
             documents.map((doc, index) => (
               <DocumentRow
                 key={doc.id}

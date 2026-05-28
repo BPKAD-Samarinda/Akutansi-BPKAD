@@ -9,6 +9,7 @@ import { Document } from "../../../types";
 import { useDocumentTableState } from "../../../hooks/document/useDocumentTableState";
 
 interface DocumentTableProps {
+  loading?: boolean;
   documents: Document[];
   totalDocuments: number;
   selectedDocuments: Set<number | string>;
@@ -22,6 +23,7 @@ interface DocumentTableProps {
 }
 
 export default function DocumentTable({
+  loading = false,
   documents,
   totalDocuments,
   selectedDocuments,
@@ -94,12 +96,14 @@ export default function DocumentTable({
             onSortClick={handleSortClick}
             onUploadClick={onUploadClick || (() => {})}
             onRefresh={onRefresh}
+            isRefreshing={loading}
           />
         </div>
       </div>
 
       <div ref={documentsContentRef}>
         <DocumentTableDesktop
+          loading={loading}
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}
           allSelected={allSelected}
@@ -113,6 +117,7 @@ export default function DocumentTable({
         />
 
         <DocumentTableMobile
+          loading={loading}
           documents={currentDocuments}
           selectedDocuments={selectedDocuments}
           onSelectDocument={onSelectDocument}
