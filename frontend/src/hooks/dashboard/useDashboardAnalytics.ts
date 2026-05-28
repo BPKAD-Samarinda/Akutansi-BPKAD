@@ -264,7 +264,9 @@ export function useDashboardAnalytics() {
   const topLoginUsers = useMemo(() => {
     const counts: Record<string, number> = {};
     logins.forEach((login) => {
-      counts[login.username] = (counts[login.username] || 0) + 1;
+      if (isInCurrentLocalWeek(login.loginAt)) {
+        counts[login.username] = (counts[login.username] || 0) + 1;
+      }
     });
     return Object.entries(counts)
       .map(([username, count]) => ({ username, count }))

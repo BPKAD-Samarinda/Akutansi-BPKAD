@@ -40,32 +40,7 @@ function AnimatedStatNumber({ value, duration = 900 }: AnimatedStatNumberProps) 
   return <>{display}</>;
 }
 
-// ── Delta badge (naik/turun) ──────────────────────────────────────────────────
-function DeltaBadge({ delta, label }: { delta: number; label: string }) {
-  if (delta === 0)
-    return (
-      <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 w-fit px-2.5 py-1 rounded-full">
-        <FiMinus className="w-3 h-3" />
-        <span>Sama {label}</span>
-      </div>
-    );
-  const isUp = delta > 0;
-  return (
-    <div
-      className={`mt-3 flex items-center gap-1.5 text-xs font-semibold w-fit px-2.5 py-1 rounded-full ${
-        isUp
-          ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15"
-          : "text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/15"
-      }`}
-    >
-      {isUp ? <FiTrendingUp className="w-3 h-3" /> : <FiTrendingDown className="w-3 h-3" />}
-      <span>
-        {isUp ? "+" : ""}
-        {delta} {label}
-      </span>
-    </div>
-  );
-}
+
 
 // ── Dashboard Page ────────────────────────────────────────────────────────────
 export default function Dashboard() {
@@ -142,7 +117,6 @@ export default function Dashboard() {
                   <FiFileText className="w-6 h-6" />
                 </div>
               </div>
-              <DeltaBadge delta={summary.docDelta} label="bln ini" />
             </div>
 
             {/* Dokumen SKP */}
@@ -160,10 +134,6 @@ export default function Dashboard() {
                 <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
                   <FiClipboard className="w-6 h-6" />
                 </div>
-              </div>
-              <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 w-fit px-2.5 py-1 rounded-full">
-                <FiTrendingUp className="w-3 h-3" />
-                <span>Kinerja termonitor</span>
               </div>
             </div>
 
@@ -183,10 +153,6 @@ export default function Dashboard() {
                   <FiUsers className="w-6 h-6" />
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-500/10 w-fit px-2.5 py-1 rounded-full">
-                <FiUsers className="w-3 h-3" />
-                <span>Akses aktif</span>
-              </div>
             </div>
 
             {/* Unggah Hari Ini */}
@@ -205,7 +171,6 @@ export default function Dashboard() {
                   <FiUploadCloud className="w-6 h-6" />
                 </div>
               </div>
-              <DeltaBadge delta={summary.uploadDelta} label="vs kemarin" />
             </div>
           </div>
 
