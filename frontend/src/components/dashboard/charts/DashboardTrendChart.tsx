@@ -199,7 +199,7 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-9 w-full xl:w-[120px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "h-9 flex-1 min-w-0 sm:flex-none sm:w-[130px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
 
   const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);
@@ -209,7 +209,7 @@ function DashboardTrendChart({
       {/* Glow effect on hover */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between relative z-10">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 relative z-10">
         <div className="flex items-start gap-3">
           <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-100 dark:border-indigo-500/20 text-indigo-500 shadow-sm">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,7 +226,7 @@ function DashboardTrendChart({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}

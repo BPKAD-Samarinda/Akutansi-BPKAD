@@ -1,4 +1,4 @@
-import buildingImage from "../../assets/images/logo-bpkad.png";
+import buildingImage from "../../assets/images/logo-bpkad.webp";
 import "./AuthHero.css";
 
 export default function AuthHero() {

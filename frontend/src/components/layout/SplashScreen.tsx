@@ -2,8 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 // @ts-ignore
 import BIRDS from "vanta/dist/vanta.birds.min";
-import bpkadLogoHitam from "../../assets/images/bpkad-building-hitam.png";
-import bpkadLogoPutih from "../../assets/images/bpkad-building-putih.png";
+import bpkadLogoHitam from "../../assets/images/bpkad-building-hitam.webp";
+import bpkadLogoPutih from "../../assets/images/bpkad-building-putih.webp";
 
 export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [progress, setProgress] = useState(0);

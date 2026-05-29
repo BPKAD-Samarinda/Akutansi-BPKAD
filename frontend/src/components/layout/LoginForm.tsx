@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import userIcon from "../../assets/icons/profile.svg";
 import lockIcon from "../../assets/icons/kunci.svg";
-import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.png";
+import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.webp";
 
 type LoginFormProps = {
   username: string;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import bpkadBuildingPutih from "../../assets/images/bpkad-building-putih.png";
-import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.png";
+import bpkadBuildingPutih from "../../assets/images/bpkad-building-putih.webp";
+import bpkadBuildingHitam from "../../assets/images/bpkad-building-hitam.webp";
 
 interface HeaderProps {
   title?: string;
