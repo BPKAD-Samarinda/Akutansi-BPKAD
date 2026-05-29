@@ -60,8 +60,8 @@ export default function ProfileModal({ isOpen, onClose, showToast }: ProfileModa
     }
 
     if (password) {
-      if (password.length < 4) {
-        showToast("Kata sandi baru minimal harus 4 karakter!", "warning");
+      if (password.length < 6) {
+        showToast("Kata sandi baru minimal harus 6 karakter!", "warning");
         return;
       }
       if (password !== confirmPassword) {

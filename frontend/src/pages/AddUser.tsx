@@ -123,6 +123,11 @@ export default function AddUser() {
       showToast("Nama pengguna dan kata sandi wajib diisi.", "warning");
       return;
     }
+    
+    if (form.password.length < 6) {
+      showToast("Kata sandi minimal 6 karakter.", "warning");
+      return;
+    }
 
     const submit = async () => {
       try {
@@ -148,6 +153,12 @@ export default function AddUser() {
 
   const handleSaveEdit = () => {
     if (!editingUser) return;
+    
+    if (editingPassword.trim() && editingPassword.length < 6) {
+      showToast("Kata sandi baru minimal 6 karakter.", "warning");
+      return;
+    }
+
     const submit = async () => {
       try {
         const result = await updateUser(editingUser.id, {

@@ -130,6 +130,12 @@ if ($route === '/users') {
             exit();
         }
         
+        if ($password !== '' && strlen($password) < 6) {
+            http_response_code(400);
+            echo json_encode(["message" => "Kata sandi minimal 6 karakter"]);
+            exit();
+        }
+        
         $allowedRoles = ["Admin", "Staff", "Anak PKL"];
         if (!in_array($normalizedRole, $allowedRoles)) {
             http_response_code(400);
