@@ -154,7 +154,7 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-9 flex-1 min-w-0 sm:flex-none sm:w-[130px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "h-9 flex-1 min-w-0 sm:flex-none sm:w-[150px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
 
   const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);

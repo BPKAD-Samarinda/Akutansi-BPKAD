@@ -3,9 +3,9 @@ import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
-    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-transparent">
+    <div className="hidden lg:block lg:w-[42%] relative min-h-screen overflow-hidden order-2 bg-transparent">
       {/* area gambar di sisi kanan */}
-      <div className="absolute inset-y-0 right-0 w-[84%] overflow-hidden">
+      <div className="absolute inset-y-0 right-0 w-full overflow-hidden">
         <img
           src={buildingImage}
           alt="Gedung BPKAD"
@@ -19,7 +19,7 @@ export default function AuthHero() {
 
         {/* card teks: tetap di dalam gambar */}
         <div className="absolute bottom-12 left-6 right-6 animate-slideInRight animate-delay-500">
-          <div className="bg-white/10 backdrop-blur-2xl rounded-3xl p-8 text-white shadow-2xl border border-white/20">
+          <div className="bg-slate-950/45 backdrop-blur-2xl rounded-3xl p-8 text-white shadow-2xl border border-white/10">
             <div className="flex items-center text-xs font-bold mb-4 tracking-widest">
               <span className="relative flex h-3 w-3 mr-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>

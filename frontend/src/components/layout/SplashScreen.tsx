@@ -1,28 +1,41 @@
 import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
-// @ts-ignore
-import BIRDS from "vanta/dist/vanta.birds.min";
+import "vanta/dist/vanta.birds.min";
 import bpkadLogoHitam from "../../assets/images/bpkad-building-hitam.webp";
-import bpkadLogoPutih from "../../assets/images/bpkad-building-putih.webp";
+
+interface VantaEffect {
+  destroy: () => void;
+}
+
+interface CustomWindow extends Window {
+  THREE?: typeof THREE;
+  VANTA?: {
+    BIRDS: (options: Record<string, unknown>) => VantaEffect;
+  };
+}
 
 export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [progress, setProgress] = useState(0);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const vantaRef = useRef<HTMLDivElement>(null);
-  const [vantaEffect, setVantaEffect] = useState<any>(0);
+  const [vantaEffect, setVantaEffect] = useState<VantaEffect | null>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const customWindow = window as unknown as CustomWindow;
+
     // Make THREE globally available for Vanta just in case
-    if (typeof window !== "undefined" && !(window as any).THREE) {
-      (window as any).THREE = THREE;
+    if (!customWindow.THREE) {
+      customWindow.THREE = THREE;
     }
 
-    let vantaInterval: any;
+    let vantaInterval: ReturnType<typeof setInterval> | undefined;
     
     const initVanta = () => {
-      if (!vantaEffect && vantaRef.current && typeof (window as any).VANTA !== 'undefined' && (window as any).VANTA.BIRDS) {
+      if (!vantaEffect && vantaRef.current && customWindow.VANTA?.BIRDS) {
         try {
-          const effect = (window as any).VANTA.BIRDS({
+          const effect = customWindow.VANTA.BIRDS({
             el: vantaRef.current,
             mouseControls: true,
             touchControls: true,
@@ -126,7 +139,7 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
               Menyiapkan Portal Layanan...
             </h2>
             <p className="text-[10px] font-bold text-slate-400 tracking-[0.25em] uppercase">
-              Sistem Manajemen Dokumen
+              Sistem Manajemen Dokumen Arsip Akuntansi
             </p>
           </div>
         </div>

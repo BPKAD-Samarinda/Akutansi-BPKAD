@@ -27,7 +27,7 @@ export default function LoginForm({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
+    <div className="w-full lg:w-[58%] flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
       <div className="w-full max-w-[460px] animate-[fadeIn_0.8s_ease-out_0.2s_both]">
         <div className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-8 sm:px-12 py-10 sm:py-12 border border-slate-100 transition-all duration-300 ease-out hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-orange-500/20">
           <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
