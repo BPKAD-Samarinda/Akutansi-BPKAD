@@ -3,7 +3,7 @@ import "./AuthHero.css";
 
 export default function AuthHero() {
   return (
-    <div className="hidden lg:block lg:w-[42%] relative min-h-screen overflow-hidden order-2 bg-transparent">
+    <div className="hidden lg:block lg:w-1/2 relative min-h-screen overflow-hidden order-2 bg-transparent">
       {/* area gambar di sisi kanan */}
       <div className="absolute inset-y-0 right-0 w-full overflow-hidden">
         <img
@@ -18,9 +18,9 @@ export default function AuthHero() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none" />
 
         {/* card teks: tetap di dalam gambar */}
-        <div className="absolute bottom-12 left-6 right-6 animate-slideInRight animate-delay-500">
-          <div className="bg-slate-950/45 backdrop-blur-2xl rounded-3xl p-8 text-white shadow-2xl border border-white/10">
-            <div className="flex items-center text-xs font-bold mb-4 tracking-widest">
+        <div className="absolute bottom-12 left-10 right-10 max-w-[600px] animate-slideInRight animate-delay-500">
+          <div className="bg-slate-950/45 backdrop-blur-2xl rounded-3xl p-6 text-white shadow-2xl border border-white/10">
+            <div className="flex items-center text-xs font-bold mb-3 tracking-widest">
               <span className="relative flex h-3 w-3 mr-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
@@ -30,18 +30,18 @@ export default function AuthHero() {
               </span>
             </div>
 
-            <h1 className="text-4xl font-bold leading-tight mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-3">
               Sistem Manajemen
               <br />
               Dokumen Arsip Akuntansi
             </h1>
 
-            <p className="text-base text-gray-200 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-200 leading-relaxed">
               Penyimpanan dan akses dokumen untuk akuntansi secara
               terpusat, cepat, dan aman.
             </p>
 
-            <div className="mt-6 h-1 w-24 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full"></div>
+            <div className="mt-5 h-1 w-20 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full"></div>
           </div>
         </div>
       </div>

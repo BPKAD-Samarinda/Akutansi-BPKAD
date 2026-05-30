@@ -27,16 +27,16 @@ export default function LoginForm({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <div className="w-full lg:w-[58%] flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
-      <div className="w-full max-w-[460px] animate-[fadeIn_0.8s_ease-out_0.2s_both]">
-        <div className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-8 sm:px-12 py-10 sm:py-12 border border-slate-100 transition-all duration-300 ease-out hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-orange-500/20">
-          <div className="flex flex-col items-center mb-10 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
+    <div className="w-full lg:w-1/2 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0 order-1 animate-[slideInLeft_0.6s_ease-out]">
+      <div className="w-full max-w-[410px] animate-[fadeIn_0.8s_ease-out_0.2s_both]">
+        <div className="w-full bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] px-6 sm:px-9 py-8 sm:py-10 border border-slate-100 transition-all duration-300 ease-out hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-orange-500/20">
+          <div className="flex flex-col items-center mb-8 animate-[scaleIn_0.5s_ease-out_0.4s_both]">
             <div className="relative mb-4 cursor-default">
               <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl blur-xl opacity-20"></div>
               <img
                 src={bpkadBuildingHitam}
                 alt="BPKAD Logo"
-                className="relative h-20 sm:h-24 object-contain drop-shadow-xl"
+                className="relative h-16 sm:h-20 object-contain drop-shadow-xl"
               />
             </div>
           </div>
@@ -55,11 +55,11 @@ export default function LoginForm({
               <label className="block text-xs font-bold text-slate-700 mb-2.5 tracking-wider uppercase">
                 Nama Pengguna
               </label>
-              <div className="relative flex items-center bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 transition-all duration-300 hover:bg-white hover:border-orange-400/30 hover:shadow-[0_0_10px_rgba(249,115,22,0.05)] focus-within:bg-white focus-within:border-orange-400/70 focus-within:ring-2 focus-within:ring-orange-500/5 focus-within:shadow-[0_0_12px_rgba(249,115,22,0.08)]">
-                <img src={userIcon} className="w-5 h-5 mr-3 opacity-40" alt="User" />
+              <div className="relative flex items-center h-12 bg-slate-50/50 border border-slate-200 rounded-xl px-4 transition-all duration-300 hover:bg-white hover:border-orange-400/30 hover:shadow-[0_0_10px_rgba(249,115,22,0.05)] focus-within:bg-white focus-within:border-orange-400/70 focus-within:ring-2 focus-within:ring-orange-500/5 focus-within:shadow-[0_0_12px_rgba(249,115,22,0.08)]">
+                <img src={userIcon} className="w-3.5 h-3.5 mr-3 opacity-40" alt="User" />
                 <input
                   type="text"
-                  placeholder="Masukkan NIP atau username"
+                  placeholder="Masukkan NIP atau nama pengguna"
                   value={username}
                   onChange={(e) => onUsernameChange(e.target.value)}
                   maxLength={50}
@@ -73,8 +73,8 @@ export default function LoginForm({
               <label className="block text-xs font-bold text-slate-700 mb-2.5 tracking-wider uppercase">
                 Kata Sandi
               </label>
-              <div className="relative flex items-center bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 transition-all duration-300 hover:bg-white hover:border-orange-400/30 hover:shadow-[0_0_10px_rgba(249,115,22,0.05)] focus-within:bg-white focus-within:border-orange-400/70 focus-within:ring-2 focus-within:ring-orange-500/5 focus-within:shadow-[0_0_12px_rgba(249,115,22,0.08)]">
-                <img src={lockIcon} className="w-5 h-5 mr-3 opacity-40" alt="Lock" />
+              <div className="relative flex items-center h-12 bg-slate-50/50 border border-slate-200 rounded-xl px-4 transition-all duration-300 hover:bg-white hover:border-orange-400/30 hover:shadow-[0_0_10px_rgba(249,115,22,0.05)] focus-within:bg-white focus-within:border-orange-400/70 focus-within:ring-2 focus-within:ring-orange-500/5 focus-within:shadow-[0_0_12px_rgba(249,115,22,0.08)]">
+                <img src={lockIcon} className="w-3.5 h-3.5 mr-3 opacity-40" alt="Lock" />
                 <input
                   type={isPasswordVisible ? "text" : "password"}
                   placeholder="Masukkan kata sandi"
@@ -91,21 +91,23 @@ export default function LoginForm({
                   className="absolute right-3 inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 transition-colors hover:text-orange-600"
                 >
                   {isPasswordVisible ? (
-                    <IoMdEyeOff className="h-5 w-5" />
+                    <IoMdEyeOff className="h-3.5 w-3.5" />
                   ) : (
-                    <IoMdEye className="h-5 w-5" />
+                    <IoMdEye className="h-3.5 w-3.5" />
                   )}
                 </button>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="relative w-full bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white font-bold text-sm tracking-wider py-3 rounded-xl transition-all duration-300 hover:shadow-[0_6px_15px_rgba(249,115,22,0.15)] hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none mt-4 animate-[slideUp_0.5s_ease-out_0.7s_both]"
-            >
-              {isLoading ? "Sedang masuk..." : "MASUK"}
-            </button>
+            <div className="flex justify-center mt-6">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="relative px-20 h-10 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 text-white font-bold text-xs sm:text-sm tracking-wider rounded-xl transition-all duration-300 hover:shadow-[0_6px_15px_rgba(249,115,22,0.15)] hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none animate-[slideUp_0.5s_ease-out_0.7s_both]"
+              >
+                {isLoading ? "Sedang masuk..." : "MASUK"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
