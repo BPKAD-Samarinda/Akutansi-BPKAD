@@ -51,9 +51,6 @@ export default function DocumentTableDesktop({
                 />
               </AppTooltip>
             </th>
-            <th className="text-center align-middle py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs">
-              NO
-            </th>
             <th className="text-left py-3.5 px-3 font-bold uppercase tracking-wider text-xs w-[30%]">
               JUDUL / NAMA DOKUMEN
             </th>
@@ -75,12 +72,12 @@ export default function DocumentTableDesktop({
         <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800">
           {loading ? (
             <tr>
-              <td colSpan={7} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
+              <td colSpan={6} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
                 Mengambil data dari server...
               </td>
             </tr>
           ) : documents.length > 0 ? (
-            documents.map((doc, index) => (
+            documents.map((doc) => (
               <DocumentRow
                 key={doc.id}
                 doc={doc}
@@ -89,12 +86,12 @@ export default function DocumentTableDesktop({
                 onView={onView}
                 onEdit={onEdit}
                 onDelete={onDelete}
-                rowNumber={pageStartIndex + index}
+                rowNumber={0}
               />
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
+              <td colSpan={6} className="py-16 text-center text-gray-400 dark:text-slate-500 text-sm">
                 Belum ada dokumen.
               </td>
             </tr>

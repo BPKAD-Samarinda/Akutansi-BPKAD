@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 type LoginRow = {
   id: number;
   username: string;
@@ -16,6 +18,17 @@ type Props = {
 };
 
 export default function DashboardLoginActivity({ data }: Props) {
+  const onlineLogins = useMemo(() => {
+    const uniqueUsernames = new Set<string>();
+    return data.filter((row) => {
+      if (row.isOnline && !uniqueUsernames.has(row.username)) {
+        uniqueUsernames.add(row.username);
+        return true;
+      }
+      return false;
+    });
+  }, [data]);
+
   return (
     <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 shadow-lg shadow-slate-200/20 dark:shadow-black/40 h-full flex flex-col relative overflow-hidden group">
       {/* Background glow */}
@@ -27,32 +40,30 @@ export default function DashboardLoginActivity({ data }: Props) {
             Aktivitas Login
           </h3>
           <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
-            Riwayat akses masuk ke sistem
+            Daftar pengguna yang sedang aktif membuka website
           </p>
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-          <span className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
-          {data.length} aktivitas
+          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+          {onlineLogins.length} online
         </span>
       </div>
 
       <div className="max-h-[250px] overflow-y-auto overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-800/80 custom-scrollbar relative z-10 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50/90 dark:bg-slate-800/90 sticky top-0 backdrop-blur-md z-10 border-b border-slate-200 dark:border-slate-700">
-            <tr className="text-slate-500 dark:text-slate-400">
-              <th className="text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest">No</th>
+          <thead className="sticky top-0 z-10 text-white" style={{ backgroundColor: "#4F46E5" }}>
+            <tr>
               <th className="text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest">User</th>
               <th className="text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest">Role</th>
               <th className="text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest">Waktu login</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-            {data.map((row, index) => (
+            {onlineLogins.map((row) => (
               <tr
                 key={row.id}
                 className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group/row"
               >
-                <td className="px-5 py-2 text-slate-500 dark:text-slate-400 text-xs">{index + 1}</td>
                 <td className="px-5 py-2">
                   <div className="flex items-center gap-2">
                     <div className="relative">
@@ -87,16 +98,16 @@ export default function DashboardLoginActivity({ data }: Props) {
               </tr>
             ))}
 
-            {data.length === 0 && (
+            {onlineLogins.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-5 py-12 text-center">
+                <td colSpan={3} className="px-5 py-12 text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400">
                     <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-3">
                       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <p className="text-sm">Belum ada aktivitas login</p>
+                    <p className="text-sm">Tidak ada pengguna lain yang sedang aktif</p>
                   </div>
                 </td>
               </tr>

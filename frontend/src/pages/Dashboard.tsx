@@ -212,22 +212,21 @@ export default function Dashboard() {
           </div>
 
           {/* ═══════════════════════════════════════════════════════════════════
-              Baris 4: Aktivitas Login (Kiri) + Top Login Chart (Kanan)
+              Baris 4: Aktivitas Login & Aktivitas Dokumen (Sejajar)
           ═══════════════════════════════════════════════════════════════════ */}
-          {isAdmin && (
-            <div data-animate-item className="w-full">
+          {isAdmin ? (
+            <div
+              data-animate-item
+              className="grid grid-cols-1 xl:grid-cols-[38%_62%] gap-4 lg:gap-5 items-stretch"
+            >
               <DashboardLoginActivity data={login.filteredLogins} />
+              <DashboardUploadActivityCard activities={summary.allUploadsActivity} />
+            </div>
+          ) : (
+            <div data-animate-item className="w-full">
+              <DashboardUploadActivityCard activities={summary.allUploadsActivity} />
             </div>
           )}
-
-          {/* ═══════════════════════════════════════════════════════════════════
-              Baris 5: Aktivitas Dokumen (Hari Ini + Terakhir Diunggah)
-          ═══════════════════════════════════════════════════════════════════ */}
-          <div data-animate-item>
-            <DashboardUploadActivityCard
-              activities={summary.allUploadsActivity}
-            />
-          </div>
 
         </main>
       </div>

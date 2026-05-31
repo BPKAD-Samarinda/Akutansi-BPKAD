@@ -52,11 +52,7 @@ export default function DocumentTablePagination({
       : ""; // Orange is the default in select.tsx
 
   return (
-    <div className="flex flex-col gap-4 mt-6 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm text-muted-foreground dark:text-slate-400">
-        Total {totalDocuments} dokumen
-      </span>
-
+    <div className="flex flex-col gap-4 mt-6 sm:flex-row sm:items-center sm:justify-end">
       <div className="flex flex-wrap items-center justify-end gap-4">
         <Field orientation="horizontal" className="w-fit">
           <FieldLabel htmlFor="select-rows-per-page">

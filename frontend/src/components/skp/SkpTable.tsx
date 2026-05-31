@@ -129,9 +129,6 @@ export default function SkpTable({
                   />
                 </AppTooltip>
               </th>
-              <th className="py-3.5 px-3 font-bold w-12 uppercase tracking-wider text-xs text-center align-middle">
-                NO
-              </th>
               <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-left w-[32%]">
                 NAMA SKP
               </th>
@@ -153,7 +150,7 @@ export default function SkpTable({
             {loading ? (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={6}
                   className="py-12 text-center text-slate-400 dark:text-slate-500"
                 >
                   Memuat data SKP...
@@ -162,7 +159,7 @@ export default function SkpTable({
             ) : currentRows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={6}
                   className="py-12 text-center text-slate-400 dark:text-slate-500"
                 >
                   Data SKP tidak ditemukan.
@@ -186,9 +183,6 @@ export default function SkpTable({
                       className="block mx-auto h-4 w-4 rounded border-gray-300 accent-indigo-500"
                       aria-label={`Pilih dokumen SKP ${item.nama_skp}`}
                     />
-                  </td>
-                  <td className="py-3.5 px-3 text-center text-sm font-semibold text-slate-500">
-                    {(safeCurrentPage - 1) * rowsPerPage + index + 1}
                   </td>
                   <td className="py-3.5 px-3">
                     <div className="flex items-center gap-2">
@@ -225,19 +219,6 @@ export default function SkpTable({
                   </td>
                   <td className="py-3.5 px-3 text-center">
                     <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
-                      <svg
-                        className="w-3.5 h-3.5 text-gray-400 shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
                       {formatIndonesianDate(item.created_at || "")}
                     </div>
                   </td>
@@ -305,10 +286,7 @@ export default function SkpTable({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600">
-                        No {(safeCurrentPage - 1) * rowsPerPage + index + 1}
-                      </p>
-                      <p className="mt-1 text-sm font-bold text-slate-950 dark:text-slate-50">
+                      <p className="text-sm font-bold text-slate-950 dark:text-slate-50">
                         {item.nama_skp}
                       </p>
                     </div>
