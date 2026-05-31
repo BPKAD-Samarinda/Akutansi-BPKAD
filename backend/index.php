@@ -39,6 +39,8 @@ if ($route === '/auth/login') {
     require_once __DIR__ . '/skp.php';
 } elseif ($route === '/dashboard/analytics') {
     require_once __DIR__ . '/dashboard.php';
+} elseif ($route === '/heartbeat') {
+    require_once __DIR__ . '/heartbeat.php';
 } else {
     http_response_code(404);
     echo json_encode(["message" => "Endpoint tidak ditemukan."]);

@@ -178,12 +178,19 @@ function authenticateToken() {
     }
     
     if (!$authHeader || strpos($authHeader, 'Bearer ') !== 0) {
-        http_response_code(401);
-        echo json_encode(["message" => "Akses ditolak. Token tidak ditemukan."]);
-        exit();
+        $token = $_GET['token'] ?? '';
+        if (!$token) {
+            $input = json_decode(@file_get_contents('php://input'), true);
+            $token = $input['token'] ?? '';
+        }
+        if (!$token) {
+            http_response_code(401);
+            echo json_encode(["message" => "Akses ditolak. Token tidak ditemukan."]);
+            exit();
+        }
+    } else {
+        $token = substr($authHeader, 7);
     }
-    
-    $token = substr($authHeader, 7);
     $decoded = JWT::verify($token, $jwt_secret);
     
     if (!$decoded || !isset($decoded['id'])) {

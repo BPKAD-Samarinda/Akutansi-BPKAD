@@ -15,6 +15,7 @@ export type NormalizedLogin = {
   username: string;
   role: "Admin" | "Staff" | "Anak PKL" | "Admin Akuntansi" | "Staff Akuntansi";
   loginAt: string; // YYYY-MM-DD HH:mm
+  isOnline?: boolean;
 };
 
 export type LoginResetMode = "daily" | "weekly";

@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Fragment, useEffect, useState, useMemo } from "react";
 import { FiClipboard, FiClock, FiGrid, FiMoon, FiSun, FiFileText, FiUploadCloud, FiUserPlus, FiLogOut } from "react-icons/fi";
-import { getUser } from "../../utils/auth";
+import { getUser, clearAuthToken } from "../../utils/auth";
+import { sendHeartbeat } from "../../services/api";
 import ProfileModal from "./ProfileModal";
 import { Toast } from "../snackbar";
 
@@ -31,7 +32,11 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   };
 
   const isActive = (path: string) => location.pathname === path;
-  const handleLogout = () => navigate("/login");
+  const handleLogout = () => {
+    sendHeartbeat("offline").catch(() => {});
+    clearAuthToken();
+    navigate("/login");
+  };
   const initials = (user?.username ?? "User")
     .split(" ")
     .map((chunk) => chunk[0])

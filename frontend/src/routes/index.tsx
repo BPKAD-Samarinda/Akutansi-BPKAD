@@ -9,7 +9,8 @@ import DocumentPreview from "../pages/DocumentPreview";
 import UploadHistory from "../pages/UploadHistory";
 import AddUser from "../pages/AddUser";
 import SkpPage from "../pages/SKP";
-import { getUser, isAuthenticated } from "../utils/auth";
+import { getUser, isAuthenticated, getAuthToken } from "../utils/auth";
+import { sendHeartbeat, resolveBaseUrl } from "../services/api";
 
 const normalizeRole = (role?: string): string => {
   const raw = String(role ?? "").trim().toLowerCase();
@@ -89,7 +90,48 @@ function AdminRoute({ children }: { children: ReactElement }) {
 export default function AppRoutes() {
   const location = useLocation();
 
-  useEffect(() => {}, [location]);
+  useEffect(() => {
+    if (!isAuthenticated()) return;
+
+    // Send heartbeat immediately on load/route change
+    sendHeartbeat("online").catch(() => {});
+
+    // Periodic heartbeat every 10 seconds
+    const interval = setInterval(() => {
+      if (isAuthenticated()) {
+        sendHeartbeat("online").catch(() => {});
+      }
+    }, 10000);
+
+    // Immediate offline on unload/close
+    const handleBeforeUnload = () => {
+      const token = getAuthToken();
+      if (token) {
+        const baseUrl = resolveBaseUrl().replace(/\/+$/, "");
+        const url = `${baseUrl}/heartbeat?token=${encodeURIComponent(token)}`;
+        const data = JSON.stringify({ status: "offline" });
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(url, new Blob([data], { type: "application/json" }));
+        } else {
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data,
+            keepalive: true
+          });
+        }
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [location.pathname]);
 
   return (
     <Routes>

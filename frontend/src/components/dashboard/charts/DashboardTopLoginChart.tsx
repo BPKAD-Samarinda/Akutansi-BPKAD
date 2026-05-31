@@ -93,27 +93,22 @@ function DashboardTopLoginChart({ data }: Props) {
   );
 
   return (
-    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 h-full flex flex-col relative overflow-hidden group">
+    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 shadow-lg shadow-slate-200/20 dark:shadow-black/40 h-full flex flex-col relative overflow-hidden group">
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-fuchsia-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      <div className="mb-6 flex items-start gap-3 relative z-10">
-        <div className="h-10 w-10 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-500/10 flex items-center justify-center shrink-0 border border-fuchsia-100 dark:border-fuchsia-500/20 text-fuchsia-500 shadow-sm">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
-        </div>
-        <div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+      <div className="mb-4 flex items-start relative z-10">
+        <div className="min-w-0">
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
             Pengguna Teraktif
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
             Berdasarkan frekuensi login minggu ini
           </p>
         </div>
       </div>
 
-      <div className="flex-1 min-h-[280px] relative z-10">
+      <div className="flex-1 min-h-[200px] relative z-10">
         {!hasData ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-sm text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
             Belum ada data login.

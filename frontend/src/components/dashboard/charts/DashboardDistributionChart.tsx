@@ -154,34 +154,27 @@ function DashboardDistributionChart(props: Props) {
   );
 
   const selectClass =
-    "h-9 flex-1 min-w-0 sm:flex-none sm:w-[150px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "h-[30px] w-auto max-w-[125px] sm:max-w-none rounded-full border border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-2.5 gap-1.5 text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
 
   const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);
 
   return (
-    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
+    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 shadow-lg shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
       {/* Glow effect on hover */}
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 relative z-10">
-        <div className="flex items-start gap-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-100 dark:border-emerald-500/20 text-emerald-500 shadow-sm">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-          </div>
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-              Jumlah Dokumen
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Sebaran dokumen berdasarkan kategori
-            </p>
-          </div>
+      <div className="mb-4 flex items-center justify-between gap-2 relative z-10">
+        <div className="min-w-0">
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight truncate">
+            Jumlah Dokumen
+          </h3>
+          <p className="hidden sm:block text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+            Sebaran dokumen berdasarkan kategori
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 shrink-0">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}
@@ -227,7 +220,7 @@ function DashboardDistributionChart(props: Props) {
         </div>
       </div>
 
-      <div className="h-[260px] sm:h-[300px] relative z-10">
+      <div className="h-[170px] sm:h-[190px] relative z-10">
         {!canRenderChart ? (
           <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center p-6">
             <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">

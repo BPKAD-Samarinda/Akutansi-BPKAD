@@ -37,6 +37,25 @@ try {
         try {
             $loginStmt = $pdo->query("SELECT id, username, role, login_at FROM login_activities ORDER BY login_at DESC, id DESC LIMIT 1000");
             $loginActivities = $loginStmt->fetchAll();
+
+            // Read online users
+            $filePath = sys_get_temp_dir() . '/bpkad_online_users.json';
+            $onlineUsers = [];
+            if (file_exists($filePath)) {
+                $onlineUsers = json_decode(@file_get_contents($filePath), true) ?: [];
+            }
+            $now = time();
+
+            foreach ($loginActivities as &$activity) {
+                $user = $activity['username'];
+                $isOnline = false;
+                if (isset($onlineUsers[$user])) {
+                    if ($now - $onlineUsers[$user] <= 25) {
+                        $isOnline = true;
+                    }
+                }
+                $activity['is_online'] = $isOnline;
+            }
         } catch (PDOException $e) {
             // Ignore if table does not exist or fetch fails
         }

@@ -29,6 +29,7 @@ export interface DashboardApiLoginActivity {
   username: string;
   role: string;
   login_at: string;
+  is_online?: boolean;
 }
 
 export interface DashboardAnalyticsResponse {
@@ -65,7 +66,7 @@ type SkpDocumentApiItem = {
   created_at?: string;
 };
 
-const resolveBaseUrl = (): string => {
+export const resolveBaseUrl = (): string => {
   const envBase = import.meta.env.VITE_API_BASE_URL as string | undefined;
   if (!envBase || envBase.trim().length === 0) {
     return "/api";
@@ -521,6 +522,10 @@ export const updateUserProfile = async (payload: {
     payload,
   );
   return response.data;
+};
+
+export const sendHeartbeat = async (status: "online" | "offline" = "online"): Promise<void> => {
+  await apiClient.post("/heartbeat", { status });
 };
 
 

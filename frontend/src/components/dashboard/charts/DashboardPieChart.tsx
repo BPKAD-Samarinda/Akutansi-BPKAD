@@ -133,7 +133,7 @@ export default function DashboardPieChart({ data }: Props) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 via-white to-slate-100/80 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 h-full flex flex-col relative overflow-hidden">
+    <div className="bg-gradient-to-b from-slate-50 via-white to-slate-100/80 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-4 sm:p-5 shadow-lg shadow-slate-200/20 dark:shadow-black/40 h-full flex flex-col relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
 
@@ -148,20 +148,14 @@ export default function DashboardPieChart({ data }: Props) {
         }
       `}</style>
 
-      <div className="mb-6 relative z-10 flex items-center justify-between">
+      <div className="mb-4 relative z-10 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
             Persentase Kategori
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
             Distribusi dokumen berdasarkan jenis
           </p>
-        </div>
-        <div className="h-8 w-8 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center border border-indigo-100 dark:border-indigo-500/20">
-          <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-          </svg>
         </div>
       </div>
 
@@ -175,13 +169,13 @@ export default function DashboardPieChart({ data }: Props) {
           <p className="text-sm">Belum ada data dokumen.</p>
         </div>
       ) : (
-        <div key={chartKey} className="flex flex-col flex-1 gap-7 relative z-10">
+        <div key={chartKey} className="flex flex-col flex-1 gap-4 relative z-10">
           {/* 3 Top Stats - More premium look */}
           <div
             className="grid grid-cols-3 gap-3"
             style={{ animation: "fadeSlideUp 600ms ease-out both" }}
           >
-            <div className="flex flex-col p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
+            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
               <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Total Kategori</p>
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-none">
@@ -191,7 +185,7 @@ export default function DashboardPieChart({ data }: Props) {
               </div>
             </div>
 
-            <div className="flex flex-col p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5 relative overflow-hidden">
+            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-12 h-12 bg-emerald-500/10 rounded-full blur-xl -mr-4 -mt-4" />
               <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Dominan</p>
               <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 truncate relative z-10">
@@ -199,7 +193,7 @@ export default function DashboardPieChart({ data }: Props) {
               </span>
             </div>
 
-            <div className="flex flex-col p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
+            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
               <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Persentase</p>
               <span className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-none">
                 {topCategory ? (
@@ -212,12 +206,12 @@ export default function DashboardPieChart({ data }: Props) {
           </div>
 
           {/* Doughnut Chart */}
-          <div className="relative flex-1 min-h-[250px] w-full flex flex-col justify-center" style={{ animation: "fadeSlideUp 600ms ease-out 100ms both" }}>
+          <div className="relative flex-1 min-h-[180px] w-full flex flex-col justify-center" style={{ animation: "fadeSlideUp 600ms ease-out 100ms both" }}>
             <Doughnut data={chartData} options={chartOptions} />
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center mt-2">
-              <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-full h-24 w-24 flex flex-col items-center justify-center shadow-sm border border-slate-100/50 dark:border-slate-800/50">
+              <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-full h-20 w-20 flex flex-col items-center justify-center shadow-sm border border-slate-100/50 dark:border-slate-800/50">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5">Total</p>
-                <p className="text-2xl font-black text-slate-800 dark:text-white leading-none">
+                <p className="text-xl font-black text-slate-800 dark:text-white leading-none">
                   <AnimatedNumber value={total} formatThousands />
                 </p>
               </div>
@@ -225,7 +219,7 @@ export default function DashboardPieChart({ data }: Props) {
           </div>
 
           {/* Legend List (Leaderboard Style) */}
-          <div className="flex flex-col gap-3 mt-auto">
+          <div className="flex flex-col gap-2 mt-auto">
             {detailWithPercentage.map((item, idx) => {
               const colors = getCategoryColorPair(item.label);
               return (

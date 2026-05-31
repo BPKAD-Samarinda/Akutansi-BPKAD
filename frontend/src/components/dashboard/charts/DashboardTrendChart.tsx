@@ -75,7 +75,7 @@ function DashboardTrendChart({
       labels: data.map((d) => d.label),
       datasets: [
         {
-          label: trendMode === "daily" ? "Status Upload Harian (1/0)" : "Upload per Bulan",
+          label: trendMode === "daily" ? "Status Unggah Harian (1/0)" : "Unggah per Bulan",
           data: data.map((d) => d.value),
           borderColor: colorPair.dark,
           backgroundColor: (ctx: ScriptableContext<"line">) => {
@@ -168,7 +168,7 @@ function DashboardTrendChart({
                     return `Tanggal ${dayLabel}`;
                   },
                   label: (ctx) =>
-                    Number(ctx.raw ?? 0) > 0 ? "1 (Upload)" : "0 (Tidak Upload)",
+                    Number(ctx.raw ?? 0) > 0 ? "1 (Unggah)" : "0 (Tidak Unggah)",
                 }
               : undefined,
         },
@@ -199,34 +199,27 @@ function DashboardTrendChart({
   );
 
   const selectClass =
-    "h-9 flex-1 min-w-0 sm:flex-none sm:w-[150px] rounded-full border border-slate-200/80 dark:border-slate-700/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs font-medium text-slate-700 dark:text-slate-200 " +
+    "h-[30px] w-auto max-w-[125px] sm:max-w-none rounded-full border border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-2.5 gap-1.5 text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-200 " +
     "transition-all hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
 
   const canRenderChart = !((selectedMonth !== 0 || selectedCategory !== "all") && selectedYear === 0);
 
   return (
-    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-5 sm:p-6 shadow-xl shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
+    <div className="bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-4 sm:p-5 shadow-lg shadow-slate-200/20 dark:shadow-black/40 relative overflow-hidden group">
       {/* Glow effect on hover */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 relative z-10">
-        <div className="flex items-start gap-3">
-          <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-100 dark:border-indigo-500/20 text-indigo-500 shadow-sm">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-            </svg>
-          </div>
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
-              Perkembangan Upload
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Tren aktivitas upload dokumen seiring waktu
-            </p>
-          </div>
+      <div className="mb-4 flex items-center justify-between gap-2 relative z-10">
+        <div className="min-w-0">
+          <h3 className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight truncate">
+            Perkembangan Unggah
+          </h3>
+          <p className="hidden sm:block text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+            Tren aktivitas unggah dokumen seiring waktu
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 shrink-0">
           <Select
             value={selectedCategory}
             onValueChange={(v) => onChangeCategory(v as CategoryValue)}
@@ -277,7 +270,7 @@ function DashboardTrendChart({
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Upload: <span className="font-bold text-slate-800 dark:text-slate-200">{trendUploadDays} hari</span>
+              Unggah: <span className="font-bold text-slate-800 dark:text-slate-200">{trendUploadDays} hari</span>
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -289,7 +282,7 @@ function DashboardTrendChart({
         </div>
       )}
 
-      <div className="h-[280px] sm:h-[320px] relative z-10">
+      <div className="h-[190px] sm:h-[210px] relative z-10">
         {!canRenderChart ? (
           <div className="h-full rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center p-6">
             <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">

@@ -106,6 +106,7 @@ export function useDashboardAnalytics() {
             username: row.username,
             role: normalizeRole(row.role),
             loginAt: normalizeDateTime(row.login_at as unknown),
+            isOnline: Boolean(row.is_online),
           }),
         );
 
@@ -371,6 +372,18 @@ export function useDashboardAnalytics() {
       }));
   }, [allUploadsMerged]);
 
+  const allUploadsActivity = useMemo(() => {
+    return allUploadsMerged.map((record) => ({
+      id: record.uniqueId,
+      name: record.uploadedBy || "-",
+      kategori: record.kategori,
+      tanggalDokumen: formatDateLabel(record.uploadedAt),
+      tanggalUnggah: formatDateLabel(record.createdAt),
+      fileName: record.name,
+      rawDate: record.createdAt || record.uploadedAt,
+    }));
+  }, [allUploadsMerged]);
+
   return {
     selectedYear,
     setSelectedYear,
@@ -393,6 +406,7 @@ export function useDashboardAnalytics() {
     latestUploadedDocument,
     todayUploadRows,
     latestUploadRows,
+    allUploadsActivity,
     distributionData,
     trendData,
     trendMode,
