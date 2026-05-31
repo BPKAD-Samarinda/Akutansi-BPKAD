@@ -95,57 +95,73 @@ export default function Dashboard() {
           {/* ═══════════════════════════════════════════════════════════════════
               Baris 1: 4 Stat Cards + badge Naik/Turun
           ═══════════════════════════════════════════════════════════════════ */}
-          <div data-animate-item className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
+          <div data-animate-item className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
 
             {/* Manajemen Dokumen */}
-            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 border-l-[5px] border-l-orange-500 p-4 sm:p-5 pl-5 sm:pl-6 shadow-sm hover:shadow-xl hover:shadow-orange-500/10 dark:hover:shadow-orange-500/5 transition-all duration-300 hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-500/10 to-amber-500/5 rounded-full blur-3xl -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-150" />
-              <div className="relative z-10">
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-5 pl-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
+              <div className="relative z-10 flex-1 min-w-0 pr-3">
                 <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-1">
                   Manajemen Dokumen
                 </p>
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white leading-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white leading-tight">
                   <AnimatedStatNumber value={summary.totalDocuments} />
                 </h3>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Total berkas arsip</p>
+              </div>
+              <div className="relative z-10 h-11 w-11 rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 flex items-center justify-center border border-orange-100/50 dark:border-orange-500/20 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <FiFileText className="w-5 h-5" />
               </div>
             </div>
 
             {/* Dokumen SKP */}
-            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 border-l-[5px] border-l-indigo-500 p-4 sm:p-5 pl-5 sm:pl-6 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/5 transition-all duration-300 hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-purple-500/5 rounded-full blur-3xl -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-150" />
-              <div className="relative z-10">
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-5 pl-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
+              <div className="relative z-10 flex-1 min-w-0 pr-3">
                 <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-1">
-                  Dokumen Sasaran Kinerja Pegawai
+                  Dokumen Sasaran Kinerja
                 </p>
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white leading-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white leading-tight">
                   <AnimatedStatNumber value={summary.totalSkpDocuments} />
                 </h3>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Sasaran kinerja pegawai</p>
+              </div>
+              <div className="relative z-10 h-11 w-11 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center border border-indigo-100/50 dark:border-indigo-500/20 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <FiClipboard className="w-5 h-5" />
               </div>
             </div>
 
             {/* Total Pengguna */}
-            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 border-l-[5px] border-l-sky-500 p-4 sm:p-5 pl-5 sm:pl-6 shadow-sm hover:shadow-xl hover:shadow-sky-500/10 dark:hover:shadow-sky-500/5 transition-all duration-300 hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sky-500/10 to-blue-500/5 rounded-full blur-3xl -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-150" />
-              <div className="relative z-10">
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-5 pl-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 dark:bg-sky-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
+              <div className="relative z-10 flex-1 min-w-0 pr-3">
                 <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-1">
                   Total Pengguna
                 </p>
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white leading-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white leading-tight">
                   <AnimatedStatNumber value={summary.totalUsers} />
                 </h3>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Pengguna terdaftar</p>
+              </div>
+              <div className="relative z-10 h-11 w-11 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-500 dark:text-sky-400 flex items-center justify-center border border-sky-100/50 dark:border-sky-500/20 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <FiUsers className="w-5 h-5" />
               </div>
             </div>
 
             {/* Unggah Hari Ini */}
-            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 border-l-[5px] border-l-emerald-500 p-4 sm:p-5 pl-5 sm:pl-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/5 transition-all duration-300 hover:-translate-y-1">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-teal-500/5 rounded-full blur-3xl -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-150" />
-              <div className="relative z-10">
+            <div className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 p-5 pl-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-500" />
+              <div className="relative z-10 flex-1 min-w-0 pr-3">
                 <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-1">
                   Unggah Hari Ini
                 </p>
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white leading-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white leading-tight">
                   <AnimatedStatNumber value={summary.todayUploadCount} />
                 </h3>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Dokumen masuk hari ini</p>
+              </div>
+              <div className="relative z-10 h-11 w-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 flex items-center justify-center border border-emerald-100/50 dark:border-emerald-500/20 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <FiUploadCloud className="w-5 h-5" />
               </div>
             </div>
           </div>

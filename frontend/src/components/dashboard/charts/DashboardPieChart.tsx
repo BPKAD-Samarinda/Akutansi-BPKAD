@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
@@ -69,6 +69,10 @@ export default function DashboardPieChart({ data }: Props) {
 
   const topCategory = detailWithPercentage[0];
   const chartKey = `${JSON.stringify(detailWithPercentage)}-${hasData ? "1" : "0"}`;
+
+  const dominantColors = useMemo(() => {
+    return getCategoryColorPair(topCategory?.label || "default");
+  }, [topCategory]);
 
   const chartData: ChartData<"doughnut"> = {
     labels: detailWithPercentage.map((d) => d.label),
@@ -169,44 +173,73 @@ export default function DashboardPieChart({ data }: Props) {
           <p className="text-sm">Belum ada data dokumen.</p>
         </div>
       ) : (
-        <div key={chartKey} className="flex flex-col flex-1 gap-4 relative z-10">
+        <div key={chartKey} className="flex flex-col flex-1 gap-4 relative z-10 min-h-0">
           {/* 3 Top Stats - More premium look */}
           <div
-            className="grid grid-cols-3 gap-3"
+            className="grid grid-cols-3 gap-2.5"
             style={{ animation: "fadeSlideUp 600ms ease-out both" }}
           >
-            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
-              <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Total Kategori</p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-none">
+            {/* Total Kategori */}
+            <div className="flex flex-col justify-between p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+              <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                Kategori
+              </span>
+              <div className="flex items-baseline gap-1 mt-1.5">
+                <span className="text-2xl font-black text-slate-800 dark:text-slate-100 leading-none">
                   <AnimatedNumber value={detailWithPercentage.length} />
                 </span>
-                <span className="text-xs text-slate-400">jenis</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Jenis</span>
               </div>
             </div>
 
-            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-12 h-12 bg-emerald-500/10 rounded-full blur-xl -mr-4 -mt-4" />
-              <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Dominan</p>
-              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400 truncate relative z-10">
-                {topCategory?.label ?? "-"}
+            {/* Dominan */}
+            <div 
+              className="flex flex-col justify-between p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 border-l-4"
+              style={{ borderLeftColor: dominantColors.dark }}
+            >
+              <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                Dominan
               </span>
+              <div className="flex items-center gap-1.5 mt-1.5 min-w-0">
+                <span 
+                  className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse" 
+                  style={{ backgroundColor: dominantColors.dark }}
+                />
+                <span 
+                  className="text-xs font-extrabold truncate w-full"
+                  style={{ color: dominantColors.dark }}
+                >
+                  {topCategory?.label ?? "-"}
+                </span>
+              </div>
             </div>
 
-            <div className="flex flex-col p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-0.5">
-              <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500 tracking-wider mb-1">Persentase</p>
-              <span className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-none">
-                {topCategory ? (
-                  <AnimatedNumber value={topCategory.percentage} decimals={1} suffix="%" />
-                ) : (
-                  "0%"
-                )}
+            {/* Persentase */}
+            <div 
+              className="flex flex-col justify-between p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 border-l-4"
+              style={{ borderLeftColor: dominantColors.dark }}
+            >
+              <span className="text-[9px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                Persentase
               </span>
+              <div className="flex items-baseline gap-0.5 mt-1.5">
+                <span 
+                  className="text-2xl font-black leading-none"
+                  style={{ color: dominantColors.dark }}
+                >
+                  {topCategory ? (
+                    <AnimatedNumber value={topCategory.percentage} decimals={1} />
+                  ) : (
+                    "0"
+                  )}
+                </span>
+                <span className="text-xs font-extrabold" style={{ color: dominantColors.dark }}>%</span>
+              </div>
             </div>
           </div>
 
           {/* Doughnut Chart */}
-          <div className="relative flex-1 min-h-[180px] w-full flex flex-col justify-center" style={{ animation: "fadeSlideUp 600ms ease-out 100ms both" }}>
+          <div className="relative flex-1 min-h-[150px] w-full flex flex-col justify-center" style={{ animation: "fadeSlideUp 600ms ease-out 100ms both" }}>
             <Doughnut data={chartData} options={chartOptions} />
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center mt-2">
               <div className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-full h-20 w-20 flex flex-col items-center justify-center shadow-sm border border-slate-100/50 dark:border-slate-800/50">
@@ -218,8 +251,8 @@ export default function DashboardPieChart({ data }: Props) {
             </div>
           </div>
 
-          {/* Legend List (Leaderboard Style) */}
-          <div className="flex flex-col gap-2 mt-auto">
+          {/* Legend List (Leaderboard Style) with Scrollable Container */}
+          <div className="flex flex-col gap-2 mt-auto max-h-[120px] overflow-y-auto pr-1.5 custom-scrollbar">
             {detailWithPercentage.map((item, idx) => {
               const colors = getCategoryColorPair(item.label);
               return (
@@ -251,7 +284,7 @@ export default function DashboardPieChart({ data }: Props) {
                     </div>
                   </div>
 
-                  {/* Sleek Progress Bar */}
+                  {/* Progress Bar */}
                   <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800/60 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-1000"

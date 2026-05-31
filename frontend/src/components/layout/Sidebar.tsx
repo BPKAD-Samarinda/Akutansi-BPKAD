@@ -198,7 +198,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           >
             <span className="flex items-center gap-2.5">
               {isDark ? <FiSun className="h-4.5 w-4.5 text-indigo-400" /> : <FiMoon className="h-4.5 w-4.5 text-indigo-500" />}
-              {isDark ? "Mode Terang" : "Mode Gelap"}
+              {isDark ? "Terang" : "Gelap"}
             </span>
             <span
               className={`relative inline-flex h-[22px] w-[38px] items-center rounded-full transition-colors duration-300 ${
