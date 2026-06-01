@@ -1,56 +1,50 @@
-# Akutansi-BPKAD
+# Akuntansi BPKAD Samarinda
 
 ## Overview
 
-Sistem manajemen dokumen akuntansi BPKAD divisi akuntansi, terdiri dari dua bagian utama:
+Sistem Manajemen Dokumen Akuntansi BPKAD (Badan Pengelola Keuangan dan Aset Daerah) Kota Samarinda. Aplikasi ini dirancang untuk memudahkan penyimpanan, pencarian, dan pengelolaan dokumen keuangan seperti SPPD (Surat Perintah Perjalanan Dinas) dan SKP (Sasaran Kinerja Pegawai).
 
-- **Frontend**: React, Vite, TypeScript, TailwindCSS
-- **Backend**: Node.js, Express, TypeScript
+Aplikasi ini menggunakan arsitektur sebagai berikut:
+- **Frontend**: React (v19), Vite, TypeScript, TailwindCSS
+- **Backend**: PHP Native (PDO MySQL, JWT Authentication, Custom Rate Limiter)
+- **Database**: MySQL / MariaDB
 
-## Instalasi Cepat
+---
 
-### 1. Backend
+## Panduan Cepat Menjalankan Aplikasi
 
-```sh
-cd backend
-npm install
-copy .env.example .env
-# lalu sesuaikan value DB_* dan JWT_SECRET di file .env
-npm run dev
-```
+Detail panduan menjalankan aplikasi secara lengkap telah dipisahkan untuk dua tipe audiens di file utama:
+👉 **[CARA_MENJALANKAN.md](file:///c:/xampp/htdocs/Akutansi-BPKAD/CARA_MENJALANKAN.md)**
 
-### 2. Frontend
+### 1. Backend (PHP)
+Jalankan server database & web lokal Anda (seperti Apache & MySQL di **XAMPP** atau **Laragon**), lalu letakkan folder proyek ini di bawah direktori web root (misal: `htdocs/Akutansi-BPKAD/`).
 
+### 2. Frontend (React)
+Masuk ke direktori frontend, instal dependensi, lalu jalankan server development:
 ```sh
 cd frontend
 npm install
 npm run dev
 ```
 
-## Struktur Folder
+---
 
-- frontend/ : UI aplikasi
-- backend/ : API & server
-- akuntansi_bpkad.sql : Contoh/struktur database
+## Struktur Folder Proyek
 
-## Pengembangan
+- **`backend/`**: File API PHP, manajemen dokumen, upload file, audit log history, dan otentikasi.
+- **`frontend/`**: Kode antarmuka (UI) aplikasi berbasis React.
+- **`docs/`**: Berisi dokumen operasional dan panduan pemeliharaan sistem.
+- **`deploy/`**: Berisi petunjuk deployment aplikasi ke server hosting.
+- **`akuntansi_bpkad.sql`**: Struktur tabel dan data dump awal database MySQL.
 
-Lihat README di masing-masing folder untuk detail lebih lanjut.
+---
 
-## Dokumentasi Operasional
+## Dokumentasi Pendukung
 
-- `docs/user-guide.md`
-- `docs/backup-restore.md`
-- `docs/troubleshooting.md`
-- `docs/maintenance.md`
-- `docs/hostinger-vps-deploy.md`
-- `docs/hostinger-vps-troubleshooting.md`
+Untuk detail teknis, pemeliharaan, dan operasional lainnya, silakan baca dokumentasi berikut:
+- 📖 [Panduan Pengguna / User Guide](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/user-guide.md)
+- ⚙️ [Panduan Pemeliharaan Rutin / Maintenance](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/maintenance.md)
+- 🛠️ [Penanganan Masalah / Troubleshooting](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/troubleshooting.md)
+- 💾 [Backup & Restore Database](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/backup-restore.md)
+- 🌐 [Panduan Deploy ke Shared Hosting](file:///c:/xampp/htdocs/Akutansi-BPKAD/deploy/shared-hosting-deploy.md)
 
-## Deploy VPS
-
-Template konfigurasi deploy tersedia di:
-
-- `deploy/vps/README.md`
-- `deploy/vps/nginx-app.conf`
-- `deploy/vps/nginx-api.conf`
-- `deploy/vps/ecosystem.config.cjs`
