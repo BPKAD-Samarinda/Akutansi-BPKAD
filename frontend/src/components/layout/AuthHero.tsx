@@ -18,7 +18,7 @@ export default function AuthHero() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none" />
 
         {/* card teks: tetap di dalam gambar */}
-        <div className="absolute bottom-12 left-10 right-10 max-w-[600px] animate-slideInRight animate-delay-500">
+        <div className="absolute bottom-12 left-10 right-10 max-w-[900px] animate-slideInRight animate-delay-500">
           <div className="bg-slate-950/45 backdrop-blur-2xl rounded-3xl p-6 text-white shadow-2xl border border-white/10">
             <div className="flex items-center text-xs font-bold mb-3 tracking-widest">
               <span className="relative flex h-3 w-3 mr-3">
