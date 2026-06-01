@@ -110,8 +110,10 @@ apiClient.interceptors.response.use(
     const status = error?.response?.status;
     if (status === 401) {
       clearAuthToken();
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      const base = import.meta.env.BASE_URL || "/";
+      const loginPath = `${base.replace(/\/$/, "")}/login`;
+      if (window.location.pathname !== loginPath) {
+        window.location.href = loginPath;
       }
     }
     return Promise.reject(error);
