@@ -14,7 +14,7 @@ Aplikasi ini menggunakan arsitektur sebagai berikut:
 ## Panduan Cepat Menjalankan Aplikasi
 
 Detail panduan menjalankan aplikasi secara lengkap telah dipisahkan untuk dua tipe audiens di file utama:
-👉 **[CARA_MENJALANKAN.md](file:///c:/xampp/htdocs/Akutansi-BPKAD/CARA_MENJALANKAN.md)**
+👉 **[CARA_MENJALANKAN.md](./CARA_MENJALANKAN.md)**
 
 ### 1. Backend (PHP)
 Jalankan server database & web lokal Anda (seperti Apache & MySQL di **XAMPP** atau **Laragon**), lalu letakkan folder proyek ini di bawah direktori web root (misal: `htdocs/Akutansi-BPKAD/`).
@@ -42,9 +42,9 @@ npm run dev
 ## Dokumentasi Pendukung
 
 Untuk detail teknis, pemeliharaan, dan operasional lainnya, silakan baca dokumentasi berikut:
-- 📖 [Panduan Pengguna / User Guide](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/user-guide.md)
-- ⚙️ [Panduan Pemeliharaan Rutin / Maintenance](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/maintenance.md)
-- 🛠️ [Penanganan Masalah / Troubleshooting](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/troubleshooting.md)
-- 💾 [Backup & Restore Database](file:///c:/xampp/htdocs/Akutansi-BPKAD/docs/backup-restore.md)
-- 🌐 [Panduan Deploy ke Shared Hosting](file:///c:/xampp/htdocs/Akutansi-BPKAD/deploy/shared-hosting-deploy.md)
+- 📖 [Panduan Pengguna / User Guide](./docs/user-guide.md)
+- ⚙️ [Panduan Pemeliharaan Rutin / Maintenance](./docs/maintenance.md)
+- 🛠️ [Penanganan Masalah / Troubleshooting](./docs/troubleshooting.md)
+- 💾 [Backup & Restore Database](./docs/backup-restore.md)
+- 🌐 [Panduan Deploy ke Shared Hosting](./deploy/shared-hosting-deploy.md)
 
