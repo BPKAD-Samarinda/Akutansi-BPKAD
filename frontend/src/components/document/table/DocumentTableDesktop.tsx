@@ -47,7 +47,7 @@ export default function DocumentTableDesktop({
                     }
                   }}
                   onChange={(e) => onSelectAll(e.target.checked)}
-                  className="block mx-auto w-4 h-4 rounded border-white/60 bg-transparent accent-orange-200 cursor-pointer"
+                  className="block mx-auto premium-checkbox-orange-header"
                 />
               </AppTooltip>
             </th>

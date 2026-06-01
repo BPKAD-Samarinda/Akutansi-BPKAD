@@ -66,14 +66,14 @@ export default function DocumentRow({
           checked={isSelected}
           onChange={() => onSelect(doc.id)}
           aria-label={`Select document ${doc.nama_sppd}`}
-          className="block mx-auto w-4 h-4 accent-orange-500 border-gray-300 dark:border-slate-600 rounded cursor-pointer"
+          className="block mx-auto premium-checkbox-orange"
         />
       </td>
 
       {/* Nama */}
       <td className="py-3.5 px-3 text-sm font-semibold text-slate-950 dark:text-slate-50 max-w-0">
         <div className="flex items-center gap-2">
-          <svg className="w-4 h-4 text-gray-300 dark:text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-[18px] h-[18px] text-gray-300 dark:text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <AppTooltip content={doc.nama_sppd}>
@@ -85,7 +85,6 @@ export default function DocumentRow({
       {/* Kategori */}
       <td className="py-3.5 px-3 text-center">
         <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
-          <span className="text-[#FF7A00]">🏷</span>
           {doc.kategori}
         </span>
       </td>

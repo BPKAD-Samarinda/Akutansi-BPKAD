@@ -243,14 +243,16 @@ export default function EditModalFormFields({
           type="button"
           onClick={onClose}
           disabled={isSaving}
-          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800 transition disabled:opacity-50"
+          className="rounded-xl px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+          style={{ backgroundColor: "oklch(0.637 0.237 25.331)" }}
         >
           Batal
         </button>
         <button
           type="submit"
           disabled={isSaving}
-          className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-amber-600 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+          style={{ backgroundColor: "oklch(0.723 0.219 149.579)" }}
         >
           {isSaving ? "Menyimpan..." : "Simpan Perubahan"}
         </button>

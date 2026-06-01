@@ -83,7 +83,7 @@ export default function DocumentTableMobile({
                       aria-label={`Pilih dokumen ${doc.nama_sppd}`}
                       checked={selectedDocuments.has(doc.id)}
                       onChange={() => onSelectDocument(doc.id)}
-                      className="w-5 h-5 text-orange-600 border-gray-300 dark:border-slate-600 rounded"
+                      className="premium-checkbox-orange"
                     />
                   </AppTooltip>
 

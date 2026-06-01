@@ -250,16 +250,18 @@ export default function UploadModal({ isOpen, onClose, onSuccess, showToast }: U
             <button
               type="button"
               onClick={handleCancel}
-              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-xl px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90 active:scale-95"
+              style={{ backgroundColor: "oklch(0.637 0.237 25.331)" }}
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isUploading}
-              className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+              style={{ backgroundColor: "oklch(0.723 0.219 149.579)" }}
             >
-              {isUploading ? "Menyimpan..." : "Simpan Dokumen"}
+              {isUploading ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>

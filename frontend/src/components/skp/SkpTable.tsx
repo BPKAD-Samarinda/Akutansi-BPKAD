@@ -124,7 +124,7 @@ export default function SkpTable({
                       if (input) input.indeterminate = someSelected;
                     }}
                     onChange={(event) => handleToggleSelectAll(event.target.checked)}
-                    className="block mx-auto h-4 w-4 rounded border-white/60 bg-transparent accent-indigo-400"
+                    className="block mx-auto premium-checkbox-indigo-header"
                     aria-label="Pilih semua dokumen SKP"
                   />
                 </AppTooltip>
@@ -180,14 +180,14 @@ export default function SkpTable({
                       type="checkbox"
                       checked={selectedIds.has(item.id)}
                       onChange={() => handleToggleSelect(item.id)}
-                      className="block mx-auto h-4 w-4 rounded border-gray-300 accent-indigo-500"
+                      className="block mx-auto premium-checkbox-indigo"
                       aria-label={`Pilih dokumen SKP ${item.nama_skp}`}
                     />
                   </td>
                   <td className="py-3.5 px-3">
                     <div className="flex items-center gap-2">
                       <svg
-                        className="w-4 h-4 text-gray-300 shrink-0"
+                        className="w-[18px] h-[18px] text-gray-300 shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -208,7 +208,6 @@ export default function SkpTable({
                   </td>
                   <td className="py-3.5 px-3 text-center">
                     <span className="inline-flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
-                      <span className="text-[#4f46e5]">🏷</span>
                       {item.triwulan === 5 ? "Tahun" : `Triwulan ${item.triwulan}`}
                     </span>
                   </td>
@@ -281,7 +280,7 @@ export default function SkpTable({
                   type="checkbox"
                   checked={selectedIds.has(item.id)}
                   onChange={() => handleToggleSelect(item.id)}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 accent-indigo-500"
+                  className="mt-1 premium-checkbox-indigo"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">

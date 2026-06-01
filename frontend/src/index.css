@@ -446,3 +446,265 @@ input[type="checkbox"] {
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: theme('colors.slate.600');
 }
+
+/* Premium Custom Checkbox Styles */
+.premium-checkbox-orange {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+}
+.dark .premium-checkbox-orange {
+  border-color: #475569;
+  background-color: #0f172a;
+}
+.premium-checkbox-orange:checked {
+  border-color: #ff7a00;
+  background-color: #ff7a00;
+}
+.premium-checkbox-orange:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.premium-checkbox-orange-header {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+.premium-checkbox-orange-header:checked {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-orange-header:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #ff7a00;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.premium-checkbox-orange-header:indeterminate {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-orange-header:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 5px;
+  width: 8px;
+  height: 2px;
+  background-color: #ff7a00;
+}
+
+.premium-checkbox-indigo {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+}
+.dark .premium-checkbox-indigo {
+  border-color: #475569;
+  background-color: #0f172a;
+}
+.premium-checkbox-indigo:checked {
+  border-color: #4f46e5;
+  background-color: #4f46e5;
+}
+.premium-checkbox-indigo:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.premium-checkbox-indigo-header {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+.premium-checkbox-indigo-header:checked {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-indigo-header:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #4f46e5;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.premium-checkbox-indigo-header:indeterminate {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-indigo-header:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 5px;
+  width: 8px;
+  height: 2px;
+  background-color: #4f46e5;
+}
+
+/* Teal Premium Checkbox Styles */
+.premium-checkbox-teal {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+}
+.dark .premium-checkbox-teal {
+  border-color: #475569;
+  background-color: #0f172a;
+}
+.premium-checkbox-teal:checked {
+  border-color: #0d9488;
+  background-color: #0d9488;
+}
+.premium-checkbox-teal:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.premium-checkbox-teal-header {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: transparent;
+  display: inline-block;
+  vertical-align: middle;
+}
+.premium-checkbox-teal-header:checked {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-teal-header:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #0d9488;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.premium-checkbox-teal-header:indeterminate {
+  border-color: #fff;
+  background-color: #fff;
+}
+.premium-checkbox-teal-header:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 5px;
+  width: 8px;
+  height: 2px;
+  background-color: #0d9488;
+}
+
+/* Disabled states for all premium checkboxes */
+.premium-checkbox-orange:disabled,
+.premium-checkbox-orange-header:disabled,
+.premium-checkbox-indigo:disabled,
+.premium-checkbox-indigo-header:disabled,
+.premium-checkbox-teal:disabled,
+.premium-checkbox-teal-header:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.dark .premium-checkbox-orange:disabled,
+.dark .premium-checkbox-orange-header:disabled,
+.dark .premium-checkbox-indigo:disabled,
+.dark .premium-checkbox-indigo-header:disabled,
+.dark .premium-checkbox-teal:disabled,
+.dark .premium-checkbox-teal-header:disabled {
+  background-color: #1e293b;
+  border-color: #475569;
+}
+

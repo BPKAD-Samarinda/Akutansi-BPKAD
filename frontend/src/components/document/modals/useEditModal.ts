@@ -309,7 +309,9 @@ export function useEditModal({
   }, [editingDocument, isOpen]);
 
   const selectCategory = (kategori: string) => {
-    setIsAddingNew(false);
+    if (kategori !== "") {
+      setIsAddingNew(false);
+    }
     setFormData((prev) => ({
       ...prev,
       kategori,

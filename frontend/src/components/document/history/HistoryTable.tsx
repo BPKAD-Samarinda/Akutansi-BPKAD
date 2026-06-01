@@ -146,7 +146,7 @@ export default function HistoryTable({
                   onChange={(event) =>
                     onToggleSelect(item.id, event.target.checked)
                   }
-                  className="mt-1 h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-teal-600 disabled:opacity-40"
+                  className="mt-1 premium-checkbox-teal"
                   aria-label={`Pilih dokumen ${item.documentName}`}
                 />
                 <div className="min-w-0 flex-1">
@@ -248,7 +248,7 @@ export default function HistoryTable({
                   type="checkbox"
                   checked={allRestorableSelected}
                   onChange={(event) => onToggleSelectAll(event.target.checked)}
-                  className="block mx-auto h-4 w-4 rounded border-white/60 bg-transparent accent-teal-400"
+                  className="block mx-auto premium-checkbox-teal-header"
                   aria-label="Pilih semua dokumen terhapus"
                 />
               </th>
@@ -289,7 +289,7 @@ export default function HistoryTable({
                       onChange={(event) =>
                         onToggleSelect(item.id, event.target.checked)
                       }
-                      className="block mx-auto h-4 w-4 rounded border-gray-300 dark:border-slate-600 accent-teal-500 disabled:opacity-40"
+                      className="block mx-auto premium-checkbox-teal"
                       aria-label={`Pilih dokumen ${item.documentName}`}
                     />
                   </td>

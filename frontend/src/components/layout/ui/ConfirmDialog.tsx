@@ -50,22 +50,18 @@ export default function ConfirmDialog({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fadeInFast">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60"
-        style={{
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-        }}
+        className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm"
         onClick={onCancel}
       ></div>
 
       {/* Dialog */}
-      <div className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-slate-700 animate-scaleInFast">
+      <div className="relative bg-white dark:bg-slate-900 rounded-[28px] shadow-2xl max-w-[360px] w-full p-6 border border-gray-100 dark:border-slate-800/80 animate-scaleInFast">
         {/* Icon */}
         <div
-          className={`w-16 h-16 ${theme.iconBg} dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-bounceOnce`}
+          className={`w-12 h-12 ${theme.iconBg} dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounceOnce`}
         >
           <svg
-            className={`w-8 h-8 ${theme.icon}`}
+            className={`w-6 h-6 ${theme.icon}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -98,26 +94,26 @@ export default function ConfirmDialog({
         </div>
 
         {/* Title */}
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 text-center mb-3">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 text-center mb-2">
           {title}
         </h3>
 
         {/* Message */}
-        <p className="text-gray-600 dark:text-slate-300 text-center mb-8 leading-relaxed">
+        <p className="text-gray-500 dark:text-slate-400 text-center mb-6 leading-relaxed text-xs">
           {message}
         </p>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={onCancel}
-            className="flex-1 px-6 py-3.5 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-200 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500 transition-all duration-300 hover:scale-105 active:scale-95"
+            className="flex-1 px-4 py-2.5 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 hover:scale-[1.02] active:scale-95"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            className={`flex-1 px-6 py-3.5 ${theme.button} text-white rounded-xl font-semibold shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-xl`}
+            className={`flex-1 px-4 py-2.5 ${theme.button} text-white rounded-xl text-xs font-bold shadow-md transition-all duration-300 hover:scale-[1.02] active:scale-95 hover:shadow-lg`}
           >
             {confirmText}
           </button>
