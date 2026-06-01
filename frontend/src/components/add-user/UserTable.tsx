@@ -40,8 +40,8 @@ export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserT
 
       <div className="hidden md:grid grid-cols-[0.5fr_1.4fr_1.2fr_1.1fr_0.8fr] gap-4 px-6 py-4 text-xs font-bold uppercase tracking-wider text-white bg-[#eab308]">
         <span className="text-center">No</span>
-        <span>Profil / Nama</span>
-        <span>Akses / Role</span>
+        <span>Nama</span>
+        <span>Akses</span>
         <span>Bidang</span>
         <span className="text-center">Aksi</span>
       </div>
@@ -103,15 +103,11 @@ export default function UserTable({ users, onEdit, onDelete, onAddClick }: UserT
                     <FiUser className="h-4 w-4 text-slate-400 shrink-0" />
                     <p className="font-semibold text-gray-800 dark:text-slate-100">{user.username}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <FiShield className="h-4 w-4 text-amber-500 shrink-0" />
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                      {formatRole(user.role)}
-                    </span>
+                  <div className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    {formatRole(user.role)}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <FiPieChart className="h-4 w-4 text-slate-400 shrink-0" />
-                    <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Akuntansi</p>
+                  <div className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    Akuntansi
                   </div>
                   <div className="flex justify-center gap-2">
                     <button
