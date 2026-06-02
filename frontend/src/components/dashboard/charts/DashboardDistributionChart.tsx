@@ -175,21 +175,7 @@ function DashboardDistributionChart(props: Props) {
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <Select
-            value={selectedCategory}
-            onValueChange={(v) => onChangeCategory(v as CategoryValue)}
-          >
-            <SelectTrigger className={selectClass}>
-              <SelectValue placeholder="Kategori" />
-            </SelectTrigger>
-            <SelectContent className="max-h-[12.5rem]">
-              {categoryOptions.map((c) => (
-                <SelectItem key={c} value={c} className="text-xs">
-                  {c === "all" ? "Semua Kategori" : c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+
 
           <Select value={String(selectedMonth)} onValueChange={(v) => onChangeMonth(Number(v))}>
             <SelectTrigger className={selectClass}>

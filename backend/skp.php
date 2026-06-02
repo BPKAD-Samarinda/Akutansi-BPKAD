@@ -190,9 +190,10 @@ if ($route === '/skp') {
         $actorName = isset($currentUser['username']) ? $currentUser['username'] : (isset($currentUser['role']) ? $currentUser['role'] : null);
         $actorRole = isset($currentUser['role']) ? $currentUser['role'] : '';
         $isAdminRole = ($currentUser['role'] === 'Admin' || $currentUser['role'] === 'Admin Akuntansi');
+        $isPklRole = ($currentUser['role'] === 'Anak PKL');
         
         $finalUploadedBy = $actorName;
-        if ($isAdminRole && !empty($target_user)) {
+        if (($isAdminRole || $isPklRole) && !empty($target_user)) {
             $finalUploadedBy = $target_user;
         }
         
@@ -311,7 +312,7 @@ if ($route === '/skp') {
     $id = $matches[1];
     
     if ($method === 'PUT') {
-        authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Admin Akuntansi", "Anak PKL");
         
         $putData = parseMultipartPut();
         $post = $putData['post'];
@@ -325,6 +326,7 @@ if ($route === '/skp') {
         $actorName = isset($currentUser['username']) ? $currentUser['username'] : (isset($currentUser['role']) ? $currentUser['role'] : null);
         $actorRole = isset($currentUser['role']) ? $currentUser['role'] : '';
         $isAdminRole = ($currentUser['role'] === 'Admin' || $currentUser['role'] === 'Admin Akuntansi');
+        $isPklRole = ($currentUser['role'] === 'Anak PKL');
         
         if (!$nama_skp || $triwulan === null || !$tahun) {
             http_response_code(400);
@@ -364,7 +366,7 @@ if ($route === '/skp') {
             }
             
             $finalUploadedBy = $existing['uploaded_by'];
-            if ($isAdminRole && !empty($target_user)) {
+            if (($isAdminRole || $isPklRole) && !empty($target_user)) {
                 $finalUploadedBy = $target_user;
             }
             
@@ -411,7 +413,7 @@ if ($route === '/skp') {
         }
         
     } elseif ($method === 'DELETE') {
-        authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Admin Akuntansi", "Anak PKL");
         
         $actorName = isset($currentUser['username']) ? $currentUser['username'] : (isset($currentUser['role']) ? $currentUser['role'] : null);
         $actorRole = isset($currentUser['role']) ? $currentUser['role'] : '';

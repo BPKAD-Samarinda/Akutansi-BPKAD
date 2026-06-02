@@ -214,7 +214,7 @@ if ($route === '/documents') {
     $id = $matches[1];
     
     if ($method === 'PUT') {
-        authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Admin Akuntansi", "Anak PKL");
         
         // Parse Multipart PUT
         $putData = parseMultipartPut();
@@ -314,7 +314,7 @@ if ($route === '/documents') {
         }
         
     } elseif ($method === 'DELETE') {
-        authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+        authorizeRoles($currentUser, "Admin", "Admin Akuntansi", "Anak PKL");
         $actorName = isset($currentUser['username']) ? $currentUser['username'] : (isset($currentUser['role']) ? $currentUser['role'] : null);
         
         try {

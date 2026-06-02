@@ -6,8 +6,12 @@ require_once __DIR__ . '/config.php';
 // 1. Authenticate Token
 $currentUser = authenticateToken();
 
-// 2. Authorize Roles (Only Admin / Admin Akuntansi allowed)
-authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+// 2. Authorize Roles based on method
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    authorizeRoles($currentUser, "Admin", "Admin Akuntansi", "Anak PKL");
+} else {
+    authorizeRoles($currentUser, "Admin", "Admin Akuntansi");
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 

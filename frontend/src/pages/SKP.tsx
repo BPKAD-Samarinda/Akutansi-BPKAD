@@ -41,10 +41,10 @@ export default function SkpPage() {
   const [usersList, setUsersList] = useState<UserApiItem[]>([]);
 
   useEffect(() => {
-    if (isAdmin) {
+    if (isAdmin || isPkl) {
       getUsers().then(setUsersList).catch(() => {});
     }
-  }, [isAdmin]);
+  }, [isAdmin, isPkl]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -225,7 +225,6 @@ export default function SkpPage() {
   };
 
   const handleOpenEdit = (item: SkpDocument) => {
-    if (isPkl) return;
     setEditing({
       id: item.id,
       nama_skp: item.nama_skp,
@@ -273,7 +272,7 @@ export default function SkpPage() {
 
   const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!editing || isPkl) return;
+    if (!editing) return;
 
     const validationMessage = validateSkpInput(editing);
     if (validationMessage) {
@@ -302,7 +301,7 @@ export default function SkpPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget || isPkl) return;
+    if (!deleteTarget) return;
     try {
       await deleteSkpDocument(deleteTarget.id);
       showToast("Dokumen SKP berhasil dihapus.", "success");
@@ -377,6 +376,7 @@ export default function SkpPage() {
               isPkl={isPkl}
               handleOpenEdit={handleOpenEdit}
               setDeleteTarget={setDeleteTarget}
+              isAdmin={isAdmin}
             />
 
             <div className="px-5 py-4 border-t border-gray-100 dark:border-slate-800">
@@ -400,7 +400,7 @@ export default function SkpPage() {
         onSubmit={handleSubmitUpload}
         uploadForm={uploadForm}
         setUploadForm={setUploadForm}
-        isAdmin={isAdmin}
+        isAdmin={isAdmin || isPkl}
         usersList={usersList}
         isSubmittingUpload={isSubmittingUpload}
       />

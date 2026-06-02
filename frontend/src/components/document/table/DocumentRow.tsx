@@ -115,7 +115,7 @@ export default function DocumentRow({
               <FiEye className="h-4 w-4" />
             </button>
           </AppTooltip>
-          {user && (user.role === "Admin" || user.role === "Admin Akuntansi") && (
+          {user && (user.role === "Admin" || user.role === "Admin Akuntansi" || user.role === "Anak PKL") && (
             <>
               <AppTooltip content="Edit dokumen">
                 <button

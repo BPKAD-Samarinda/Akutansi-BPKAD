@@ -25,7 +25,7 @@ export default function DocumentTableMobile({
 }: DocumentTableMobileProps) {
   const user = getUser();
   const canManageDocument =
-    user?.role === "Admin" || user?.role === "Admin Akuntansi";
+    user?.role === "Admin" || user?.role === "Admin Akuntansi" || user?.role === "Anak PKL";
 
   const getFileFormat = (filePath: string) => {
     return filePath.split(".").pop()?.toLowerCase() || "";

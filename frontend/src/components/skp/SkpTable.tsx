@@ -28,6 +28,7 @@ interface SkpTableProps {
   isPkl: boolean;
   handleOpenEdit: (item: SkpDocument) => void;
   setDeleteTarget: (item: SkpDocument) => void;
+  isAdmin: boolean;
 }
 
 export default function SkpTable({
@@ -50,6 +51,7 @@ export default function SkpTable({
   isPkl,
   handleOpenEdit,
   setDeleteTarget,
+  isAdmin,
 }: SkpTableProps) {
   return (
     <>
@@ -138,6 +140,11 @@ export default function SkpTable({
               <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[12%]">
                 TAHUN
               </th>
+              {isAdmin && (
+                <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[15%]">
+                  PEMILIK
+                </th>
+              )}
               <th className="py-3.5 px-3 font-bold uppercase tracking-wider text-xs text-center w-[18%]">
                 TANGGAL UNGGAH
               </th>
@@ -150,7 +157,7 @@ export default function SkpTable({
             {loading ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={isAdmin ? 7 : 6}
                   className="py-12 text-center text-slate-400 dark:text-slate-500"
                 >
                   Memuat data SKP...
@@ -159,7 +166,7 @@ export default function SkpTable({
             ) : currentRows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={isAdmin ? 7 : 6}
                   className="py-12 text-center text-slate-400 dark:text-slate-500"
                 >
                   Data SKP tidak ditemukan.
@@ -216,6 +223,13 @@ export default function SkpTable({
                       {item.tahun}
                     </span>
                   </td>
+                  {isAdmin && (
+                    <td className="py-3.5 px-3 text-center">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        {item.uploaded_by || "-"}
+                      </span>
+                    </td>
+                  )}
                   <td className="py-3.5 px-3 text-center">
                     <div className="flex items-center justify-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
                       {formatIndonesianDate(item.created_at || "")}
@@ -232,7 +246,6 @@ export default function SkpTable({
                           <FiEye className="h-4 w-4" />
                         </button>
                       </AppTooltip>
-                      {!isPkl && (
                         <>
                           <AppTooltip content="Edit dokumen SKP">
                             <button
@@ -253,7 +266,6 @@ export default function SkpTable({
                             </button>
                           </AppTooltip>
                         </>
-                      )}
                     </div>
                   </td>
                 </tr>
@@ -300,6 +312,14 @@ export default function SkpTable({
                         {item.tahun}
                       </p>
                     </div>
+                    {isAdmin && (
+                      <div>
+                        <p className="uppercase tracking-wide">Pemilik</p>
+                        <p className="mt-1 font-medium text-slate-700 dark:text-slate-200">
+                          {item.uploaded_by || "-"}
+                        </p>
+                      </div>
+                    )}
                     <div>
                       <p className="uppercase tracking-wide">Tanggal</p>
                       <p className="mt-1 font-medium text-slate-700 dark:text-slate-200">
@@ -317,28 +337,26 @@ export default function SkpTable({
                         <FiEye className="w-4 h-4" />
                       </button>
                     </AppTooltip>
-                    {!isPkl && (
-                      <>
-                        <AppTooltip content="Edit dokumen SKP">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEdit(item)}
-                            className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-amber-50/50 hover:bg-amber-100 text-amber-600 transition-colors dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400"
-                          >
-                            <FiEdit3 className="w-4 h-4" />
-                          </button>
-                        </AppTooltip>
-                        <AppTooltip content="Hapus dokumen SKP">
-                          <button
-                            type="button"
-                            onClick={() => setDeleteTarget(item)}
-                            className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-rose-50/50 hover:bg-rose-100 text-rose-600 transition-colors dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400"
-                          >
-                            <FiTrash2 className="w-4 h-4" />
-                          </button>
-                        </AppTooltip>
-                      </>
-                    )}
+                        <>
+                          <AppTooltip content="Edit dokumen SKP">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(item)}
+                              className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-amber-50/50 hover:bg-amber-100 text-amber-600 transition-colors dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:text-amber-400"
+                            >
+                              <FiEdit3 className="w-4 h-4" />
+                            </button>
+                          </AppTooltip>
+                          <AppTooltip content="Hapus dokumen SKP">
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(item)}
+                              className="flex-1 py-2.5 flex justify-center items-center rounded-lg bg-rose-50/50 hover:bg-rose-100 text-rose-600 transition-colors dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:text-rose-400"
+                            >
+                              <FiTrash2 className="w-4 h-4" />
+                            </button>
+                          </AppTooltip>
+                        </>
                   </div>
                 </div>
               </div>
